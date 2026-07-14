@@ -16,6 +16,7 @@ public class Mines : Building, VillageBuildable
     private TownStorage townStorage;
 
     [Header("Mines Specific")]
+    public VillagerAI currentVillager;
     public bool isWorkedOn; //When villager is working
     public Sprite[] workedOnStates;
     public int jobPlaceID = 2;
@@ -192,7 +193,7 @@ public class Mines : Building, VillageBuildable
     IEnumerator GatherMaterial()
     {
         matGatherIcon.gameObject.SetActive(true);
-        float gatherTime = materials[matSelectionId].timeToGather;
+        float gatherTime = materials[matSelectionId].timeToGather / currentVillager.villagerHealth.functionSpeed;
         List<float> spriteUpdateTime = new List<float>();
         float differenceTime = gatherTime / (float)materials[matSelectionId].materialStages.Length; //To add each spriteUpdateTime
         float accumulatedTime = 0; //To set each spriteUpdateTime
@@ -232,6 +233,7 @@ public class Mines : Building, VillageBuildable
     
     public override void AssignVillagerRole(VillagerAI villager)
     {
+        currentVillager = villager;
         villager.jobPlace = this.transform;
         villager.jobPlaceID = jobPlaceID;
         villager.villagerSprite.UpdateLooks();
@@ -239,6 +241,7 @@ public class Mines : Building, VillageBuildable
 
     public override void RemoveVillagerRole(VillagerAI villager)
     {
+        currentVillager = null;
         villager.jobPlace = null;
         villager.jobPlaceID = 0;
         villager.villagerSprite.UpdateLooks();

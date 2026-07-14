@@ -79,7 +79,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1146705521
   m_SortingLayer: 1
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_MaskInteraction: 0
   m_Sprite: {fileID: 2127791430, guid: f8e7766bab56be2459ff1309f58dcf0a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -308,7 +308,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1146705521
   m_SortingLayer: 1
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_MaskInteraction: 0
   m_Sprite: {fileID: 733553507, guid: f8e7766bab56be2459ff1309f58dcf0a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -399,7 +399,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1146705521
   m_SortingLayer: 1
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_MaskInteraction: 0
   m_Sprite: {fileID: -4862926110306180413, guid: d8520620029779b4b8fbb76f5f7cc9f1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -423,9 +423,10 @@ GameObject:
   - component: {fileID: 529449395397457741}
   - component: {fileID: 608116680714210915}
   - component: {fileID: 8013851338391025249}
+  - component: {fileID: 3645880358106294929}
+  - component: {fileID: 8404538804813820497}
   - component: {fileID: 5213338453812323853}
   - component: {fileID: 1290862045786327698}
-  - component: {fileID: 3645880358106294929}
   m_Layer: 6
   m_Name: Villager
   m_TagString: Untagged
@@ -500,7 +501,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: f7be77a9266fe1640ad9bfb8d97484fb, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.93333334, g: 1, b: 0.8, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -521,6 +522,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c69364dd075814b90d25ebe7d6771d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VillagerAI
+  villagerHealth: {fileID: 8404538804813820497}
   state: 1
   villagerPF: {fileID: 8013851338391025249}
   villagerSprite: {fileID: 3645880358106294929}
@@ -586,6 +588,69 @@ MonoBehaviour:
   moveSpeed: 3
   isMoving: 0
   currentGridPosition: {x: 0, y: 0}
+--- !u!114 &3645880358106294929
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7679702431223297464}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6ce097ad02c64c43a7df3f629d36c3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VillagerSprite
+  villager: {fileID: 608116680714210915}
+  villagerLook:
+  - look:
+    - {fileID: 21300000, guid: f7be77a9266fe1640ad9bfb8d97484fb, type: 3}
+    - {fileID: 21300000, guid: d25209720dc6e5b439b2d8a3142dcea7, type: 3}
+    id: 0
+  - look:
+    - {fileID: 4581440321176895008, guid: b4c79820a833ed14e8b5a347bd9a2497, type: 3}
+    - {fileID: 5859407754506350433, guid: b4c79820a833ed14e8b5a347bd9a2497, type: 3}
+    id: 1
+  - look:
+    - {fileID: 5781944544380164951, guid: 64af4027a25f0a34e97d48e38effbd0c, type: 3}
+    - {fileID: 6790679111517242629, guid: 64af4027a25f0a34e97d48e38effbd0c, type: 3}
+    id: 2
+  isHighlighted: 0
+--- !u!114 &8404538804813820497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7679702431223297464}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10a607c40dd375f44915ddd206cb5dab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VillagerHealth
+  villager: {fileID: 608116680714210915}
+  health: 0
+  inflictedVirus:
+    infection: 0
+    severity: 0
+    lethality: 0
+    resistanceType: 0
+    trait1: 0
+    trait2: 0
+    trait3: 0
+  rend: {fileID: 529449395397457741}
+  daysLeft: 0
+  infectedStates:
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 0.93333334, g: 1, b: 0.8, a: 1}
+  - {r: 0.74509805, g: 0.8627451, b: 0.49803922, a: 1}
+  villagerLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  infectionCooldown: 5
+  tileRange: 1
+  airborneBonus: 1
+  airborneInfectionMultiplyer: 1.25
+  minFunction: 0.75
 --- !u!61 &5213338453812323853
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -659,33 +724,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &3645880358106294929
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7679702431223297464}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6ce097ad02c64c43a7df3f629d36c3b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::VillagerSprite
-  villager: {fileID: 608116680714210915}
-  villagerLook:
-  - look:
-    - {fileID: 21300000, guid: f7be77a9266fe1640ad9bfb8d97484fb, type: 3}
-    - {fileID: 21300000, guid: d25209720dc6e5b439b2d8a3142dcea7, type: 3}
-    id: 0
-  - look:
-    - {fileID: 4581440321176895008, guid: b4c79820a833ed14e8b5a347bd9a2497, type: 3}
-    - {fileID: 5859407754506350433, guid: b4c79820a833ed14e8b5a347bd9a2497, type: 3}
-    id: 1
-  - look:
-    - {fileID: 5781944544380164951, guid: 64af4027a25f0a34e97d48e38effbd0c, type: 3}
-    - {fileID: 6790679111517242629, guid: 64af4027a25f0a34e97d48e38effbd0c, type: 3}
-    id: 2
-  isHighlighted: 0
 --- !u!1 &9081392522446617057
 GameObject:
   m_ObjectHideFlags: 0
@@ -768,7 +806,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1146705521
   m_SortingLayer: 1
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 6b3ce955be7acb648bac3397de17241a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

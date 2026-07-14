@@ -10,6 +10,11 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
     public List<int> jobId = new List<int>();
     public List<Vector3> villagerPos = new List<Vector3>();
     public List<float> villagerHunger = new List<float>();
+    public List<int> daysLeft = new List<int>();
+    
+    [Header("Villager Health Saving")]
+    public List<Health> villagerHealth = new List<Health>();
+    public List<Virus> villagerVirus = new List<Virus>();
 
     [Header("Building Saving")]
     public List<int> motelId = new List<int>();
@@ -46,6 +51,10 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
     public GameObject villagerPrefab;
     public GameObject[] buildingIdPrefabs;
 
+    //VirusManager
+    [Header("Virus Manager")]
+    public List<Virus> viruses = new List<Virus>();
+
     //Settings
     [Header("Settings")]
     public float sfxValue;
@@ -64,6 +73,10 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         data.jobId = this.jobId;
         data.villagerPos = this.villagerPos;
         data.villagerHunger = this.villagerHunger;
+        data.daysLeft = this.daysLeft;
+
+        data.villagerHealth = this.villagerHealth;
+        data.villagerVirus = this.villagerVirus;
 
         data.motelId = this.motelId;
         data.motelTypeId = this.motelTypeId;
@@ -97,6 +110,8 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         data.graphicsIndex = this.graphicsIndex;
         data.canScreenShake = this.canScreenShake;
         data.fpsIndex = this.fpsIndex;
+        
+        data.viruses = this.viruses;
     }
 
     public void LoadData(GameData data)
@@ -106,6 +121,10 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         this.jobId = data.jobId;
         this.villagerPos = data.villagerPos;
         this.villagerHunger = data.villagerHunger;
+        this.daysLeft = data.daysLeft;
+
+        this.villagerHealth = data.villagerHealth;
+        this.villagerVirus = data.villagerVirus;
 
         this.motelId = data.motelId;
         this.motelTypeId = data.motelTypeId;
@@ -140,16 +159,18 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         this.canScreenShake = data.canScreenShake;
         this.fpsIndex = data.fpsIndex;
 
+        this.viruses = data.viruses;
+
         LoadInfo();
     }
 
     [ContextMenu("SaveInfo")]
     public void SaveInfo()
     {
-        villagerId.Clear(); houseId.Clear(); jobId.Clear(); villagerPos.Clear(); villagerHunger.Clear();
+        villagerId.Clear(); houseId.Clear(); jobId.Clear(); villagerPos.Clear(); villagerHunger.Clear(); villagerHealth.Clear(); villagerVirus.Clear(); daysLeft.Clear();
         motelId.Clear(); motelTypeId.Clear(); motelTransform.Clear(); motelPos.Clear(); motelSellValue.Clear();
         workplaceId.Clear(); workplaceTypeId.Clear(); workplaceTransform.Clear(); workplaceSellValue.Clear(); workplacePos.Clear();
-        roadPos.Clear(); 
+        roadPos.Clear(); viruses.Clear();
 
         //Gathering Buildings' Info
         GridManager grid = GridManager.instance;
@@ -192,6 +213,9 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
             jobId.Add(IdExtractor(workplaceTransform, workplaceId, villager.jobPlace));
             villagerPos.Add(villager.gameObject.transform.position);
             villagerHunger.Add(villager.hunger);
+            villagerHealth.Add(villager.villagerHealth.health);
+            villagerVirus.Add(villager.villagerHealth.inflictedVirus);
+            daysLeft.Add(villager.villagerHealth.daysLeft);
             idCounter++;
         }
 
@@ -226,6 +250,9 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         graphicsIndex = Settings.instance.graphicsIndex;
         canScreenShake = Settings.instance.canScreenShake;
         fpsIndex = Settings.instance.fpsIndex;
+        
+        //Gathering the VirusManager's Info
+        viruses = new List<Virus>(VirusManager.instance.viruses);
     }
 
     public void LoadInfo()
@@ -265,6 +292,10 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
             GameObject go = Instantiate(villagerPrefab, villagerPos[i], Quaternion.identity);
             if(go.TryGetComponent(out VillagerAI goScript))
             {
+                goScript.villagerHealth.health = villagerHealth[i];
+                goScript.villagerHealth.inflictedVirus = villagerVirus[i];
+                goScript.villagerHealth.daysLeft = daysLeft[i];
+
                 if(houseId[i] != -1) //Has a house
                 {
                     goScript.house = GetTransformFromId(houseId[i], motelTransform, motelId);
@@ -327,6 +358,9 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         Settings.instance.UpdateValues();
         Settings.instance.SetFPS();
         Settings.instance.ApplyChanges();
+
+        //VirusManager
+        VirusManager.instance.viruses = new List<Virus>(viruses);
 
         StartCoroutine(WaitForStart());
     }

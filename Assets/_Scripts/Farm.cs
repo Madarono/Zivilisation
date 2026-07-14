@@ -7,6 +7,7 @@ public class Farm : Building, VillageBuildable
     private TownStorage townStorage;
 
     [Header("Farm Specific")]
+    public VillagerAI currentVillager;
     public bool isWorkedOn; //When villager is working
     public Sprite[] workedOnStates;
     public int jobPlaceID = 1;
@@ -61,6 +62,7 @@ public class Farm : Building, VillageBuildable
     {
         addButton.SetActive(villagers.Count < humanIcons.Length);
         deleteButton.SetActive(villagers.Count > 0);
+        matGatherIcon.gameObject.SetActive(isWorkedOn);
         rend.sprite = (isShowing, isWorkedOn) switch
         {
             (true, false) => buildingStates[1],
@@ -126,7 +128,7 @@ public class Farm : Building, VillageBuildable
     IEnumerator Farming()
     {
         matGatherIcon.gameObject.SetActive(true);
-        float gatherTime = cooldownDuration;
+        float gatherTime = cooldownDuration / currentVillager.villagerHealth.functionSpeed;
         List<float> spriteUpdateTime = new List<float>();
         float differenceTime = gatherTime / (float)wheatStages.Length; //To add each spriteUpdateTime
         float accumulatedTime = 0; //To set each spriteUpdateTime
@@ -165,6 +167,7 @@ public class Farm : Building, VillageBuildable
 
     public override void AssignVillagerRole(VillagerAI villager)
     {
+        currentVillager = villager;
         villager.jobPlace = this.transform;
         villager.jobPlaceID = jobPlaceID;
         villager.villagerSprite.UpdateLooks();
@@ -172,6 +175,7 @@ public class Farm : Building, VillageBuildable
 
     public override void RemoveVillagerRole(VillagerAI villager)
     {
+        currentVillager = null;
         villager.jobPlace = null;
         villager.jobPlaceID = 0;
         villager.villagerSprite.UpdateLooks();

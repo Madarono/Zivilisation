@@ -19,6 +19,7 @@ public class RequirementSprite
 
 public class VillagerAI : MonoBehaviour
 {
+    public VillagerHealth villagerHealth;
     public VillagerState state;
     public VillagerPathFind villagerPF;
     public VillagerSprite villagerSprite;
@@ -84,6 +85,7 @@ public class VillagerAI : MonoBehaviour
         rend = GetComponent<SpriteRenderer>();
         villagerPF = GetComponent<VillagerPathFind>();
         villagerSprite = GetComponent<VillagerSprite>();
+        villagerHealth = GetComponent<VillagerHealth>();
         failedCol = failed.GetComponent<Collider2D>();
         col = GetComponent<Collider2D>();
         canWander = false;
@@ -382,38 +384,10 @@ public class VillagerAI : MonoBehaviour
         state = VillagerState.Idle;
     }
 
-    // bool CheckWaypoint()
-    // {
-    //     Vector2Int pos = new Vector2Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y));
-    //     Vector2Int leftPos = new Vector2Int(pos.x - 1, pos.y);
-    //     Vector2Int rightPos = new Vector2Int(pos.x + 1, pos.y);
-    //     Vector2Int upPos = new Vector2Int(pos.x, pos.y + 1);
-    //     Vector2Int downPos = new Vector2Int(pos.x, pos.y - 1);
-
-    //     allPos.Clear();
-
-    //     allPos.Add(pos);
-    //     allPos.Add(leftPos);
-    //     allPos.Add(rightPos);
-    //     allPos.Add(upPos);
-    //     allPos.Add(downPos);
-
-    //     WaypointSystem waypoint = WaypointSystem.instance;
-
-    //     foreach(var playerPos in allPos)
-    //     {
-    //         if(waypoint.waypointsHash.Contains(playerPos))
-    //         {
-    //             return true;
-    //         }
-    //     }
-
-    //     return false;
-    // }
-
     //Coroutines
     IEnumerator HungerGoDown()
     {
+        float depletion = hungerDepletionAmount * villagerHealth.currentHungerMultiplyer;
         while(true)
         {
             yield return new WaitForSeconds(hungerDepletionCooldown);
@@ -421,58 +395,9 @@ public class VillagerAI : MonoBehaviour
             {
                 continue;
             }
-            hunger = Mathf.Clamp01(hunger - hungerDepletionAmount);
+
+            depletion = hungerDepletionAmount * villagerHealth.currentHungerMultiplyer;
+            hunger = Mathf.Clamp01(hunger - depletion);
         }
-    }
-
-    IEnumerator Wandering()
-    {
-        yield break;
-
-        // while(true)
-        // {
-
-        //     if (goingToHouse || state == VillagerState.Moving || state == VillagerState.Working || state == VillagerState.Sleeping)
-        //     {
-        //         float pauseTimer = 1f;
-        //         while (pauseTimer > 0)
-        //         {
-        //             pauseTimer -= Time.deltaTime;
-        //             yield return null;
-        //         }
-        //         continue;
-        //     }
-
-        //     //Road check
-        //     if (!CheckWaypoint())
-        //     {
-        //         float pauseTimer = 1f;
-        //         while (pauseTimer > 0)
-        //         {
-        //             pauseTimer -= Time.deltaTime;
-        //             yield return null;
-        //         }
-        //         continue;
-        //     }
-
-        //     float randomCooldown = Random.Range(minWanderingCooldown, maxWanderingCooldown);
-        //     while (randomCooldown > 0)
-        //     {
-        //         randomCooldown -= Time.deltaTime;
-        //         yield return null; 
-        //     }
-
-        //     if (goingToHouse || state == VillagerState.Working || WaypointSystem.instance.waypoints.Count == 0) //Double check
-        //     {
-        //         continue;
-        //     }
-
-        //     int random = Random.Range(0, WaypointSystem.instance.waypoints.Count);
-        //     Vector2Int randomPos = WaypointSystem.instance.waypoints[random];
-            
-        //     MoveVillager(null, 0, 0, randomPos);
-            
-        //     yield return null;
-        // }
     }
 }

@@ -18,7 +18,7 @@ public class VillagerPathFind : MonoBehaviour
     void Start()
     {
         villager = GetComponent<VillagerAI>();
-        moveSpeed = villager.villagerSpeed;
+        moveSpeed = villager.villagerSpeed * villager.villagerHealth.functionSpeed;
         gridManager = GridManager.instance;
         Vector2Int currentPlayerPosition = new Vector2Int((int)transform.position.x, (int)transform.position.y);
         currentGridPosition = currentPlayerPosition;
@@ -51,6 +51,7 @@ public class VillagerPathFind : MonoBehaviour
     {
         isMoving = true;
         int currentPathIndex = 0;
+        moveSpeed = villager.villagerSpeed * villager.villagerHealth.functionSpeed;
 
         while (currentPathIndex < currentPath.Count)
         {

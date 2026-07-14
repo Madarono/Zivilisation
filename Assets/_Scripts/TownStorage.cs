@@ -131,7 +131,7 @@ public class TownStorage : MonoBehaviour
             float cooldown = (waitTime + (totalPopulation * scaleFactorPerPopulation)) * (2 - globalMorality);
             float spawnChance = Mathf.Pow(globalMorality, 2f);
 
-            Debug.Log(cooldown);
+            // Debug.Log(cooldown);
 
             yield return new WaitForSeconds(cooldown);
 

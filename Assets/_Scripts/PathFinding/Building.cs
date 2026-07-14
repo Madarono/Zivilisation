@@ -152,7 +152,6 @@ public class Building : MonoBehaviour, VillageBuildable
         isDisowning = true;
         TownManager.instance.activeBuilding = this;
         TownManager.instance.SelectingHumanMode(this, true);
-
     }
 
     public virtual void AssignVillagerRole(VillagerAI villager)

@@ -654,7 +654,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: d35183e55fefbc740bb12afaae6c9360, type: 3}
   jobPlaceID: 1
   wheatPerGain: 0.1
-  cooldownDuration: 10
+  cooldownDuration: 3.3333333
   matGatherIcon: {fileID: 2646180748845067248}
   wheatStages:
   - {fileID: 6766556259339474250, guid: d8520620029779b4b8fbb76f5f7cc9f1, type: 3}

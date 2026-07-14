@@ -889,7 +889,7 @@ MonoBehaviour:
   matGatherIcon: {fileID: 3714282447686352336}
   materials:
   - materialIcon: {fileID: 21300000, guid: 444a598f708ccaa4ea87c346b56c7853, type: 3}
-    timeToGather: 10
+    timeToGather: 3
     materialStages:
     - {fileID: 21300000, guid: 6608e6ae3c05378449a2d31ae5305d17, type: 3}
     - {fileID: 21300000, guid: 538f6b1c13393c045b76534a005b169f, type: 3}
@@ -900,7 +900,7 @@ MonoBehaviour:
     - {fileID: 21300000, guid: 444a598f708ccaa4ea87c346b56c7853, type: 3}
     storageID: 1
   - materialIcon: {fileID: 21300000, guid: c3f7b3cde7e11fc4db70165c5658e8d7, type: 3}
-    timeToGather: 20
+    timeToGather: 6
     materialStages:
     - {fileID: 21300000, guid: 448f9a7156585024ba97e9977aef40b6, type: 3}
     - {fileID: 21300000, guid: 75422269675077c4ba8c47eadc0a94a8, type: 3}
@@ -911,7 +911,7 @@ MonoBehaviour:
     - {fileID: 21300000, guid: c3f7b3cde7e11fc4db70165c5658e8d7, type: 3}
     storageID: 2
   - materialIcon: {fileID: 21300000, guid: 3ee4d77ba43b3c141b243735ab8d0311, type: 3}
-    timeToGather: 50
+    timeToGather: 16
     materialStages:
     - {fileID: 21300000, guid: 673c6406cb256e946ae785f353518cc8, type: 3}
     - {fileID: 21300000, guid: c11bf6cac37d5fe499ba3705e1a705ad, type: 3}
@@ -922,7 +922,7 @@ MonoBehaviour:
     - {fileID: 21300000, guid: 3ee4d77ba43b3c141b243735ab8d0311, type: 3}
     storageID: 3
   - materialIcon: {fileID: 21300000, guid: 775298ab1eeab7b49b8f3ba5f15a03e3, type: 3}
-    timeToGather: 100
+    timeToGather: 33
     materialStages:
     - {fileID: 21300000, guid: 8ff875270409f5e43b07ca01b1575d35, type: 3}
     - {fileID: 21300000, guid: 37fb0698552d22041a80c8c3cbc174fa, type: 3}

@@ -15596,6 +15596,9 @@ MonoBehaviour:
   jobId: 
   villagerPos: []
   villagerHunger: []
+  daysLeft: 
+  villagerHealth: 
+  villagerVirus: []
   motelId: 
   motelTypeId: 
   motelSellValue: 
@@ -15623,6 +15626,7 @@ MonoBehaviour:
   - {fileID: 578179650165816390, guid: df0596e946d276e4492c0d8589414182, type: 3}
   - {fileID: 7673461289365722503, guid: fc7713a34d30c4d438fab7f1b933b0f9, type: 3}
   - {fileID: 7673461289365722503, guid: 97ddee0b765783f4fa88b313dc14db63, type: 3}
+  viruses: []
   sfxValue: 0
   musicValue: 0
   muteSfx: 0
@@ -16608,7 +16612,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbf816f0c955f7845a3d33364ceddf16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DayCycle
-  dayInMinutes: 15
+  dayInMinutes: 5
   clockMultiplyer: 0
   hours: 0
   minutes: 0
@@ -16759,7 +16763,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a5d5578619fc564fb6fef6860d35963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VirusManager
-  viruses: []
+  viruses:
+  - infection: 2
+    severity: 8
+    lethality: 6
+    resistanceType: 3
+    trait1: 0
+    trait2: 0
+    trait3: 0
   virusResistanceWeights:
   - resistance: 0
     weight: 2
@@ -16782,16 +16793,21 @@ MonoBehaviour:
     weight: 1
   - trait: 2
     weight: 0.8
-  - trait: 3
+  - trait: 5
     weight: 0.8
   - trait: 4
     weight: 0.5
-  - trait: 5
+  - trait: 6
+    weight: 0.5
+  - trait: 7
     weight: 0.2
-  power: 0.5
+  - trait: 3
+    weight: 0.2
+  power: 1
   trait1Power: 0.5
   trait2Power: 0.25
   trait3Power: 0.2
+  incubationTimeInDays: 2
 --- !u!114 &2112431330
 MonoBehaviour:
   m_ObjectHideFlags: 0

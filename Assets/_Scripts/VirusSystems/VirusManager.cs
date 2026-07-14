@@ -46,15 +46,19 @@ public enum VirusResistance
 public enum VirusTrait 
 {
     None,
-    Airborne, //Infection 2x when villager lingers close to a 1-tile radius
+    Airborne, //1.5x Infection and +1 Tilerange when infecting
     Overcrowding, //Infection 2x when sleeping with other villager inside homes
+    MuscleAtrophy, //1.5x Severity and minFunction goes as low as 0.25f and not just 0.75f
+    HyperMetabolism, //2x Hunger decrease
     Coughing, //Stop pathfinding to cough, can infect if anyone close by a higher percentage than airborne
-    Exhaustion_Insomnia, //Break schedule from sleep and/or work
-    Sudden_Collapse //Can die randomly and leave an infected corpse, need to be disposed of quickly or infection 3x around it
+    ExhaustionInsomnia, //Break schedule from sleep and/or work
+    SuddenCollapse //Can die randomly and leave an infected corpse, need to be disposed of quickly or infection 3x around it
 }
 
 public class VirusManager : MonoBehaviour
 {
+    public static VirusManager instance {get; private set;}
+
     public List<Virus> viruses = new List<Virus>();
 
     [Header("Resistance Weight")]
@@ -70,6 +74,14 @@ public class VirusManager : MonoBehaviour
     public float trait1Power = 0.5f;
     public float trait2Power = 0.25f;
     public float trait3Power = 0.2f;
+    public int incubationTimeInDays = 2;
+
+    private List<VillagerAI> healthyVillagers = new List<VillagerAI>();
+
+    void Awake()
+    {
+        instance = this;
+    }
 
     public void MakeNewVirus()
     {
@@ -115,6 +127,48 @@ public class VirusManager : MonoBehaviour
         newVirus.resistanceType = virusResistance;
 
         viruses.Add(newVirus);
+    }
+
+    public void InflictRandomVillager(bool newest)
+    {
+        if(viruses.Count == 0) return;
+        
+        Virus randomVirus = newest ? viruses[viruses.Count - 1] : viruses[Random.Range(0, viruses.Count)];
+
+        VillagerAI randomVillager = GetRandomVillager();
+
+        if(randomVillager == null) return;
+
+        randomVillager.villagerHealth.Inflict(randomVirus, incubationTimeInDays);
+    }
+
+    [ContextMenu("Inflict Newest")]
+    public void InflictNewest()
+    {
+        InflictRandomVillager(true);
+    }
+
+    [ContextMenu("Inflict Random")]
+    public void InflictRandom()
+    {
+        InflictRandomVillager(false);
+    }
+
+    VillagerAI GetRandomVillager()
+    {
+        healthyVillagers.Clear();
+
+        foreach(var villager in TownManager.instance.villagers)
+        {
+            if(villager.villagerHealth.health == Health.Healthy)
+            {
+                healthyVillagers.Add(villager);
+            }
+        }
+
+        if(healthyVillagers.Count == 0) return null;
+
+        return healthyVillagers[Random.Range(0, healthyVillagers.Count)];
     }
     
     public VirusResistance GetRandomResistence()

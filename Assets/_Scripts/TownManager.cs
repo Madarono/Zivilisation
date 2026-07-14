@@ -221,6 +221,10 @@ public class TownManager : MonoBehaviour
         {
             SleepAllVillagers();
             TownStorage.instance.StopVillagerCooldown();
+            if(!TownStorage.instance.hasCheckedTomorrow)
+            {
+                ReduceDayVillagers();
+            }
             TownStorage.instance.CalculateTomorrowMorality();
         }
         else if(cycle.hours >= hourAwakeReq && cycle.hours < hourWorkReq)
@@ -258,6 +262,17 @@ public class TownManager : MonoBehaviour
         foreach(var villager in villagers)
         {
             villager.GoToWork();
+        }
+    }
+
+    public void ReduceDayVillagers()
+    {
+        foreach(var villager in villagers)
+        {
+            if(villager.villagerHealth.health == Health.Incubation)
+            {
+                villager.villagerHealth.ReduceDays();
+            }
         }
     }
 
@@ -310,7 +325,17 @@ public class TownManager : MonoBehaviour
 
             foreach (var villager in buildingScript.villagers)
             {
+                if(villager.state == VillagerState.Sleeping)
+                {
+                    activeBuilding.isChoosing = false;
+                    activeBuilding = null;
+                    denyButton.SetActive(false);
+                    PopupText.instance.Popup("Can't disown villager whilst sleeping.");
+                    villager.rend.sprite = null;
+                    return;
+                }
                 villager.villagerSprite.Selected();
+
             }
             return;
         }
@@ -354,6 +379,11 @@ public class TownManager : MonoBehaviour
 
         foreach(var villager in buildingScript.villagers)
         {
+            if(villager.state == VillagerState.Sleeping)
+            {
+                return;
+            }
+
             villager.villagerSprite.Selected();
         }
     }
@@ -370,6 +400,11 @@ public class TownManager : MonoBehaviour
 
         foreach(var villager in buildingScript.villagers)
         {
+            if(villager.state == VillagerState.Sleeping)
+            {
+                return;
+            }
+
             villager.villagerSprite.DeSelected();
         }
     }

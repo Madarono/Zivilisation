@@ -10,6 +10,9 @@ public class GameData
     public List<int> jobId = new List<int>();
     public List<Vector3> villagerPos = new List<Vector3>();
     public List<float> villagerHunger = new List<float>();
+    public List<int> daysLeft = new List<int>();
+    public List<Health> villagerHealth = new List<Health>();
+    public List<Virus> villagerVirus = new List<Virus>();
 
     public List<int> motelId = new List<int>();
     public List<int> motelTypeId = new List<int>();
@@ -44,6 +47,8 @@ public class GameData
     public bool canScreenShake;
     public int fpsIndex;
 
+    public List<Virus> viruses = new List<Virus>();
+
     public GameData()
     {
         //VillagerSavingSystem.cs
@@ -52,6 +57,10 @@ public class GameData
         jobId = new List<int>();
         villagerPos = new List<Vector3>();
         villagerHunger = new List<float>();
+        daysLeft = new List<int>();
+        
+        villagerHealth = new List<Health>();
+        villagerVirus = new List<Virus>();
 
         motelId = new List<int>();
         motelTypeId = new List<int>();
@@ -85,5 +94,7 @@ public class GameData
         graphicsIndex = 2;
         canScreenShake = true;
         fpsIndex = 1;
+
+        viruses = new List<Virus>();
     }
 }
