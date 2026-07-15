@@ -15,8 +15,18 @@ public class TownManager : MonoBehaviour
     [Header("Building")]
     public bool isBuilding;
 
+    [Header("For Market")]
+    public GameObject marketWindow;
+    public Market availableMarket;
+    public Slider[] marketSliders;
+    public TextMeshProUGUI[] marketVisuals;
+    public TextMeshProUGUI[] marketSellVisuals;
+    public TextMeshProUGUI marketSellValue;
+    public Image[] marketArrows;
+
     [Header("Village Hunger")]
     public List<VillagerAI> villagers = new List<VillagerAI>();
+    public List<VillagerDead> deadVillagers = new List<VillagerDead>();
     public TextMeshProUGUI wheatNeededVisual;
     public TextMeshProUGUI wheatAvailableVisual;
     public Button feedVisual;
@@ -58,6 +68,7 @@ public class TownManager : MonoBehaviour
 
     void Start()
     {
+        marketWindow.SetActive(false);
         denyButton.SetActive(false);
     }
 
@@ -224,6 +235,7 @@ public class TownManager : MonoBehaviour
             if(!TownStorage.instance.hasCheckedTomorrow)
             {
                 ReduceDayVillagers();
+                MarketSystem.instance.RandomizeDemand();
             }
             TownStorage.instance.CalculateTomorrowMorality();
         }
@@ -452,5 +464,28 @@ public class TownManager : MonoBehaviour
         }
 
         activeBuilding = null;
+    }
+    
+
+    //For Market
+    public void CloseMarketWindow()
+    {
+        if(availableMarket == null) return;
+
+        availableMarket.HideVisuals();
+    }
+
+    public void UpdateSliderVisual(int id)
+    {
+        if(availableMarket == null) return;
+
+        availableMarket.UpdateSliderVisual(id);
+    }
+
+    public void Sell()
+    {
+        if(availableMarket == null) return;
+
+        availableMarket.Sell();
     }
 }

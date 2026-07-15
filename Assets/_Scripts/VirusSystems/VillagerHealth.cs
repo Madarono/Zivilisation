@@ -48,11 +48,37 @@ public class VillagerHealth : MonoBehaviour //ToDo: Infection that makes Infecti
     public float muscleSeverityMultiplyer = 1.5f;
 
     [Line]
+
+    [Header("<size=15>--- Lethality ---</size>")] //Only makes cure harder, that's it
+
+    [Space(10)]
+    [Header("Sudden Collapse")]
+    public float suddenCollapseCooldown = 30f;
+    public float minChanceForDeath = 10f;
+    public float maxChanceForDeath = 70f;
+    public float lethalityMultiplyer = 1.5f;
+
+    [Line]
+    [Header("<size=15>--- Miscellaneous ---</size>")]
+
+    [Space(10)]
     [Header("HyperMetabolism")]
     public float hungerMultiplyer = 2f; //Hunger depletion multiplyer when having this trait
     public float currentHungerMultiplyer = 1f;
 
+    [Space(10)]
+    [Header("Coughing")]
+    public float coughCooldown = 5f;
+    public float coughChance = 20f;
+    public float coughStunt = 3f;
+
+    [Space(10)]
+    [Header("Exhausion Insomnia")] //Exhausion Insomnia is a passive always-occuring virus, so no variables here
+    public bool hasExhausionInsomnia;
+
     Coroutine infectionCoroutine;
+    Coroutine coughCoroutine;
+    Coroutine suddenCollapseCoroutine;
 
     void Start()
     {
@@ -67,7 +93,7 @@ public class VillagerHealth : MonoBehaviour //ToDo: Infection that makes Infecti
         health = Health.Incubation;
         daysLeft = days;
         UpdateVisuals();
-    } 
+    }
 
     public void Infect(Virus virus)
     {
@@ -97,9 +123,18 @@ public class VillagerHealth : MonoBehaviour //ToDo: Infection that makes Infecti
         {
             infectionCoroutine = StartCoroutine(Infection());
         }
+        if(health == Health.Infected && HasCertainTrait(VirusTrait.Coughing) && coughCoroutine == null)
+        {
+            coughCoroutine = StartCoroutine(Cough());
+        }
+        if(health == Health.Infected && HasCertainTrait(VirusTrait.SuddenCollapse) && suddenCollapseCoroutine == null)
+        {
+            suddenCollapseCoroutine = StartCoroutine(SuddenCollapse());
+        }
 
         if(health == Health.Infected)
         {
+            hasExhausionInsomnia = HasCertainTrait(VirusTrait.ExhaustionInsomnia);
             bool muscleAtrophy = HasCertainTrait(VirusTrait.MuscleAtrophy);
             float minFunc = muscleAtrophy ? minMuscleFunction : minFunction;
             float finalSeverity = Mathf.Min(muscleAtrophy ? inflictedVirus.severity * muscleSeverityMultiplyer : inflictedVirus.severity, 100f);
@@ -186,6 +221,46 @@ public class VillagerHealth : MonoBehaviour //ToDo: Infection that makes Infecti
                         villager.villagerHealth.Infect(inflictedVirus); //Infecting others
                     }
                 }
+            }
+        }
+    }
+
+    IEnumerator Cough()
+    {
+        while(true)
+        {
+            yield return new WaitForSeconds(coughCooldown);
+            float chance = Random.Range(0, 100f);
+
+            if(chance <= coughChance)
+            {
+                Debug.Log("Cough");
+                villager.Cough(coughStunt);
+            }
+        }
+    }
+
+    IEnumerator SuddenCollapse()
+    {
+        float lethality = Mathf.Min(lethalityMultiplyer * inflictedVirus.lethality, 100f);
+        float deathChance = Mathf.Lerp(minChanceForDeath, maxChanceForDeath, lethality);
+
+        while(true)
+        {
+            if(villager.state == VillagerState.Sleeping) //Don't kill him while he's asleep. Sheesh
+            {
+                yield return null;
+                continue;
+            }
+
+            yield return new WaitForSeconds(suddenCollapseCooldown);
+
+            float chance = Random.Range(0, 100f);
+
+            if(chance <= deathChance)
+            {
+                Debug.Log("Kill the villager");
+                villager.Death();
             }
         }
     }

@@ -29,6 +29,7 @@ public class VillagerAI : MonoBehaviour
     public float hunger = 1f;
     public float hungerDepletionAmount = 0.1f;
     public float hungerDepletionCooldown = 10f;
+    public bool isCoughing = false;
 
     [Header("Icon Visuals")]
     public bool isShowing;
@@ -67,10 +68,15 @@ public class VillagerAI : MonoBehaviour
     public Transform jobPlace;
     public int jobPlaceID = 0;
 
-    private Transform cacheTarget;
+    [Header("Death")]
+    public GameObject deathPrefab;
+
+    public Transform cacheTarget {get; private set;}
     private int cacheOffsetX;
     private int cacheOffsetY;
     private List<Vector2Int> allPos = new List<Vector2Int>();
+
+    public bool hasWarnedInsomnia = false;
     
 
     public void Start()
@@ -106,7 +112,7 @@ public class VillagerAI : MonoBehaviour
             HideVisuals();
         }
 
-        if (goingToHouse || state == VillagerState.Moving || state == VillagerState.Working || state == VillagerState.Sleeping)
+        if (goingToHouse || state == VillagerState.Moving || state == VillagerState.Working || state == VillagerState.Sleeping || isCoughing)
         {
             wanderTimer = 1f;
         }
@@ -190,6 +196,8 @@ public class VillagerAI : MonoBehaviour
 
     void OnSpriteClicked()
     {
+        if(TownManager.instance.availableMarket != null && TownManager.instance.availableMarket.isShowing) return;
+
         if(goingToHouse)
         {
             return;
@@ -337,8 +345,13 @@ public class VillagerAI : MonoBehaviour
 
     public void MoveVillagerToHouse()
     {
-        if(house == null)
+        if(house == null || villagerHealth.hasExhausionInsomnia)
         {
+            if(villagerHealth.hasExhausionInsomnia && house != null && !hasWarnedInsomnia) 
+            {
+                PopupText.instance.Popup("A villager can't sleep due to insomnia");
+                hasWarnedInsomnia = true;
+            }
             return;
         }
 
@@ -356,8 +369,13 @@ public class VillagerAI : MonoBehaviour
 
     public void GoToWork()
     {
-        if(jobPlace == null)
+        if(jobPlace == null || villagerHealth.hasExhausionInsomnia)
         {
+            if(villagerHealth.hasExhausionInsomnia && jobPlace != null && !hasWarnedInsomnia) 
+            {
+                PopupText.instance.Popup("A villager can't work due to insomnia");
+                hasWarnedInsomnia = true;
+            }
             return;
         }
 
@@ -382,6 +400,46 @@ public class VillagerAI : MonoBehaviour
         goingToHouse = false;
         villagerSprite.UpdateLooks();
         state = VillagerState.Idle;
+        hasWarnedInsomnia = false;
+    }
+
+    public void Cough(float duration) //From VillagerHealth.cs
+    {
+        villagerPF.CancelMovement();
+        StartCoroutine(StopToCough(duration));
+    }
+
+    [ContextMenu("Kill this villager")]
+    public void Death() //From VillagerHealth.cs
+    {
+        TownManager.instance.villagers.Remove(this);
+        if(house != null)
+        {
+            if(house.TryGetComponent(out Building building))
+            {
+                building.RemoveVillagerRole(this);
+            }
+        }
+        if(jobPlace != null)
+        {
+            if(jobPlace.TryGetComponent(out Building building))
+            {
+                building.RemoveVillagerRole(this);
+            }
+        }
+
+        Vector2 posInt = new Vector2((int)transform.position.x, (int)transform.position.y);
+
+        GameObject go = Instantiate(deathPrefab, posInt, Quaternion.identity);
+
+        if(go.TryGetComponent(out VillagerDead goScript))
+        {
+            goScript.inflictedVirus = villagerHealth.inflictedVirus;
+        }
+
+        PopupText.instance.Popup("A villager has died.");
+
+        Destroy(gameObject);
     }
 
     //Coroutines
@@ -399,5 +457,14 @@ public class VillagerAI : MonoBehaviour
             depletion = hungerDepletionAmount * villagerHealth.currentHungerMultiplyer;
             hunger = Mathf.Clamp01(hunger - depletion);
         }
+    }
+
+    IEnumerator StopToCough(float duration)
+    {
+        isCoughing = true;
+        yield return new WaitForSeconds(duration);
+        isCoughing = false;
+
+        wanderTimer = 0.5f;
     }
 }

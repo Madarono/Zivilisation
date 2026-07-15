@@ -20,16 +20,27 @@ public class BuildItem : MonoBehaviour
     public int width;
     public int height;
 
+    [Header("Special Modifications")]
+    public GameObject darkened;
+    public bool onlyOne = false;
+    public int onlyOneId = 0;
+
     void Start()
     {
+        if(!BuildOptions.instance.items.Contains(this)) BuildOptions.instance.items.Add(this);
+
         Refresh();
     }
 
-    void Refresh()
+    public void Refresh()
     {
         iconVisual.sprite = icon;
         priceVisual.text = "$" + price.ToString();
         nameVisual.text = name;
+
+        if(!onlyOne) return;
+
+        darkened.SetActive(BuildOptions.instance.CheckOnlyOne(onlyOneId));
     }
 
     public void Choose()

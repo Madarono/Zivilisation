@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -12,6 +14,8 @@ public class BuildOptions : MonoBehaviour
     public GameObject window;
     public int id = 1;
     public bool isOpen;
+
+    public HashSet<BuildItem> items = new HashSet<BuildItem>();
 
     [Header("Sell Value")]
     public float sellValueMultiplyer = 0.7f;
@@ -38,8 +42,12 @@ public class BuildOptions : MonoBehaviour
     private Vector2 finalWorldPos;
     private bool isPositionLocked;
 
+    [Header("Only One Buildings")]
+    public Market market;
+
     void Awake()
     {
+        items.Clear();
         instance = this;
     }
 
@@ -140,6 +148,11 @@ public class BuildOptions : MonoBehaviour
                     PopupText.instance.Popup("The Gate occupies this tile. Can't delete.");
                     return;
                 }
+                else if(hit.gameObject.TryGetComponent(out Market hitMarket))
+                {
+                    TownManager.instance.availableMarket = null;
+                    Destroy(hit.gameObject);
+                }
             }
         }
 
@@ -193,6 +206,11 @@ public class BuildOptions : MonoBehaviour
         priceObj.SetActive(false);
         shovelBuilds.gameObject.SetActive(true);
         moveBuilds.gameObject.SetActive(true);
+
+        foreach(var item in items)
+        {
+            item.Refresh();
+        }
     }
 
     public void CloseWindow()
@@ -316,6 +334,12 @@ public class BuildOptions : MonoBehaviour
     
     public void ChooseOption(BuildItem item)
     {
+        if(item.onlyOne && CheckOnlyOne(item.onlyOneId))
+        {
+            PopupText.instance.Popup("You can only have one of this building.");
+            return;
+        }
+
         this.item = item;
         if(TownStorage.instance.money < item.price)
         {
@@ -401,6 +425,7 @@ public class BuildOptions : MonoBehaviour
     {
         if(TownStorage.instance.money < item.price || !isPositionLocked)
         {
+            if(TownStorage.instance.money < item.price) PopupText.instance.Popup("Insufficient Money.");
             return;
         }
 
@@ -412,14 +437,10 @@ public class BuildOptions : MonoBehaviour
         TownStorage.instance.money -= item.price;
         SpawnOption(item.itemPrefab, finalWorldPos, item.price * sellValueMultiplyer);
 
-        // GameObject go = Instantiate(item.itemPrefab, finalWorldPos, Quaternion.identity);
-        // if(go.TryGetComponent(out Building goBuilding)) 
-        // {
-        //     goBuilding.gridTaken.MeasureGridTaken();
-        //     goBuilding.gridTaken.PutUnwalkable();
-        //     goBuilding.sellValue = Mathf.FloorToInt(item.price * sellValueMultiplyer);
-        //     GridManager.instance.buildings.Add(goBuilding);
-        // }
+        if(item.onlyOne)
+        {
+            CancelOption(); //To Avoid putting more than one of the onlyone
+        }
     }
 
     public void SpawnOption(GameObject prefab, Vector2 prefabPos, float sellValue = 0f)
@@ -474,5 +495,31 @@ public class BuildOptions : MonoBehaviour
 
 
         return true;
+    }
+
+    public bool CheckOnlyOne(int id) //True if exist, False if none exists
+    {
+        UpdateOnlyOne();
+
+        switch(id)
+        {
+            case 0:
+                if(market == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+                break;
+        }
+
+        return false;
+    }
+
+    void UpdateOnlyOne()
+    {
+        market = TownManager.instance.availableMarket;
     }
 }

@@ -88,5 +88,10 @@ public class VillagerPathFind : MonoBehaviour
         }
 
         isMoving = false;
+
+        if (villager.cacheTarget == null)
+        {
+            TownManager.instance.ReleaseWanderSlot();
+        }
     }
 }

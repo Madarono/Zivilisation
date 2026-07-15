@@ -530,6 +530,7 @@ MonoBehaviour:
   hunger: 1
   hungerDepletionAmount: 0.01
   hungerDepletionCooldown: 9
+  isCoughing: 0
   isShowing: 0
   villagerStatsWindow: {fileID: 9081392522446617057}
   hungerIcon: {fileID: 1242269092820423259}
@@ -563,7 +564,7 @@ MonoBehaviour:
   villagerSpeed: 1
   rend: {fileID: 529449395397457741}
   minWanderingCooldown: 5
-  maxWanderingCooldown: 20
+  maxWanderingCooldown: 7
   villagerLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -573,6 +574,8 @@ MonoBehaviour:
   goingToHouse: 0
   jobPlace: {fileID: 0}
   jobPlaceID: 0
+  deathPrefab: {fileID: 4801039612059696973, guid: 063435e68d2985a4080ea8b13d11efaa, type: 3}
+  hasWarnedInsomnia: 0
 --- !u!114 &8013851338391025249
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -642,15 +645,29 @@ MonoBehaviour:
   infectedStates:
   - {r: 1, g: 1, b: 1, a: 1}
   - {r: 0.93333334, g: 1, b: 0.8, a: 1}
-  - {r: 0.74509805, g: 0.8627451, b: 0.49803922, a: 1}
+  - {r: 0.5372549, g: 0.63529414, b: 0.34117648, a: 1}
   villagerLayer:
     serializedVersion: 2
     m_Bits: 64
-  infectionCooldown: 5
+  infectionCooldown: 10
   tileRange: 1
   airborneBonus: 1
   airborneInfectionMultiplyer: 1.25
+  overcrowdingMultiplyer: 0.2
+  functionSpeed: 1
   minFunction: 0.75
+  minMuscleFunction: 0.25
+  muscleSeverityMultiplyer: 1.5
+  suddenCollapseCooldown: 30
+  minChanceForDeath: 10
+  maxChanceForDeath: 70
+  lethalityMultiplyer: 1.5
+  hungerMultiplyer: 2
+  currentHungerMultiplyer: 1
+  coughCooldown: 10
+  coughChance: 30
+  coughStunt: 2
+  hasExhausionInsomnia: 0
 --- !u!61 &5213338453812323853
 BoxCollider2D:
   m_ObjectHideFlags: 0

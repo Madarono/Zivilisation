@@ -52,7 +52,7 @@ public enum VirusTrait
     HyperMetabolism, //2x Hunger decrease
     Coughing, //Stop pathfinding to cough, can infect if anyone close by a higher percentage than airborne
     ExhaustionInsomnia, //Break schedule from sleep and/or work
-    SuddenCollapse //Can die randomly and leave an infected corpse, need to be disposed of quickly or infection 3x around it
+    SuddenCollapse //Can die randomly and leave an infected corpse, need to be disposed of quickly or infection 2x around it
 }
 
 public class VirusManager : MonoBehaviour

@@ -11,6 +11,8 @@ public class GameData
     public List<Vector3> villagerPos = new List<Vector3>();
     public List<float> villagerHunger = new List<float>();
     public List<int> daysLeft = new List<int>();
+    public List<Virus> deadVillagerVirus = new List<Virus>();
+    public List<Vector3> deadVillagerPos = new List<Vector3>();
     public List<Health> villagerHealth = new List<Health>();
     public List<Virus> villagerVirus = new List<Virus>();
 
@@ -23,6 +25,9 @@ public class GameData
     public List<int> workplaceTypeId = new List<int>();
     public List<int> workplaceSellValue = new List<int>();
     public List<Vector3> workplacePos = new List<Vector3>();
+
+    public float[] dailyDemand = new float[5];
+    public float demandPower;
 
     public List<Vector2> roadPos = new List<Vector2>();
 
@@ -58,6 +63,9 @@ public class GameData
         villagerPos = new List<Vector3>();
         villagerHunger = new List<float>();
         daysLeft = new List<int>();
+
+        deadVillagerPos = new List<Vector3>();
+        deadVillagerVirus = new List<Virus>();
         
         villagerHealth = new List<Health>();
         villagerVirus = new List<Virus>();
@@ -71,6 +79,9 @@ public class GameData
         workplaceTypeId = new List<int>();
         workplaceSellValue = new List<int>();
         workplacePos = new List<Vector3>();
+
+        dailyDemand = new float[5];
+        demandPower = 1f;
 
         roadPos = new List<Vector2>();
 

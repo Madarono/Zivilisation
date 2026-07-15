@@ -17,6 +17,6 @@ public class LineDrawer : DecoratorDrawer
 
     public override float GetHeight() 
     { 
-        return 18f; 
+        return 10f; 
     }
 }

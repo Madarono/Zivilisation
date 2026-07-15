@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Building : MonoBehaviour, VillageBuildable
 {
-    protected bool isShowing = false;
+    public bool isShowing = false;
     protected Collider2D col;
     protected SpriteRenderer rend;
 
@@ -85,13 +85,15 @@ public class Building : MonoBehaviour, VillageBuildable
         }
     }
 
-    protected void OnSpriteClicked()
+    protected virtual void OnSpriteClicked()
     {
         BothVisuals();
     }
 
     public void BothVisuals()
     {
+        if(TownManager.instance.availableMarket != null && TownManager.instance.availableMarket.isShowing) return;
+        
         isShowing = !isShowing;
 
         if(isShowing)

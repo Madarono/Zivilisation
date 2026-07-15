@@ -11,6 +11,11 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
     public List<Vector3> villagerPos = new List<Vector3>();
     public List<float> villagerHunger = new List<float>();
     public List<int> daysLeft = new List<int>();
+
+    [Header("Dead Villagers Saving")]
+    public List<Virus> deadVillagerVirus = new List<Virus>();
+    public List<Vector3> deadVillagerPos = new List<Vector3>();
+    public GameObject deadVillagerPrefab;
     
     [Header("Villager Health Saving")]
     public List<Health> villagerHealth = new List<Health>();
@@ -28,6 +33,10 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
     public List<int> workplaceSellValue = new List<int>();
     public List<Transform> workplaceTransform = new List<Transform>();
     public List<Vector3> workplacePos = new List<Vector3>();
+
+    [Header("Demand Saving")]
+    public float[] dailyDemand = new float[5];
+    public float demandPower;
 
     [Header("Road Saving")]
     public List<Vector2> roadPos = new List<Vector2>();
@@ -75,6 +84,10 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         data.villagerHunger = this.villagerHunger;
         data.daysLeft = this.daysLeft;
 
+        data.deadVillagerPos = this.deadVillagerPos;
+        data.deadVillagerVirus = this.deadVillagerVirus;
+
+
         data.villagerHealth = this.villagerHealth;
         data.villagerVirus = this.villagerVirus;
 
@@ -87,6 +100,9 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         data.workplaceTypeId = this.workplaceTypeId;
         data.workplaceSellValue = this.workplaceSellValue;
         data.workplacePos = this.workplacePos;
+
+        data.dailyDemand = this.dailyDemand;
+        data.demandPower = this.demandPower;
 
         data.roadPos = this.roadPos;
 
@@ -123,6 +139,9 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         this.villagerHunger = data.villagerHunger;
         this.daysLeft = data.daysLeft;
 
+        this.deadVillagerPos = data.deadVillagerPos;
+        this.deadVillagerVirus = data.deadVillagerVirus;
+
         this.villagerHealth = data.villagerHealth;
         this.villagerVirus = data.villagerVirus;
 
@@ -135,6 +154,9 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         this.workplaceTypeId = data.workplaceTypeId;
         this.workplaceSellValue = data.workplaceSellValue;
         this.workplacePos = data.workplacePos;
+
+        this.dailyDemand = data.dailyDemand;
+        this.demandPower = data.demandPower;
 
         this.roadPos = data.roadPos;
 
@@ -167,7 +189,7 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
     [ContextMenu("SaveInfo")]
     public void SaveInfo()
     {
-        villagerId.Clear(); houseId.Clear(); jobId.Clear(); villagerPos.Clear(); villagerHunger.Clear(); villagerHealth.Clear(); villagerVirus.Clear(); daysLeft.Clear();
+        villagerId.Clear(); houseId.Clear(); jobId.Clear(); villagerPos.Clear(); villagerHunger.Clear(); villagerHealth.Clear(); villagerVirus.Clear(); daysLeft.Clear(); deadVillagerPos.Clear(); deadVillagerVirus.Clear();
         motelId.Clear(); motelTypeId.Clear(); motelTransform.Clear(); motelPos.Clear(); motelSellValue.Clear();
         workplaceId.Clear(); workplaceTypeId.Clear(); workplaceTransform.Clear(); workplaceSellValue.Clear(); workplacePos.Clear();
         roadPos.Clear(); viruses.Clear();
@@ -219,6 +241,13 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
             idCounter++;
         }
 
+        //Gathering the Dead Villagers' Info
+        foreach(var deadVillager in town.deadVillagers)
+        {
+            deadVillagerVirus.Add(deadVillager.inflictedVirus);
+            deadVillagerPos.Add(deadVillager.gameObject.transform.position);
+        }
+
         //Gathering the Roads' Info
         foreach(var road in roadSys.roadPos)
         {
@@ -250,6 +279,10 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         graphicsIndex = Settings.instance.graphicsIndex;
         canScreenShake = Settings.instance.canScreenShake;
         fpsIndex = Settings.instance.fpsIndex;
+
+        //Gathering the MarketSystem's Info
+        dailyDemand = (float[])MarketSystem.instance.dailyDemand.Clone();
+        demandPower = MarketSystem.instance.demandPower;
         
         //Gathering the VirusManager's Info
         viruses = new List<Virus>(VirusManager.instance.viruses);
@@ -328,6 +361,16 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
             Vector2Int pos = new Vector2Int((int)roadPos[i].x, (int)roadPos[i].y);
             RoadSystem.instance.PutRoad(pos);
         }
+
+        //DeadVillagers
+        for(int i = 0; i < deadVillagerPos.Count; i++)
+        {
+            GameObject go = Instantiate(deadVillagerPrefab, deadVillagerPos[i], Quaternion.identity);
+            if(go.TryGetComponent(out VillagerDead goScript))
+            {
+                goScript.inflictedVirus = deadVillagerVirus[i];
+            }
+        }
         
         //TownStorage
         TownStorage.instance.money = moneySave;
@@ -361,6 +404,26 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
 
         //VirusManager
         VirusManager.instance.viruses = new List<Virus>(viruses);
+
+        //MarketSystem.cs
+        MarketSystem.instance.dailyDemand = (float[])dailyDemand.Clone();
+        MarketSystem.instance.demandPower = demandPower;
+
+        bool allZero = true;
+
+        foreach(var demand in MarketSystem.instance.dailyDemand)
+        {
+            if(demand > 0)
+            {
+                allZero = false; 
+                return;
+            }
+        }
+
+        if(allZero)
+        {
+            MarketSystem.instance.RandomizeDemand();
+        }
 
         StartCoroutine(WaitForStart());
     }

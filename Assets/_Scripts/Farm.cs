@@ -122,6 +122,7 @@ public class Farm : Building, VillageBuildable
                 villager.villagerPF.CancelMovement();
             }  
             villager.state = VillagerState.Idle;
+            villager.hasWarnedInsomnia = false;
         }
     }
 
@@ -145,6 +146,12 @@ public class Farm : Building, VillageBuildable
 
         while(true)
         {
+            if(currentVillager.isCoughing)
+            {
+                yield return null;
+                continue;
+            }
+
             t += Time.deltaTime;
             if(t >= (spriteUpdateTime[currentSpriteUpdateTime] + differenceTime) && currentSpriteUpdateTime < spriteUpdateTime.Count)
             {
