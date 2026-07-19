@@ -6487,6 +6487,7 @@ MonoBehaviour:
   zoomedInX: 160
   zoomedInY: 90
   zoomDuration: 0.2
+  zoomCooldown: 0.25
   uiMask: {fileID: 920328319}
 --- !u!114 &519420035
 MonoBehaviour:
