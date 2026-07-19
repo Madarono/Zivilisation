@@ -20,16 +20,19 @@ public class CameraPinch : MonoBehaviour
     public int zoomedInX = 160;
     public int zoomedInY = 90;
     public float zoomDuration = 1f;
+    [Tooltip("Prevents the player from spam-triggering resolution swaps.")]
+    public float zoomCooldown = 0.4f; 
 
     [Header("UI Buffer Transition Mask")]
-    [SerializeField] private CanvasGroup uiMask; // Drag your ZoomMask's CanvasGroup here
+    [SerializeField] private CanvasGroup uiMask;
 
     private Vector3 panStartWorldPos;
     private bool isPanning = false;
     public bool IsPanning => isPanning;
     private Coroutine returnCoroutine;
-    private Coroutine zoomCoroutine; // Track active zoom routine to prevent overlap
+    private Coroutine zoomCoroutine; 
     private PixelPerfectCamera pixelCam;
+    private float nextZoomAllowedTime = 0f;
 
     void Awake()
     {
@@ -44,7 +47,6 @@ public class CameraPinch : MonoBehaviour
             pixelCam = cam.GetComponent<PixelPerfectCamera>();
         }
 
-        // Ensure mask is clear at start
         if (uiMask != null) uiMask.alpha = 0f;
     }
 
@@ -59,8 +61,14 @@ public class CameraPinch : MonoBehaviour
         {
             isPanning = false;
 
+            if (Time.unscaledTime < nextZoomAllowedTime)
+            {
+                return;
+            }
+
             Touch touch0 = Input.GetTouch(0);
             Touch touch1 = Input.GetTouch(1);
+
 
             Vector2 prevTouch0 = touch0.position - touch0.deltaPosition;
             Vector2 prevTouch1 = touch1.position - touch1.deltaPosition;
@@ -74,11 +82,11 @@ public class CameraPinch : MonoBehaviour
             {
                 if (delta > 0f)
                 {
-                    SetSnapZoom(false);
+                    SetSnapZoom(true);
                 }
                 else
                 {
-                    SetSnapZoom(true);
+                    SetSnapZoom(false);
                 }
             }
         }
@@ -149,6 +157,8 @@ public class CameraPinch : MonoBehaviour
     {
         if (pixelCam == null) return;
 
+        if (Time.unscaledTime < nextZoomAllowedTime) return;
+
         ResetReturnTimer();
 
         int targetX = isZoomedIn ? zoomedInX : zoomedOutX;
@@ -162,6 +172,9 @@ public class CameraPinch : MonoBehaviour
             }
             return;
         }
+
+        // Lock future inputs immediately
+        nextZoomAllowedTime = Time.unscaledTime + zoomCooldown;
 
         if (zoomCoroutine != null) StopCoroutine(zoomCoroutine);
         zoomCoroutine = StartCoroutine(ExecuteZoomSwap(isZoomedIn, targetX, targetY));
