@@ -27,6 +27,14 @@ public class Window : MonoBehaviour
 
     public void OpenWindow()
     {
+        if(ActiveWindow.instance.currentActiveWindow != null)
+        {
+            Debug.Log("Another window is active");
+            return;
+        }
+
+        ActiveWindow.instance.currentActiveWindow = this;
+        ActiveWindow.instance.isActive = true;
         window.SetActive(true);
         isOpen = true;
         if(stopBuild)
@@ -44,6 +52,10 @@ public class Window : MonoBehaviour
 
     public void CloseWindow()
     {
+        if(ActiveWindow.instance.currentActiveWindow == null || (ActiveWindow.instance.currentActiveWindow != null && ActiveWindow.instance.currentActiveWindow != this)) return;
+
+        ActiveWindow.instance.currentActiveWindow = null;
+        ActiveWindow.instance.isActive = false;
         window.SetActive(false);
         
         if(tabs == null)

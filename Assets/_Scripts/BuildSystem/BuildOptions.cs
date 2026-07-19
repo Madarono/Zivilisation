@@ -45,6 +45,22 @@ public class BuildOptions : MonoBehaviour
     [Header("Only One Buildings")]
     public Market market;
 
+    [Line]
+    [CenteredHeader("Camera Shake", 20)]
+    [Header("Placing")]
+    public float placeDuration;
+    public float placeMagnitude;
+
+    [Header("Moving")]
+    public float moveDuration;
+    public float moveMagnitude;
+    public float confirmDuration;
+    public float confirmMagnitude;
+
+    [Header("Shovelling")]
+    public float shovelDuration;
+    public float shovelMagnitude;
+
     void Awake()
     {
         items.Clear();
@@ -86,6 +102,7 @@ public class BuildOptions : MonoBehaviour
         int xPos = Mathf.RoundToInt(worldPos.x);
         int yPos = Mathf.RoundToInt(worldPos.y);
 
+        //Shovelling
         if((Input.GetMouseButtonDown(0) || (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)) && isShovelling)
         {
             Collider2D hit = Physics2D.OverlapPoint(worldPos);
@@ -124,6 +141,7 @@ public class BuildOptions : MonoBehaviour
 
                     TownStorage.instance.money += hitBuilding.sellValue;
                     Destroy(hit.gameObject);
+                    if(Settings.instance.canScreenShake) PixelCameraShake.instance.Shake(shovelDuration, shovelMagnitude);
                 }
                 else if(hit.gameObject.TryGetComponent(out Farm hitFarm))
                 {
@@ -133,6 +151,7 @@ public class BuildOptions : MonoBehaviour
                     }
                     TownStorage.instance.money += hitBuilding.sellValue;
                     Destroy(hit.gameObject);
+                    if(Settings.instance.canScreenShake) PixelCameraShake.instance.Shake(shovelDuration, shovelMagnitude);
                 }
                 else if(hit.gameObject.TryGetComponent(out Mines hitMines))
                 {
@@ -142,6 +161,7 @@ public class BuildOptions : MonoBehaviour
                     }
                     TownStorage.instance.money += hitBuilding.sellValue;
                     Destroy(hit.gameObject);
+                    if(Settings.instance.canScreenShake) PixelCameraShake.instance.Shake(shovelDuration, shovelMagnitude);
                 }
                 else if(hit.gameObject.TryGetComponent(out Gate hitGate))
                 {
@@ -152,10 +172,12 @@ public class BuildOptions : MonoBehaviour
                 {
                     TownManager.instance.availableMarket = null;
                     Destroy(hit.gameObject);
+                    if(Settings.instance.canScreenShake) PixelCameraShake.instance.Shake(shovelDuration, shovelMagnitude);
                 }
             }
         }
 
+        //Moving
         if((Input.GetMouseButtonDown(0) || (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)) && isMoving)
         {
             Collider2D hit = Physics2D.OverlapPoint(worldPos);
@@ -170,6 +192,7 @@ public class BuildOptions : MonoBehaviour
             }
         }
 
+        //Placing | Moving
         if(!isPositionLocked)
         {
             finalWorldPos = new Vector2(xPos, yPos);
@@ -305,6 +328,8 @@ public class BuildOptions : MonoBehaviour
         debugItem.gameObject.SetActive(true);
         debugItem.sprite = building.buildingStates[0]; //Unworked building at normal state or house at normal state
         finalPos = Vector2Int.zero;
+
+        if(Settings.instance.canScreenShake) PixelCameraShake.instance.Shake(moveDuration, moveMagnitude);
     }
 
     public bool CheckBuildingUnTouched(Building building)
@@ -419,6 +444,8 @@ public class BuildOptions : MonoBehaviour
         moveableBuilding.gridTaken.MeasureGridTaken();
         moveableBuilding.gridTaken.PutUnwalkable();
         moveableBuilding = null;
+
+        if(Settings.instance.canScreenShake) PixelCameraShake.instance.Shake(confirmDuration, confirmMagnitude);
     }
 
     public void AcceptOption()
@@ -453,6 +480,8 @@ public class BuildOptions : MonoBehaviour
             goBuilding.sellValue = Mathf.FloorToInt(sellValue);
             GridManager.instance.buildings.Add(goBuilding);
         }
+
+        if(Settings.instance.canScreenShake) PixelCameraShake.instance.Shake(placeDuration, placeMagnitude);
     }
 
     bool CheckBoundries(Vector2Int pos, Building? building = null)

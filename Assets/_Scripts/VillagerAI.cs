@@ -71,6 +71,10 @@ public class VillagerAI : MonoBehaviour
     [Header("Death")]
     public GameObject deathPrefab;
 
+    [Header("Death - ScreenShake")]
+    public float deathDuration;
+    public float deathMagnitude;
+
     public Transform cacheTarget {get; private set;}
     private int cacheOffsetX;
     private int cacheOffsetY;
@@ -102,6 +106,8 @@ public class VillagerAI : MonoBehaviour
 
     void Update()
     {
+        if(Settings.instance.isOpen || ActiveWindow.instance.isActive) return;
+        
         if(jobPlace == null) 
         {
             jobPlaceID = 0;
@@ -439,6 +445,8 @@ public class VillagerAI : MonoBehaviour
 
         PopupText.instance.Popup("A villager has died.");
 
+        if(Settings.instance.canScreenShake) PixelCameraShake.instance.Shake(deathDuration, deathMagnitude);
+
         Destroy(gameObject);
     }
 
@@ -456,6 +464,7 @@ public class VillagerAI : MonoBehaviour
 
             depletion = hungerDepletionAmount * villagerHealth.currentHungerMultiplyer;
             hunger = Mathf.Clamp01(hunger - depletion);
+            TownManager.instance.CalculateNeededWheat();
         }
     }
 

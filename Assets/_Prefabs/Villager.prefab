@@ -575,6 +575,8 @@ MonoBehaviour:
   jobPlace: {fileID: 0}
   jobPlaceID: 0
   deathPrefab: {fileID: 4801039612059696973, guid: 063435e68d2985a4080ea8b13d11efaa, type: 3}
+  deathDuration: 1
+  deathMagnitude: 0.75
   hasWarnedInsomnia: 0
 --- !u!114 &8013851338391025249
 MonoBehaviour:

@@ -18,7 +18,7 @@ public class Market : Building, VillageBuildable
     public int[] sellMultiplyer = new int[5];
     public TextMeshProUGUI[] visual;
     public TextMeshProUGUI[] sellVisual;
-    public TextMeshProUGUI sellValue;
+    public TextMeshProUGUI sellValueVisual;
     public Image[] arrows;
     public int[] price = new int[5];
     public int finalPrice;
@@ -33,7 +33,7 @@ public class Market : Building, VillageBuildable
         visual = TownManager.instance.marketVisuals;
         sellVisual = TownManager.instance.marketSellVisuals;
         arrows = TownManager.instance.marketArrows;
-        sellValue = TownManager.instance.marketSellValue;
+        sellValueVisual = TownManager.instance.marketSellValue;
 
         TownManager.instance.availableMarket = this;
         if(!GridManager.instance.buildings.Contains(this))
@@ -45,6 +45,8 @@ public class Market : Building, VillageBuildable
 
     protected override void Update()
     {
+        if(Settings.instance.isOpen || ActiveWindow.instance.isActive) return;
+        
         bool isClick = Input.GetMouseButtonDown(0);
         bool isTouch = Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began;
 
@@ -120,7 +122,7 @@ public class Market : Building, VillageBuildable
         }
 
         CalculateFinalPrice();
-        sellValue.text = "$" + finalPrice.ToString();
+        sellValueVisual.text = "$" + finalPrice.ToString();
     }
 
     public void UpdateSliderVisual(int id)
@@ -130,7 +132,7 @@ public class Market : Building, VillageBuildable
         price[id] = p;
         sellVisual[id].text = "$" + price[id].ToString();
         CalculateFinalPrice();
-        sellValue.text = "$" + finalPrice.ToString();
+        sellValueVisual.text = "$" + finalPrice.ToString();
     }
 
     public void CalculateFinalPrice()

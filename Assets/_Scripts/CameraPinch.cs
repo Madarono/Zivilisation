@@ -2,27 +2,34 @@ using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Rendering.Universal;
 
 public class CameraPinch : MonoBehaviour
 {
     public static CameraPinch Instance { get; private set; }
     public Camera cam;
-    public float zoomSpeed = 0.01f;
     public float panSpeed = 1.0f;
-    public float maxSize = 50;
-    public float minSize = 2f;
     public Vector3 islandPlace;
     public float cooldown = 3f;
     public float distanceTillReturn = 5f;
     public float cameraSpeed = 10f;
 
-    [Header("Desktop specific")]
-    public float scrollSpeed = 40f;
+    [Header("Pixel Perfect Hardcoded Resolutions")]
+    public int zoomedOutX = 320;
+    public int zoomedOutY = 180;
+    public int zoomedInX = 160;
+    public int zoomedInY = 90;
+    public float zoomDuration = 1f;
+
+    [Header("UI Buffer Transition Mask")]
+    [SerializeField] private CanvasGroup uiMask; // Drag your ZoomMask's CanvasGroup here
 
     private Vector3 panStartWorldPos;
     private bool isPanning = false;
-    public bool IsPanning => isPanning; //Read-Only for other scripts
+    public bool IsPanning => isPanning;
     private Coroutine returnCoroutine;
+    private Coroutine zoomCoroutine; // Track active zoom routine to prevent overlap
+    private PixelPerfectCamera pixelCam;
 
     void Awake()
     {
@@ -31,6 +38,14 @@ public class CameraPinch : MonoBehaviour
         {
             cam = Camera.main;
         }
+
+        if (cam != null)
+        {
+            pixelCam = cam.GetComponent<PixelPerfectCamera>();
+        }
+
+        // Ensure mask is clear at start
+        if (uiMask != null) uiMask.alpha = 0f;
     }
 
     void Update()
@@ -39,8 +54,6 @@ public class CameraPinch : MonoBehaviour
         {
             return;
         }
-
-        bool interacted = false;
 
         if (Input.touchCount == 2)
         {
@@ -56,8 +69,18 @@ public class CameraPinch : MonoBehaviour
             float currMag = (touch0.position - touch1.position).magnitude;
 
             float delta = currMag - prevMag;
-            HandleZoom(delta);
-            interacted = true;
+
+            if (Mathf.Abs(delta) > 0.5f)
+            {
+                if (delta > 0f)
+                {
+                    SetSnapZoom(false);
+                }
+                else
+                {
+                    SetSnapZoom(true);
+                }
+            }
         }
         else if (Input.touchCount == 1)
         {
@@ -72,7 +95,6 @@ public class CameraPinch : MonoBehaviour
                 else
                 {
                     isPanning = true;
-                    interacted = true;
                     ResetReturnTimer();
                 }
             }
@@ -81,12 +103,14 @@ public class CameraPinch : MonoBehaviour
                 float factor = ((cam.orthographicSize * 2f) / Screen.height) * panSpeed;
                 Vector3 dragDelta = new Vector3(touch.deltaPosition.x, touch.deltaPosition.y, 0) * factor;
 
-                cam.transform.position -= dragDelta;
-                interacted = true;
+                Vector3 newPos = cam.transform.position - dragDelta;
+                cam.transform.position = GetSnappedPosition(newPos);
+                ResetReturnTimer();
             }
             else if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
             {
                 isPanning = false;
+                ManageReturnRoutine();
             }
         }
         else if (Input.touchCount == 0)
@@ -101,7 +125,6 @@ public class CameraPinch : MonoBehaviour
                 {
                     panStartWorldPos = cam.ScreenToWorldPoint(Input.mousePosition);
                     isPanning = true;
-                    interacted = true;
                     ResetReturnTimer();
                 }
             }
@@ -110,49 +133,65 @@ public class CameraPinch : MonoBehaviour
                 Vector3 currentWorldPos = cam.ScreenToWorldPoint(Input.mousePosition);
                 Vector3 direction = panStartWorldPos - currentWorldPos;
                 direction.z = 0;
-                cam.transform.position += direction;
-                interacted = true;
+                
+                Vector3 newPos = cam.transform.position + direction;
+                cam.transform.position = GetSnappedPosition(newPos);
             }
             else if (Input.GetMouseButtonUp(0))
             {
                 isPanning = false;
-            }
-
-            float scrollDelta = Input.mouseScrollDelta.y;
-            if (Mathf.Abs(scrollDelta) > 0f)
-            {
-                HandleZoom(scrollDelta * scrollSpeed);
-                interacted = true;
-            }
-        }
-
-        if (interacted)
-        {
-            if (!isPanning && Input.touchCount == 0)
-            {
                 ManageReturnRoutine();
             }
         }
     }
 
-    public void HandleZoom(float delta)
+    public void SetSnapZoom(bool isZoomedIn)
     {
-        if (Mathf.Abs(delta) < 0.01f) return;
+        if (pixelCam == null) return;
 
         ResetReturnTimer();
 
-        if (cam.orthographic)
+        int targetX = isZoomedIn ? zoomedInX : zoomedOutX;
+        int targetY = isZoomedIn ? zoomedInY : zoomedOutY;
+
+        if (IsAlreadyZoomed(targetX, targetY))
         {
-            float sizeBefore = cam.orthographicSize;
-            float zoomStep = delta * zoomSpeed * (sizeBefore / maxSize);
-            cam.orthographicSize = Mathf.Clamp(sizeBefore - zoomStep, minSize, maxSize);
+            if (Input.touchCount == 0 && !isPanning)
+            {
+                ManageReturnRoutine();
+            }
+            return;
+        }
+
+        if (zoomCoroutine != null) StopCoroutine(zoomCoroutine);
+        zoomCoroutine = StartCoroutine(ExecuteZoomSwap(isZoomedIn, targetX, targetY));
+    }
+
+    private IEnumerator ExecuteZoomSwap(bool isZoomedIn, int targetX, int targetY)
+    {
+        if (uiMask != null) uiMask.alpha = 1f;
+
+        yield return new WaitForEndOfFrame();
+
+        pixelCam.refResolutionX = targetX;
+        pixelCam.refResolutionY = targetY;
+
+        if (isZoomedIn)
+        {
+            LensDistortWarp.instance.Enlarge();
         }
         else
         {
-            cam.fieldOfView = Mathf.Clamp(cam.fieldOfView - delta * zoomSpeed, 15f, 100f);
+            LensDistortWarp.instance.Small();
         }
+
+        yield return null;
+        yield return null;
+        
+        if (uiMask != null) uiMask.alpha = 0f;
         
         ManageReturnRoutine();
+        zoomCoroutine = null;
     }
 
     private void ResetReturnTimer()
@@ -186,16 +225,25 @@ public class CameraPinch : MonoBehaviour
 
         while (Vector3.Distance(cam.transform.position, targetPos) > 0.01f)
         {
-            cam.transform.position = Vector3.Lerp(cam.transform.position, targetPos, Time.unscaledDeltaTime * cameraSpeed);
+            Vector3 newPos = Vector3.Lerp(cam.transform.position, targetPos, Time.unscaledDeltaTime * cameraSpeed);
+            cam.transform.position = GetSnappedPosition(newPos);
             yield return null;
         }
 
-        cam.transform.position = targetPos;
+        cam.transform.position = GetSnappedPosition(targetPos);
         returnCoroutine = null;
     }
 
-    public void ChangeZoom(float amount)
+    bool IsAlreadyZoomed(int zoomX, int zoomY)
     {
-        HandleZoom(amount);
+        return pixelCam.refResolutionX == zoomX && pixelCam.refResolutionY == zoomY;
+    }
+
+    private Vector3 GetSnappedPosition(Vector3 position)
+    {
+        float ppu = 8f;
+        position.x = Mathf.Round(position.x * ppu) / ppu;
+        position.y = Mathf.Round(position.y * ppu) / ppu;
+        return position;
     }
 }

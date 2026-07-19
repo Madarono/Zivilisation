@@ -396,11 +396,13 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         Settings.instance.graphicsIndex = graphicsIndex;
         Settings.instance.canScreenShake = canScreenShake;
         Settings.instance.fpsIndex = fpsIndex;
-        Settings.instance.musicSlider.value = musicValue;
-        Settings.instance.sfxSlider.value = sfxValue;
+        Settings.instance.musicSlider.value = musicValue * Settings.instance.audioDivider;
+        Settings.instance.sfxSlider.value = sfxValue * Settings.instance.audioDivider;
         Settings.instance.UpdateValues();
         Settings.instance.SetFPS();
         Settings.instance.ApplyChanges();
+
+        TownManager.instance.CalculateNeededWheat();
 
         //VirusManager
         VirusManager.instance.viruses = new List<Virus>(viruses);
@@ -416,7 +418,7 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
             if(demand > 0)
             {
                 allZero = false; 
-                return;
+                break;
             }
         }
 

@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 using TMPro;
 
 public enum Graphics
@@ -32,6 +34,7 @@ public class Settings : MonoBehaviour
     public bool muteSfx;
     public float musicValue;
     public bool muteMusic;
+    public float audioDivider = 100f;
     public Graphics graphics;
     public int graphicsIndex;
     public bool canScreenShake;
@@ -57,6 +60,15 @@ public class Settings : MonoBehaviour
     public ButtonVisual[] shakeVisual;
     public Sprite[] muteButton;
 
+    [Header("Post Processing")]
+    public Volume ppVolume;
+    public ScrollingScanlines scanlines;
+    private Bloom bloom;
+    private Vignette vignette;
+    private LensDistortion lensDistortion;
+    private ColorAdjustments colorAdjustments;
+    private ChromaticAberration chromaticAberration;
+
     void Awake()
     {
         instance = this;
@@ -68,6 +80,15 @@ public class Settings : MonoBehaviour
         window.SetActive(false);
         timeForward = TimeForward.instance;
         camera = CameraPinch.Instance;
+
+        if (ppVolume != null && ppVolume.profile != null)
+        {
+            ppVolume.profile.TryGet(out bloom);
+            ppVolume.profile.TryGet(out vignette);
+            ppVolume.profile.TryGet(out lensDistortion);
+            ppVolume.profile.TryGet(out colorAdjustments);
+            ppVolume.profile.TryGet(out chromaticAberration);
+        }
     }
 
     public void BothWindow()
@@ -89,6 +110,7 @@ public class Settings : MonoBehaviour
         window.SetActive(true);
         Time.timeScale = 0;
         camera.enabled = false;
+        isOpen = true;
         UpdateVisual();
     }
 
@@ -97,6 +119,7 @@ public class Settings : MonoBehaviour
         window.SetActive(false);
         timeForward.UpdateTimeScale();
         camera.enabled = true;
+        isOpen = false;
     }
 
     public void ChangeFPS()
@@ -131,8 +154,8 @@ public class Settings : MonoBehaviour
 
     public void ChangeAudioSlider()
     {
-        musicValue = musicSlider.value;
-        sfxValue = sfxSlider.value;
+        musicValue = musicSlider.value / audioDivider;
+        sfxValue = sfxSlider.value / audioDivider;
     }
 
     public void MuteSFX()
@@ -162,8 +185,8 @@ public class Settings : MonoBehaviour
         shakeText.text = shakeVisual[canScreenShake ? 1 : 0].visual;
         shakeText.color = shakeVisual[canScreenShake ? 1 : 0].textColor;
 
-        musicSlider.value = musicValue;
-        sfxSlider.value = sfxValue;
+        musicSlider.value = musicValue * audioDivider;
+        sfxSlider.value = sfxValue * audioDivider;
 
         muteSfxButton.sprite = muteButton[muteSfx ? 1 : 0];
         muteMusicButton.sprite = muteButton[muteMusic ? 1 : 0];
@@ -178,10 +201,46 @@ public class Settings : MonoBehaviour
     public void ApplyChanges()
     {
         TownManager.instance.maxSimultaneousWanderers = wanderCountGraphics[graphicsIndex];
+        ApplyGraphicsTier(graphics);
     }
 
     public void SetFPS()
     {
         Application.targetFrameRate = fps;
+    }
+
+    public void ApplyGraphicsTier(Graphics tier)
+    {
+        switch (tier)
+        {
+            case Graphics.Low:
+                ppVolume.gameObject.SetActive(false);
+                scanlines.enabled = false;
+                break;
+
+            case Graphics.Medium:
+                ppVolume.gameObject.SetActive(true);
+                scanlines.enabled = true;
+                
+                if (bloom != null) bloom.active = true;
+                if (vignette != null) vignette.active = true;
+                if (colorAdjustments != null) colorAdjustments.active = true;
+                
+                // Turn Off
+                if (lensDistortion != null) lensDistortion.active = false;
+                if (chromaticAberration != null) chromaticAberration.active = false;
+                break;
+
+            case Graphics.High:
+                ppVolume.gameObject.SetActive(true);
+                scanlines.enabled = true;
+
+                if (bloom != null) bloom.active = true;
+                if (vignette != null) vignette.active = true;
+                if (colorAdjustments != null) colorAdjustments.active = true;
+                if (lensDistortion != null) lensDistortion.active = true;
+                if (chromaticAberration != null) chromaticAberration.active = true;
+                break;
+        }
     }
 }

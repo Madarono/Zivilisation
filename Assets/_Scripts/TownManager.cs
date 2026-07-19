@@ -74,7 +74,9 @@ public class TownManager : MonoBehaviour
 
     void Update()
     {
-        CalculateNeededWheat();
+        if(Settings.instance.isOpen || ActiveWindow.instance.isActive) return;
+        
+        // CalculateNeededWheat();
         UpdateVisuals();    
 
         if(Input.GetKeyDown(KeyCode.C))
