@@ -33,12 +33,16 @@ public class VillagerSprite : MonoBehaviour
 
     public void Selected()
     {
+        if(villager.quarantine != null) return;
+
         isHighlighted = true;
         UpdateLooks();
     }
 
     public void DeSelected()
     {
+        if(villager.quarantine != null) return;
+
         isHighlighted = false;
         UpdateLooks();
     }

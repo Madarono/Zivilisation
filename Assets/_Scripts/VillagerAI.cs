@@ -68,6 +68,9 @@ public class VillagerAI : MonoBehaviour
     public Transform jobPlace;
     public int jobPlaceID = 0;
 
+    [Header("Quarantine")]
+    public Transform quarantine;
+
     [Header("Death")]
     public GameObject deathPrefab;
 
@@ -174,18 +177,23 @@ public class VillagerAI : MonoBehaviour
             else
             {
                 bool isWorkplace = (TownManager.instance.activeBuilding is Farm) || (TownManager.instance.activeBuilding is Mines);
+                bool isQuarantine = TownManager.instance.activeBuilding is Quarantine;
                 
-                if (isWorkplace && jobPlace == null)
+                if (isWorkplace && !isQuarantine && jobPlace == null)
                 {
                     TownManager.instance.SelectedHuman(this);
                 }
-                else if (!isWorkplace && house == null)
+                else if (!isWorkplace && !isQuarantine && house == null)
+                {
+                    TownManager.instance.SelectedHuman(this);
+                }
+                else if (!isWorkplace && isQuarantine && villagerHealth.health != Health.Healthy)
                 {
                     TownManager.instance.SelectedHuman(this);
                 }
             }
         }
-        else if (!goingToHouse && !TownManager.instance.isBuilding)
+        else if (!goingToHouse && !TownManager.instance.isBuilding && quarantine == null)
         {
             OnSpriteClicked();
         }
@@ -282,6 +290,13 @@ public class VillagerAI : MonoBehaviour
         {
             if(jobPlace.TryGetComponent(out Farm farm)) farm.StartFarming();
             else if(jobPlace.TryGetComponent(out Mines mines)) mines.StartMining();
+        }
+        else if(quarantine != null && cacheTarget == quarantine)
+        {
+            if(quarantine.TryGetComponent(out Quarantine quarantineScript))
+            {
+                quarantineScript.HideVillager();
+            }
         }
         else
         {    

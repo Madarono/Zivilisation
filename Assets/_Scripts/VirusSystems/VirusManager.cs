@@ -59,6 +59,9 @@ public class VirusManager : MonoBehaviour
 {
     public static VirusManager instance {get; private set;}
 
+    private TownManager townManager;
+    private DayCycle dayCycle;
+
     public List<Virus> viruses = new List<Virus>();
 
     [Header("Resistance Weight")]
@@ -66,6 +69,13 @@ public class VirusManager : MonoBehaviour
 
     [Header("Trait Weight")]
     public VirusTraitWeight[] virusTraitWeights;
+
+    [Header("Infect Chance")]
+    public float gateVillagerChance = 5f;
+    public float randomVillagerChance = 10f;
+    public int[] villagerInfectTimes;
+
+    private Coroutine randomInfect;
 
     [Header("Make new Virus")]
     [Tooltip("Higher values make powerful viruses more common and more traits more common.")]
@@ -81,6 +91,12 @@ public class VirusManager : MonoBehaviour
     void Awake()
     {
         instance = this;
+    }
+
+    void Start()
+    {
+        townManager = TownManager.instance;
+        dayCycle = DayCycle.instance;
     }
 
     public void MakeNewVirus()
@@ -135,12 +151,27 @@ public class VirusManager : MonoBehaviour
         
         Virus randomVirus = newest ? viruses[viruses.Count - 1] : viruses[Random.Range(0, viruses.Count)];
 
-        VillagerAI randomVillager = GetRandomVillager();
+        GetHealthyVillagers();
 
-        if(randomVillager == null) return;
+        if(healthyVillagers.Count == 0) return;
+
+        VillagerAI randomVillager = healthyVillagers[Random.Range(0, healthyVillagers.Count)];
 
         randomVillager.villagerHealth.Inflict(randomVirus, incubationTimeInDays);
+
+        Debug.Log("Infected a villager");
     }
+
+    public void InflictVillager(VillagerAI villager, bool newest)
+    {
+        if(viruses.Count == 0 || villager.villagerHealth.health != Health.Healthy) return;
+        
+        Virus randomVirus = newest ? viruses[viruses.Count - 1] : viruses[Random.Range(0, viruses.Count)];
+
+        villager.villagerHealth.Inflict(randomVirus, incubationTimeInDays);
+        PopupText.instance.Popup("A sick traveller has entered your villager. Monitor your villagers closely.");
+    }
+
 
     [ContextMenu("Inflict Newest")]
     public void InflictNewest()
@@ -154,7 +185,7 @@ public class VirusManager : MonoBehaviour
         InflictRandomVillager(false);
     }
 
-    VillagerAI GetRandomVillager()
+    List<VillagerAI> GetHealthyVillagers()
     {
         healthyVillagers.Clear();
 
@@ -168,7 +199,7 @@ public class VirusManager : MonoBehaviour
 
         if(healthyVillagers.Count == 0) return null;
 
-        return healthyVillagers[Random.Range(0, healthyVillagers.Count)];
+        return healthyVillagers;
     }
     
     public VirusResistance GetRandomResistence()
@@ -193,24 +224,25 @@ public class VirusManager : MonoBehaviour
     public VirusTrait GetRandomTrait(Virus currentVirus)
     {
         List<VirusTraitWeight> availableWeights = new List<VirusTraitWeight>();
-        
+
         foreach (var item in virusTraitWeights)
         {
+            if (item.trait == VirusTrait.None) continue;
+
             bool isAlreadyAssigned = (currentVirus.trait1 == item.trait || currentVirus.trait2 == item.trait || currentVirus.trait3 == item.trait);
-            
+
             if (!isAlreadyAssigned)
             {
                 availableWeights.Add(item);
             }
         }
 
-        if (availableWeights.Count == 0) 
-        {
-            return VirusTrait.None;
-        }
+        if (availableWeights.Count == 0) return VirusTrait.None;
 
         float totalWeight = 0;
         foreach (var item in availableWeights) totalWeight += item.weight;
+
+        if (totalWeight <= 0f) return VirusTrait.None;
 
         float roll = UnityEngine.Random.value * totalWeight;
         float cumulative = 0;
@@ -221,7 +253,46 @@ public class VirusManager : MonoBehaviour
             if (roll <= cumulative) return item.trait;
         }
 
-        return availableWeights[availableWeights.Count - 1].trait;
+        return VirusTrait.None;
+    }
+
+    public void CheckInfect(bool gate = false, VillagerAI villager = null)
+    {
+        if(!CanInfect() && !gate) return;
+
+        float chance = Random.Range(0, 100f);
+
+        if (gate)
+        {
+            if (villager != null && chance <= gateVillagerChance)
+            {
+                MakeNewVirus();
+                InflictVillager(villager, true);
+            }
+        }
+        else
+        {
+            if (chance <= randomVillagerChance)
+            {
+                if(viruses.Count == 0) MakeNewVirus();
+
+                InflictRandom();
+            }
+        }
+    }
+
+    bool CanInfect()
+    {
+        dayCycle = DayCycle.instance;
+        foreach(var time in villagerInfectTimes)
+        {
+            if(dayCycle.hours == time)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }

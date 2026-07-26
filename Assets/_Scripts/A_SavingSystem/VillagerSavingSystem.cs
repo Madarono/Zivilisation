@@ -8,6 +8,7 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
     public List<int> villagerId = new List<int>();
     public List<int> houseId = new List<int>();
     public List<int> jobId = new List<int>();
+    public List<int> quarantineId = new List<int>();
     public List<Vector3> villagerPos = new List<Vector3>();
     public List<float> villagerHunger = new List<float>();
     public List<int> daysLeft = new List<int>();
@@ -74,12 +75,22 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
     public bool canScreenShake;
     public int fpsIndex;
 
+    //Quarantine
+    [Header("Quarantine")]
+    public float timeInsideCurrent = 0f;
+    public float timeoutCurrent = 0f;
+    public QuarantineState quarantineState;
+
+    //Temporary then delete immediately
+    private List<Building> lateStateBuildings = new List<Building>();
+
     public void SaveData(GameData data)
     {
         SaveInfo(); 
         data.villagerId = this.villagerId;
         data.houseId = this.houseId;
         data.jobId = this.jobId;
+        data.quarantineId = this.quarantineId;
         data.villagerPos = this.villagerPos;
         data.villagerHunger = this.villagerHunger;
         data.daysLeft = this.daysLeft;
@@ -128,6 +139,11 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         data.fpsIndex = this.fpsIndex;
         
         data.viruses = this.viruses;
+        
+        data.timeInsideCurrent = this.timeInsideCurrent;
+        data.timeoutCurrent = this.timeoutCurrent;
+        data.quarantineState = this.quarantineState;
+
     }
 
     public void LoadData(GameData data)
@@ -135,6 +151,7 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         this.villagerId = data.villagerId;
         this.houseId = data.houseId;
         this.jobId = data.jobId;
+        this.quarantineId = data.quarantineId;
         this.villagerPos = data.villagerPos;
         this.villagerHunger = data.villagerHunger;
         this.daysLeft = data.daysLeft;
@@ -183,13 +200,16 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
 
         this.viruses = data.viruses;
 
+        this.timeInsideCurrent = data.timeInsideCurrent;
+        this.timeoutCurrent = data.timeoutCurrent;
+        this.quarantineState = data.quarantineState;
         LoadInfo();
     }
 
     [ContextMenu("SaveInfo")]
     public void SaveInfo()
     {
-        villagerId.Clear(); houseId.Clear(); jobId.Clear(); villagerPos.Clear(); villagerHunger.Clear(); villagerHealth.Clear(); villagerVirus.Clear(); daysLeft.Clear(); deadVillagerPos.Clear(); deadVillagerVirus.Clear();
+        villagerId.Clear(); quarantineId.Clear(); houseId.Clear(); jobId.Clear(); villagerPos.Clear(); villagerHunger.Clear(); villagerHealth.Clear(); villagerVirus.Clear(); daysLeft.Clear(); deadVillagerPos.Clear(); deadVillagerVirus.Clear();
         motelId.Clear(); motelTypeId.Clear(); motelTransform.Clear(); motelPos.Clear(); motelSellValue.Clear();
         workplaceId.Clear(); workplaceTypeId.Clear(); workplaceTransform.Clear(); workplaceSellValue.Clear(); workplacePos.Clear();
         roadPos.Clear(); viruses.Clear();
@@ -205,8 +225,9 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
             Building buildingScript = building as Building;
             Farm farmScript = building as Farm;
             Mines minesScript = building as Mines;
+            Quarantine quarantineScript = building as Quarantine;
 
-            if(buildingScript != null && farmScript == null && minesScript == null) //Houses only here
+            if(buildingScript != null && farmScript == null && minesScript == null && quarantineScript == null) //Houses only here
             {
                 motelId.Add(idCounter);
                 motelTypeId.Add(buildingScript.buildingId);
@@ -233,6 +254,7 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
             villagerId.Add(idCounter);
             houseId.Add(IdExtractor(motelTransform, motelId, villager.house));
             jobId.Add(IdExtractor(workplaceTransform, workplaceId, villager.jobPlace));
+            quarantineId.Add(IdExtractor(workplaceTransform, workplaceId, villager.quarantine));
             villagerPos.Add(villager.gameObject.transform.position);
             villagerHunger.Add(villager.hunger);
             villagerHealth.Add(villager.villagerHealth.health);
@@ -286,12 +308,28 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         
         //Gathering the VirusManager's Info
         viruses = new List<Virus>(VirusManager.instance.viruses);
+
+        //Gathering the Quarantine's Info
+        if(TownManager.instance.availableQuarantine != null)
+        {
+            timeInsideCurrent = TownManager.instance.availableQuarantine.timeInsideCurrent;
+            timeoutCurrent = TownManager.instance.availableQuarantine.timeoutCurrent;
+            quarantineState = TownManager.instance.availableQuarantine.state;
+        }
     }
 
     public void LoadInfo()
     {
         motelTransform.Clear();
         workplaceTransform.Clear();
+
+        //Roads
+        for(int i = 0; i < roadPos.Count; i++)
+        {
+            Vector2Int pos = new Vector2Int((int)roadPos[i].x, (int)roadPos[i].y);
+            RoadSystem.instance.PutRoad(pos);
+        }
+
         //Buildings
         for(int i = 0; i < motelId.Count; i++)
         {
@@ -349,17 +387,21 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
                     }
                 }
 
+                if(quarantineId[i] != -1)
+                {
+                    goScript.quarantine = GetTransformFromId(quarantineId[i], workplaceTransform, workplaceId);
+                    if(goScript.quarantine != null && goScript.quarantine.TryGetComponent(out Building building))
+                    {
+                        // building.AssignVillagerRole(goScript);
+                        lateStateBuildings.Add(building);
+                        building.villagers.Add(goScript);
+                    }
+                }
+
                 goScript.hunger = villagerHunger[i];
 
                 TownManager.instance.villagers.Add(goScript);
             }
-        }
-
-        //Roads
-        for(int i = 0; i < roadPos.Count; i++)
-        {
-            Vector2Int pos = new Vector2Int((int)roadPos[i].x, (int)roadPos[i].y);
-            RoadSystem.instance.PutRoad(pos);
         }
 
         //DeadVillagers
@@ -469,5 +511,35 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
     void LateStart()
     {
         TownManager.instance.CheckHour();
+
+        //For the Quarantine
+        TownManager townManager = TownManager.instance;
+
+        if(townManager.availableQuarantine != null)
+        {
+            townManager.availableQuarantine.timeInsideCurrent = timeInsideCurrent;
+            townManager.availableQuarantine.timeoutCurrent = timeoutCurrent;
+            townManager.availableQuarantine.state = quarantineState;
+
+            if(townManager.availableQuarantine.state == QuarantineState.Able && timeInsideCurrent != 0 && townManager.availableQuarantine.insideCoroutine == null)
+            {
+                townManager.availableQuarantine.StartInside();
+            }
+            else if(townManager.availableQuarantine.state == QuarantineState.Timeout && timeoutCurrent != 0 && townManager.availableQuarantine.outsideCoroutine == null)
+            {
+                townManager.availableQuarantine.StartOutside();
+            }
+        }
+
+        //For all
+        foreach(var building in lateStateBuildings)
+        {
+            Quarantine quarantine = building as Quarantine;
+
+            foreach(var villager in building.villagers)
+            {
+                building.AssignVillagerRole(villager);
+            }
+        }
     }
 }

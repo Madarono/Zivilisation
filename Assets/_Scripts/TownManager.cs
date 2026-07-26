@@ -24,6 +24,9 @@ public class TownManager : MonoBehaviour
     public TextMeshProUGUI marketSellValue;
     public Image[] marketArrows;
 
+    [Header("For Quarantine")]
+    public Quarantine availableQuarantine;
+
     [Header("Village Hunger")]
     public List<VillagerAI> villagers = new List<VillagerAI>();
     public List<VillagerDead> deadVillagers = new List<VillagerDead>();
@@ -326,7 +329,7 @@ public class TownManager : MonoBehaviour
 
 
     //Building - Choosing Human
-    public void SelectingHumanMode(VillageBuildable building, bool? inverse = false)
+    public void SelectingHumanMode(VillageBuildable building, bool? inverse = false, bool infected = false)
     {
         denyButton.SetActive(true);
         
@@ -353,12 +356,26 @@ public class TownManager : MonoBehaviour
             }
             return;
         }
+        else if(infected)
+        {
+            if (buildingScript == null) return;
+
+            foreach (var villager in villagers)
+            {
+                if(villager.villagerHealth.health != Health.Healthy && villager.quarantine == null)
+                {
+                    villager.villagerSprite.Selected(); 
+                }
+            }
+
+            return;
+        }
 
         foreach (var villager in villagers)
         {
             if (isWorkplace)
             {
-                if (villager.jobPlace == null)
+                if (villager.jobPlace == null && villager.quarantine == null)
                 {
                     villager.villagerSprite.Selected();
                 }
@@ -369,7 +386,7 @@ public class TownManager : MonoBehaviour
             }
             else
             {
-                if (villager.house == null)
+                if (villager.house == null && villager.quarantine == null)
                 {
                     villager.villagerSprite.Selected();
                 }
@@ -466,6 +483,23 @@ public class TownManager : MonoBehaviour
         }
 
         activeBuilding = null;
+    }
+
+    public void RemoveHumanManually(VillagerAI villager, Building building)
+    {
+        building.RemoveVillagerRole(villager);
+        building.isChoosing = false;
+        building.isDisowning = false;
+        building.villagers.Remove(villager);
+        building.UpdateVisuals();
+        denyButton.SetActive(false);
+
+        villager.villagerSprite.DeSelected();
+
+        foreach(var villager1 in building.villagers)
+        {
+            villager1.villagerSprite.DeSelected();
+        }
     }
     
 

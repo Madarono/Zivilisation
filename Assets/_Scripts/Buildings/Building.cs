@@ -150,7 +150,7 @@ public class Building : MonoBehaviour, VillageBuildable
         TownManager.instance.SelectingHumanMode(this);
     }
 
-    public void RemoveHuman()
+    public virtual void RemoveHuman()
     {
         isChoosing = true;
         isDisowning = true;

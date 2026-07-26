@@ -36,9 +36,11 @@ public class Gate : MonoBehaviour
         if(go.TryGetComponent(out VillagerAI goScript))
         {
             TownManager.instance.villagers.Add(goScript);
+            VirusManager.instance.CheckInfect(true, goScript);  
         }
 
         newVillagerSpawned = go;
+
     }
 
     public GameObject SpawnNewVillagerInfo()

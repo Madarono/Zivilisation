@@ -36,6 +36,7 @@ public class DayCycle : MonoBehaviour
             hours++;
             minutes = 0;
             TownManager.instance.CheckHour();
+            VirusManager.instance.CheckInfect();
         }
         if(hours >= 24)
         {

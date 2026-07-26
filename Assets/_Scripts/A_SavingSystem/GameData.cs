@@ -8,6 +8,7 @@ public class GameData
     public List<int> villagerId = new List<int>();
     public List<int> houseId = new List<int>();
     public List<int> jobId = new List<int>();
+    public List<int> quarantineId = new List<int>();
     public List<Vector3> villagerPos = new List<Vector3>();
     public List<float> villagerHunger = new List<float>();
     public List<int> daysLeft = new List<int>();
@@ -54,12 +55,17 @@ public class GameData
 
     public List<Virus> viruses = new List<Virus>();
 
+    public float timeInsideCurrent = 0f;
+    public float timeoutCurrent = 0f;
+    public QuarantineState quarantineState;
+
     public GameData()
     {
         //VillagerSavingSystem.cs
         villagerId = new List<int>();
         houseId = new List<int>();
         jobId = new List<int>();
+        quarantineId = new List<int>();
         villagerPos = new List<Vector3>();
         villagerHunger = new List<float>();
         daysLeft = new List<int>();
@@ -107,5 +113,9 @@ public class GameData
         fpsIndex = 1;
 
         viruses = new List<Virus>();
+
+        timeInsideCurrent = 0f;
+        timeoutCurrent = 0f;
+        quarantineState = QuarantineState.Able;
     }
 }

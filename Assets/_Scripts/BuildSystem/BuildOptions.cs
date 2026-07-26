@@ -44,6 +44,7 @@ public class BuildOptions : MonoBehaviour
 
     [Header("Only One Buildings")]
     public Market market;
+    public Quarantine quarantine;
 
     [Line]
     [CenteredHeader("Camera Shake", 20)]
@@ -171,6 +172,12 @@ public class BuildOptions : MonoBehaviour
                 else if(hit.gameObject.TryGetComponent(out Market hitMarket))
                 {
                     TownManager.instance.availableMarket = null;
+                    Destroy(hit.gameObject);
+                    if(Settings.instance.canScreenShake) PixelCameraShake.instance.Shake(shovelDuration, shovelMagnitude);
+                }
+                else if(hit.gameObject.TryGetComponent(out Quarantine hitQuarantine))
+                {
+                    TownManager.instance.availableQuarantine = null;
                     Destroy(hit.gameObject);
                     if(Settings.instance.canScreenShake) PixelCameraShake.instance.Shake(shovelDuration, shovelMagnitude);
                 }
@@ -368,6 +375,7 @@ public class BuildOptions : MonoBehaviour
         this.item = item;
         if(TownStorage.instance.money < item.price)
         {
+            PopupText.instance.Popup("Insufficient Money.");
             this.item = null;
             return;
         }
@@ -542,6 +550,16 @@ public class BuildOptions : MonoBehaviour
                     return true;
                 }
                 break;
+
+            case 1:
+                if(quarantine == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
         }
 
         return false;
@@ -550,5 +568,6 @@ public class BuildOptions : MonoBehaviour
     void UpdateOnlyOne()
     {
         market = TownManager.instance.availableMarket;
+        quarantine = TownManager.instance.availableQuarantine;
     }
 }
