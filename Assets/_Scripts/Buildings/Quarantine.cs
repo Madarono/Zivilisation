@@ -56,7 +56,8 @@ public class Quarantine : Building, VillageBuildable
         if (state == QuarantineState.Timeout)
         {
             float minutesLeft = Mathf.Ceil((timeoutDuration - timeoutCurrent) / 60f);
-            PopupText.instance.Popup($"This quarantine is on cooldown for another {minutesLeft} minutes.");
+            string minuteString = minutesLeft <= 1 ? "minute" : "minutes";
+            PopupText.instance.Popup($"This quarantine is on cooldown for another {minutesLeft} {minuteString}.");
             return;
         }
 

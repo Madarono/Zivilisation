@@ -178,7 +178,7 @@ public class VillagerHealth : MonoBehaviour //ToDo: Infection that makes Infecti
         while(true)
         {
             yield return new WaitForSeconds(infectionCooldown);
-            if(villager.state == VillagerState.Sleeping && !HasCertainTrait(VirusTrait.Overcrowding)) continue; //Has no Overcrowding Tait
+            if((villager.state == VillagerState.Sleeping && !HasCertainTrait(VirusTrait.Overcrowding)) || villager.quarantine != null) continue; //Has no Overcrowding Tait or in Quarantine
             else if(villager.state == VillagerState.Sleeping && HasCertainTrait(VirusTrait.Overcrowding))
             {
                 float householdChance = Random.Range(0, 100f);
@@ -229,6 +229,8 @@ public class VillagerHealth : MonoBehaviour //ToDo: Infection that makes Infecti
     {
         while(true)
         {
+            if(villager.quarantine != null) continue;
+
             yield return new WaitForSeconds(coughCooldown);
             float chance = Random.Range(0, 100f);
 
@@ -247,7 +249,7 @@ public class VillagerHealth : MonoBehaviour //ToDo: Infection that makes Infecti
 
         while(true)
         {
-            if(villager.state == VillagerState.Sleeping) //Don't kill him while he's asleep. Sheesh
+            if(villager.state == VillagerState.Sleeping || villager.quarantine != null) //Don't kill him while he's asleep. Sheesh
             {
                 yield return null;
                 continue;

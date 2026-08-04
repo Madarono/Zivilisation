@@ -109,7 +109,7 @@ public class VillagerAI : MonoBehaviour
 
     void Update()
     {
-        if(Settings.instance.isOpen || ActiveWindow.instance.isActive) return;
+        if(Settings.instance.isOpen || ActiveWindow.instance.isActive || ActiveWindow.instance.briefActive) return;
         
         if(jobPlace == null) 
         {
@@ -479,7 +479,16 @@ public class VillagerAI : MonoBehaviour
 
             depletion = hungerDepletionAmount * villagerHealth.currentHungerMultiplyer;
             hunger = Mathf.Clamp01(hunger - depletion);
-            TownManager.instance.CalculateNeededWheat();
+
+            //For Anytime Feed
+            if(HungerManager.instance.feedState == FeedTime.Anytime)
+            {
+                
+                if(hunger > HungerManager.instance.minFullFeed && HungerManager.instance.percentageState == FeedPer.FullFeed) continue;
+                if(hunger > HungerManager.instance.minBareFeed && HungerManager.instance.percentageState == FeedPer.BareMinimum) continue;
+
+                HungerManager.instance.FeedVillager(this);
+            }
         }
     }
 

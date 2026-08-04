@@ -42,7 +42,7 @@ public class Mines : Building, VillageBuildable
 
     protected override void Update()
     {
-        if(Settings.instance.isOpen || ActiveWindow.instance.isActive) return;
+        if(Settings.instance.isOpen || ActiveWindow.instance.isActive || ActiveWindow.instance.briefActive) return;
 
         if ((Input.GetMouseButtonDown(0) || (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)) && !ViewMode.instance.viewMode)
         {

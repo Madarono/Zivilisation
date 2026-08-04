@@ -15,6 +15,7 @@ public class BuildSystem : MonoBehaviour
 {
     public static BuildSystem instance {get; private set;}
     public Window statsWindow;
+    public Window hungerWindow;
     private TownManager townManager;
     private RoadSystem roadSystem;
     private BuildOptions buildOptions;
@@ -55,6 +56,8 @@ public class BuildSystem : MonoBehaviour
 
     public void BothBuilding()
     {
+        if(ActiveWindow.instance.briefActive) return;
+
         townManager.isBuilding = !townManager.isBuilding;
         buildVisual.SetActive(townManager.isBuilding);
 
@@ -88,6 +91,7 @@ public class BuildSystem : MonoBehaviour
     public void StartBuilding()
     {
         statsWindow.CloseWindow();
+        hungerWindow.CloseWindow();
         ViewMode.instance.StopViewMode();
         if(activeMoving != null)
         {
@@ -173,18 +177,28 @@ public class BuildSystem : MonoBehaviour
 
         while(true)
         {
+            bool allReached = true;
+
             for(int i = 0; i < options.Length; i++)
             {
-                options[i].option.transform.localPosition = Vector3.Lerp(options[i].option.transform.localPosition, optionsPos[i], speed * Time.unscaledDeltaTime);
+                Vector3 target = Vector3.Lerp(options[i].option.transform.localPosition, optionsPos[i], speed * Time.unscaledDeltaTime);
+                options[i].option.transform.localPosition = SnapToPixel(target);
+
+                if(Vector3.Distance(options[i].option.transform.localPosition, optionsPos[i]) > 0.1f)
+                {
+                    allReached = false;
+                }
             }
 
-            if(Vector2.Distance(options[0].option.transform.localPosition, optionsPos[0]) <= 0.1f)
+            if(allReached)
             {
                 for(int i = 0; i < options.Length; i++)
                 {
                     options[i].option.transform.localPosition = optionsPos[i];
                 }
+                yield break;
             }
+
             yield return null;
         }
     }
@@ -198,21 +212,40 @@ public class BuildSystem : MonoBehaviour
 
         while(true)
         {
+            bool allReached = true;
+
             for(int i = 0; i < options.Length; i++)
             {
-                options[i].option.transform.localPosition = Vector3.Lerp(options[i].option.transform.localPosition, Vector3.zero, returnSpeed * Time.unscaledDeltaTime);
+                Vector3 target = Vector3.Lerp(options[i].option.transform.localPosition, Vector3.zero, returnSpeed * Time.unscaledDeltaTime);
+                options[i].option.transform.localPosition = SnapToPixel(target);
+
+                if(Vector3.Distance(options[i].option.transform.localPosition, Vector3.zero) > 0.1f)
+                {
+                    allReached = false;
+                }
             }
 
-            if(Vector2.Distance(options[0].option.transform.localPosition, Vector3.zero) <= 0.1f)
+            if(allReached)
             {
                 for(int i = 0; i < options.Length; i++)
                 {
                     options[i].option.transform.localPosition = Vector3.zero;
                     options[i].option.SetActive(false);
                 }
+                yield break;
             }
+
             yield return null;
         }
+    }
+
+    private Vector3 SnapToPixel(Vector3 pos)
+    {
+        return new Vector3(
+            Mathf.Round(pos.x),
+            Mathf.Round(pos.y),
+            Mathf.Round(pos.z)
+        );
     }
 
 

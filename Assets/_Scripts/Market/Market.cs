@@ -45,7 +45,7 @@ public class Market : Building, VillageBuildable
 
     protected override void Update()
     {
-        if(Settings.instance.isOpen || ActiveWindow.instance.isActive) return;
+        if(Settings.instance.isOpen || ActiveWindow.instance.isActive || ActiveWindow.instance.briefActive) return;
         
         bool isClick = Input.GetMouseButtonDown(0);
         bool isTouch = Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began;

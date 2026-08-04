@@ -528,8 +528,8 @@ MonoBehaviour:
   villagerSprite: {fileID: 3645880358106294929}
   col: {fileID: 5213338453812323853}
   hunger: 1
-  hungerDepletionAmount: 0.01
-  hungerDepletionCooldown: 9
+  hungerDepletionAmount: 0.05
+  hungerDepletionCooldown: 10
   isCoughing: 0
   isShowing: 0
   villagerStatsWindow: {fileID: 9081392522446617057}
@@ -574,6 +574,7 @@ MonoBehaviour:
   goingToHouse: 0
   jobPlace: {fileID: 0}
   jobPlaceID: 0
+  quarantine: {fileID: 0}
   deathPrefab: {fileID: 4801039612059696973, guid: 063435e68d2985a4080ea8b13d11efaa, type: 3}
   deathDuration: 1
   deathMagnitude: 0.75
@@ -652,7 +653,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   infectionCooldown: 10
-  tileRange: 1
+  tileRange: 0.75
   airborneBonus: 1
   airborneInfectionMultiplyer: 1.25
   overcrowdingMultiplyer: 0.2

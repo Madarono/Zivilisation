@@ -7,6 +7,9 @@ public class Window : MonoBehaviour
     public bool isOpen;
     public bool stopBuild;
 
+    [Header("Special")]
+    public bool isHunger;
+
     void Start()
     {
         window.SetActive(false);
@@ -14,6 +17,8 @@ public class Window : MonoBehaviour
 
     public void BothWindow()
     {
+        if(ActiveWindow.instance.briefActive) return;
+        
         isOpen = !isOpen;
         if(isOpen)
         {
@@ -29,8 +34,7 @@ public class Window : MonoBehaviour
     {
         if(ActiveWindow.instance.currentActiveWindow != null)
         {
-            Debug.Log("Another window is active");
-            return;
+            ActiveWindow.instance.currentActiveWindow.CloseWindow();
         }
 
         ActiveWindow.instance.currentActiveWindow = this;
@@ -47,6 +51,11 @@ public class Window : MonoBehaviour
             return;
         }
 
+        if(isHunger) //For HungerManager.cs
+        {
+            HungerManager.instance.UpdateVisuals();
+        }
+
         tabs.DefaultWindow();
     }
 
@@ -57,6 +66,7 @@ public class Window : MonoBehaviour
         ActiveWindow.instance.currentActiveWindow = null;
         ActiveWindow.instance.isActive = false;
         window.SetActive(false);
+        isOpen = false;
         
         if(tabs == null)
         {

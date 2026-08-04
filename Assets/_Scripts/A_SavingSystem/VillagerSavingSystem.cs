@@ -81,6 +81,10 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
     public float timeoutCurrent = 0f;
     public QuarantineState quarantineState;
 
+    [Header("HungerManager")]
+    public int feedId;
+    public int percentageId;
+
     //Temporary then delete immediately
     private List<Building> lateStateBuildings = new List<Building>();
 
@@ -144,6 +148,8 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         data.timeoutCurrent = this.timeoutCurrent;
         data.quarantineState = this.quarantineState;
 
+        data.feedId = this.feedId;
+        data.percentageId = this.percentageId;
     }
 
     public void LoadData(GameData data)
@@ -203,6 +209,10 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         this.timeInsideCurrent = data.timeInsideCurrent;
         this.timeoutCurrent = data.timeoutCurrent;
         this.quarantineState = data.quarantineState;
+
+        this.feedId = data.feedId;
+        this.percentageId = data.percentageId;
+
         LoadInfo();
     }
 
@@ -316,6 +326,10 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
             timeoutCurrent = TownManager.instance.availableQuarantine.timeoutCurrent;
             quarantineState = TownManager.instance.availableQuarantine.state;
         }
+
+        //Gathering the HungerManager's Info
+        feedId = HungerManager.instance.feedId;
+        percentageId = HungerManager.instance.percentageId;
     }
 
     public void LoadInfo()
@@ -444,8 +458,6 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         Settings.instance.SetFPS();
         Settings.instance.ApplyChanges();
 
-        TownManager.instance.CalculateNeededWheat();
-
         //VirusManager
         VirusManager.instance.viruses = new List<Virus>(viruses);
 
@@ -468,6 +480,11 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         {
             MarketSystem.instance.RandomizeDemand();
         }
+
+        //HungerManager.cs
+        HungerManager.instance.feedId = feedId;
+        HungerManager.instance.percentageId = percentageId;
+        HungerManager.instance.UpdateVisuals();
 
         StartCoroutine(WaitForStart());
     }

@@ -59,6 +59,9 @@ public class GameData
     public float timeoutCurrent = 0f;
     public QuarantineState quarantineState;
 
+    public int feedId;
+    public int percentageId;
+
     public GameData()
     {
         //VillagerSavingSystem.cs
@@ -117,5 +120,8 @@ public class GameData
         timeInsideCurrent = 0f;
         timeoutCurrent = 0f;
         quarantineState = QuarantineState.Able;
+
+        feedId = 0;
+        percentageId = 0;
     }
 }

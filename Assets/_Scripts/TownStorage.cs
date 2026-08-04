@@ -27,6 +27,7 @@ public class TownStorage : MonoBehaviour
     [Header("Global Morality")]
     public float globalMorality;
     public bool hasCheckedTomorrow;
+    public GlobalMoralityBrief brief;
 
     [Header("Requirements")]
     public float fedReq = 0.8f;
@@ -55,6 +56,8 @@ public class TownStorage : MonoBehaviour
     void Start()
     {
         townManager = TownManager.instance;
+        brief.window.SetActive(false);
+        brief.gameObject.SetActive(false);
     }    
 
     public void StartVillagerCooldown()
@@ -96,7 +99,7 @@ public class TownStorage : MonoBehaviour
                 continue;
             }
 
-            if(villager.house != null && villager.hunger >= fedReq)
+            if(villager.hunger >= fedReq)
             {
                 totalFed++;
             }
@@ -121,6 +124,9 @@ public class TownStorage : MonoBehaviour
         Debug.Log("Population: " + totalPopulation + "\nFed: " + totalFed + "\nWorking: " + totalWorking + "\nHomeless: " + totalHomeless + "\nStarving: " + totalStarving + 
         "\n\nNetDailyChange: " + netDailyChange + "\nNew Global Morality: " + globalMorality);
         hasCheckedTomorrow = true;
+
+        brief.gameObject.SetActive(true);
+        brief.UpdateValues(totalFed, totalWorking, totalHomeless, totalStarving, netDailyChange, starvationRatio, starvationPenalty);
     }
 
     IEnumerator VillagerSpawnCooldown()

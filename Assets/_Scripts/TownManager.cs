@@ -30,9 +30,6 @@ public class TownManager : MonoBehaviour
     [Header("Village Hunger")]
     public List<VillagerAI> villagers = new List<VillagerAI>();
     public List<VillagerDead> deadVillagers = new List<VillagerDead>();
-    public TextMeshProUGUI wheatNeededVisual;
-    public TextMeshProUGUI wheatAvailableVisual;
-    public Button feedVisual;
     float wheatNeeded;
 
     [Header("Other Stats")]
@@ -77,15 +74,9 @@ public class TownManager : MonoBehaviour
 
     void Update()
     {
-        if(Settings.instance.isOpen || ActiveWindow.instance.isActive) return;
+        if(Settings.instance.isOpen || ActiveWindow.instance.isActive || ActiveWindow.instance.briefActive) return;
         
-        // CalculateNeededWheat();
         UpdateVisuals();    
-
-        if(Input.GetKeyDown(KeyCode.C))
-        {
-            FeedAllVillagers();
-        }
 
         if ((Input.GetMouseButtonDown(0) || (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)) && !ViewMode.instance.viewMode)
         {
@@ -125,16 +116,7 @@ public class TownManager : MonoBehaviour
             }
         }
     }
-
-    public void CalculateNeededWheat()
-    {
-        wheatNeeded = 0;
-
-        foreach(var villager in villagers)
-        {
-            wheatNeeded += 1 - villager.hunger;
-        }
-    }
+    
 
     public void CalculateHousedPopulation()
     {
@@ -208,27 +190,14 @@ public class TownManager : MonoBehaviour
         CalculateHouses();
         CalculateMines();
         moralityVisual.text = "Global Morality: " + TownStorage.instance.globalMorality.ToString("F2") + " / 1.00";
-        wheatNeededVisual.text = "Wheat Needed: " + wheatNeeded.ToString("F2");
-        wheatAvailableVisual.text = "Wheat Available: " + TownStorage.instance.wheat.ToString("F2");
         populationVisual.text = "Population: " + villagers.Count.ToString();
         housedPopulationVisual.text = "Housed Population: " + housedPopulation.ToString();
         workingPopulationVisual.text = "Working Population: " + workingPopulation.ToString();
         housesVisual.text = "Houses: " + houses.ToString();
         farmsVisual.text = "Farms: " + farms.ToString();
         minesVisual.text = "Mines: " + mines.ToString();
-        feedVisual.interactable = TownStorage.instance.wheat >= wheatNeeded ? true : false;
     }
-    public void FeedAllVillagers()
-    {
-        if(TownStorage.instance.wheat >= wheatNeeded)
-        {
-            TownStorage.instance.wheat -= wheatNeeded;
-            foreach(var villager in villagers)
-            {
-                villager.hunger = 1f;
-            }
-        }
-    }
+
     public void CheckHour()
     {
         DayCycle cycle = DayCycle.instance;
@@ -241,8 +210,10 @@ public class TownManager : MonoBehaviour
             {
                 ReduceDayVillagers();
                 MarketSystem.instance.RandomizeDemand();
+                HungerManager.instance.EndOfDayFeed();
+                TownStorage.instance.CalculateTomorrowMorality();
+                TownStorage.instance.hasCheckedTomorrow = true;
             }
-            TownStorage.instance.CalculateTomorrowMorality();
         }
         else if(cycle.hours >= hourAwakeReq && cycle.hours < hourWorkReq)
         {
