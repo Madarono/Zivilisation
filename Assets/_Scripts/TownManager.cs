@@ -28,6 +28,7 @@ public class TownManager : MonoBehaviour
     public Quarantine availableQuarantine;
 
     [Header("Village Hunger")]
+    public int totalDead;
     public List<VillagerAI> villagers = new List<VillagerAI>();
     public List<VillagerDead> deadVillagers = new List<VillagerDead>();
     float wheatNeeded;
@@ -74,6 +75,7 @@ public class TownManager : MonoBehaviour
 
     void Update()
     {
+        if(LoseCondition.instance.lost) return;
         if(Settings.instance.isOpen || ActiveWindow.instance.isActive || ActiveWindow.instance.briefActive) return;
         
         UpdateVisuals();    
@@ -206,14 +208,23 @@ public class TownManager : MonoBehaviour
         {
             SleepAllVillagers();
             TownStorage.instance.StopVillagerCooldown();
+            LoseCondition.instance.CheckLossByMorality();
             if(!TownStorage.instance.hasCheckedTomorrow)
             {
+                Stats.instance.totalDays++;
                 ReduceDayVillagers();
                 MarketSystem.instance.RandomizeDemand();
                 HungerManager.instance.EndOfDayFeed();
                 TownStorage.instance.CalculateTomorrowMorality();
                 TownStorage.instance.hasCheckedTomorrow = true;
+                LoseCondition.instance.DecreaseLossMorality();
             }
+
+            if(LoseCondition.instance.LossByMorality())
+            {
+                LoseCondition.instance.CheckLossCondition();
+            }
+            
         }
         else if(cycle.hours >= hourAwakeReq && cycle.hours < hourWorkReq)
         {

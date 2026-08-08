@@ -45,6 +45,7 @@ public class Market : Building, VillageBuildable
 
     protected override void Update()
     {
+        if(LoseCondition.instance.lost) return;
         if(Settings.instance.isOpen || ActiveWindow.instance.isActive || ActiveWindow.instance.briefActive) return;
         
         bool isClick = Input.GetMouseButtonDown(0);
@@ -156,6 +157,8 @@ public class Market : Building, VillageBuildable
         townStorage.quartz -= Mathf.RoundToInt(sliders[3].value);
         townStorage.titanium -= Mathf.RoundToInt(sliders[4].value);
         townStorage.money += finalPrice;
+
+        Stats.instance.totalMoneyGained += finalPrice;
 
         foreach(var slider in sliders)
         {

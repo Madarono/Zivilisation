@@ -17,6 +17,8 @@ public class GameData
     public List<Health> villagerHealth = new List<Health>();
     public List<Virus> villagerVirus = new List<Virus>();
 
+    public int totalDead;
+
     public List<int> motelId = new List<int>();
     public List<int> motelTypeId = new List<int>();
     public List<int> motelSellValue = new List<int>();
@@ -55,12 +57,21 @@ public class GameData
 
     public List<Virus> viruses = new List<Virus>();
 
-    public float timeInsideCurrent = 0f;
-    public float timeoutCurrent = 0f;
+    public float timeInsideCurrent;
+    public float timeoutCurrent;
     public QuarantineState quarantineState;
 
     public int feedId;
     public int percentageId;
+
+    public int currentDays;
+    public bool progressLosMor;
+
+    public int totalDays;
+    public float lowestMorality;
+    public int desertions;
+    public int totalSick;
+    public int totalMoneyGained;
 
     public GameData()
     {
@@ -75,6 +86,7 @@ public class GameData
 
         deadVillagerPos = new List<Vector3>();
         deadVillagerVirus = new List<Virus>();
+        totalDead = 0;
         
         villagerHealth = new List<Health>();
         villagerVirus = new List<Virus>();
@@ -123,5 +135,14 @@ public class GameData
 
         feedId = 0;
         percentageId = 0;
+
+        currentDays = 0;
+        progressLosMor = false;
+
+        totalDays = 0;
+        lowestMorality = 0f;
+        desertions = 0;
+        totalSick = 0;
+        totalMoneyGained = 0;
     }
 }

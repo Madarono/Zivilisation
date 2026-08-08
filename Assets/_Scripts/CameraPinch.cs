@@ -20,6 +20,7 @@ public class CameraPinch : MonoBehaviour
     public int zoomedInX = 160;
     public int zoomedInY = 90;
     public float zoomDuration = 1f;
+
     [Tooltip("Prevents the player from spam-triggering resolution swaps.")]
     public float zoomCooldown = 0.4f; 
 
@@ -52,6 +53,8 @@ public class CameraPinch : MonoBehaviour
 
     void Update()
     {
+        if(LoseCondition.instance.lost) return;
+        
         if ((Time.timeScale == 0 && TimeForward.instance.choosing != 0) || RoadSystem.instance.isMultiBrush) 
         {
             return;

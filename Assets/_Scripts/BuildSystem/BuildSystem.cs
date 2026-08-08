@@ -56,6 +56,7 @@ public class BuildSystem : MonoBehaviour
 
     public void BothBuilding()
     {
+        if(LoseCondition.instance.lost) return;
         if(ActiveWindow.instance.briefActive) return;
 
         townManager.isBuilding = !townManager.isBuilding;

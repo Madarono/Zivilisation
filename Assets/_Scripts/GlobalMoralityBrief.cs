@@ -80,7 +80,7 @@ public class GlobalMoralityBrief : MonoBehaviour
         window.SetActive(true);
     }
 
-    public void UpdateValues(int totalFed, int totalWorking, int totalHomeless, int totalStarving, float netDailyChange, float starvationRatio, float starvationPenalty)
+    public void UpdateValues(int totalFed, int totalWorking, int totalHomeless, int totalStarving, float netDailyChange, float starvationRatio, float starvationPenalty, float oldGlobalMorality)
     {
         float fedContrib = Mathf.Floor(TownStorage.instance.fedMultiplyer * totalFed * 100f) / 100f;
         string fedStr = fedContrib > 0 ? $"+{fedContrib:0.00}" : $"{fedContrib:0.00}";
@@ -95,8 +95,6 @@ public class GlobalMoralityBrief : MonoBehaviour
         string starvingStr = flooredStarvation > 0 ? $"-{flooredStarvation:0.00}" : $"{flooredStarvation:0.00}";
 
         string netChangeStr = netDailyChange > 0 ? $"+{netDailyChange:0.00}" : $"{netDailyChange:0.00}";
-
-        float oldGlobalMorality = TownStorage.instance.globalMorality - netDailyChange;
 
         fedValue.text = $"{totalFed} ({fedStr})";
         workingValue.text = $"{totalWorking} ({workingStr})";

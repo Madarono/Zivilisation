@@ -97,6 +97,13 @@ public class VillagerHealth : MonoBehaviour //ToDo: Infection that makes Infecti
 
     public void Infect(Virus virus)
     {
+        if(LoseCondition.instance.LossBySickness())
+        {
+            LoseCondition.instance.CheckLossCondition();
+        }
+
+        Stats.instance.totalSick++;
+
         inflictedVirus = virus;
         health = Health.Infected;
         UpdateVisuals();

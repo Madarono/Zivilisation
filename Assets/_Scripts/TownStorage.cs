@@ -119,14 +119,21 @@ public class TownStorage : MonoBehaviour
         float starvationPenalty = starvingMultiplyer * starvationRatio;
 
         netDailyChange = (fedMultiplyer * totalFed) + (workingMultiplyer * totalWorking) - (homelessMultiplyer * totalHomeless) - starvationPenalty;
+        float oldGlobalMorality = globalMorality;
+
         globalMorality = Mathf.Clamp01(globalMorality + netDailyChange);
+
+        if(globalMorality < Stats.instance.lowestMorality)
+        {
+            Stats.instance.lowestMorality = globalMorality;
+        }
 
         Debug.Log("Population: " + totalPopulation + "\nFed: " + totalFed + "\nWorking: " + totalWorking + "\nHomeless: " + totalHomeless + "\nStarving: " + totalStarving + 
         "\n\nNetDailyChange: " + netDailyChange + "\nNew Global Morality: " + globalMorality);
         hasCheckedTomorrow = true;
 
         brief.gameObject.SetActive(true);
-        brief.UpdateValues(totalFed, totalWorking, totalHomeless, totalStarving, netDailyChange, starvationRatio, starvationPenalty);
+        brief.UpdateValues(totalFed, totalWorking, totalHomeless, totalStarving, netDailyChange, starvationRatio, starvationPenalty, oldGlobalMorality);
     }
 
     IEnumerator VillagerSpawnCooldown()

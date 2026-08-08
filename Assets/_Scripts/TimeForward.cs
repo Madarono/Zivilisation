@@ -27,6 +27,8 @@ public class TimeForward : MonoBehaviour
 
     public void IncreaseChoosing()
     {
+        if(LoseCondition.instance.lost) return;
+
         choosing++;
         if(choosing == timeStates.Length)
         {
@@ -38,6 +40,8 @@ public class TimeForward : MonoBehaviour
 
     public void UpdateTimeScale()
     {
+        if(LoseCondition.instance.lost) return;
+        
         timeIcon.sprite = timeStates[choosing].icon;
         Time.timeScale = timeStates[choosing].timeSpeed;
     }

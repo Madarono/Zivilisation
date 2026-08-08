@@ -17,6 +17,7 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
     public List<Virus> deadVillagerVirus = new List<Virus>();
     public List<Vector3> deadVillagerPos = new List<Vector3>();
     public GameObject deadVillagerPrefab;
+    public int totalDead;
     
     [Header("Villager Health Saving")]
     public List<Health> villagerHealth = new List<Health>();
@@ -77,13 +78,24 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
 
     //Quarantine
     [Header("Quarantine")]
-    public float timeInsideCurrent = 0f;
-    public float timeoutCurrent = 0f;
+    public float timeInsideCurrent;
+    public float timeoutCurrent;
     public QuarantineState quarantineState;
 
     [Header("HungerManager")]
     public int feedId;
     public int percentageId;
+
+    [Header("Lose Condition")]
+    public int currentDays;
+    public bool progressLosMor;
+
+    [Header("Stats")]
+    public int totalDays;
+    public float lowestMorality;
+    public int desertions;
+    public int totalSick;
+    public int totalMoneyGained;
 
     //Temporary then delete immediately
     private List<Building> lateStateBuildings = new List<Building>();
@@ -101,6 +113,7 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
 
         data.deadVillagerPos = this.deadVillagerPos;
         data.deadVillagerVirus = this.deadVillagerVirus;
+        data.totalDead = this.totalDead;
 
 
         data.villagerHealth = this.villagerHealth;
@@ -150,6 +163,16 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
 
         data.feedId = this.feedId;
         data.percentageId = this.percentageId;
+
+        data.currentDays = this.currentDays;
+        data.progressLosMor = this.progressLosMor;
+
+        data.totalDays = this.totalDays;
+        data.lowestMorality = this.lowestMorality;
+        data.desertions = this.desertions;
+        data.totalSick = this.totalSick;
+        data.totalMoneyGained = this.totalMoneyGained;
+
     }
 
     public void LoadData(GameData data)
@@ -164,6 +187,7 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
 
         this.deadVillagerPos = data.deadVillagerPos;
         this.deadVillagerVirus = data.deadVillagerVirus;
+        this.totalDead = data.totalDead;
 
         this.villagerHealth = data.villagerHealth;
         this.villagerVirus = data.villagerVirus;
@@ -212,6 +236,15 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
 
         this.feedId = data.feedId;
         this.percentageId = data.percentageId;
+
+        this.currentDays = data.currentDays;
+        this.progressLosMor = data.progressLosMor;
+
+        this.totalDays = data.totalDays;
+        this.lowestMorality = data.lowestMorality;
+        this.desertions = data.desertions;
+        this.totalSick = data.totalSick;
+        this.totalMoneyGained = data.totalMoneyGained;
 
         LoadInfo();
     }
@@ -280,6 +313,8 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
             deadVillagerPos.Add(deadVillager.gameObject.transform.position);
         }
 
+        totalDead = TownManager.instance.totalDead;
+
         //Gathering the Roads' Info
         foreach(var road in roadSys.roadPos)
         {
@@ -330,6 +365,17 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         //Gathering the HungerManager's Info
         feedId = HungerManager.instance.feedId;
         percentageId = HungerManager.instance.percentageId;
+
+        //Gathering the LoseCondition's Info
+        currentDays = LoseCondition.instance.currentDays;
+        progressLosMor = LoseCondition.instance.progressLosMor;
+
+        //Gathering the Stats' info
+        totalDays = Stats.instance.totalDays;
+        lowestMorality = Stats.instance.lowestMorality;
+        desertions = Stats.instance.desertions;
+        totalSick = Stats.instance.totalSick;
+        totalMoneyGained = Stats.instance.totalMoneyGained;
     }
 
     public void LoadInfo()
@@ -427,6 +473,8 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
                 goScript.inflictedVirus = deadVillagerVirus[i];
             }
         }
+
+        TownManager.instance.totalDead = totalDead;
         
         //TownStorage
         TownStorage.instance.money = moneySave;
@@ -485,6 +533,17 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         HungerManager.instance.feedId = feedId;
         HungerManager.instance.percentageId = percentageId;
         HungerManager.instance.UpdateVisuals();
+
+        //LoseConditions.cs
+        LoseCondition.instance.currentDays = currentDays;
+        LoseCondition.instance.progressLosMor = progressLosMor;
+
+        //Stats.cs
+        Stats.instance.totalDays = totalDays;
+        Stats.instance.lowestMorality = lowestMorality;
+        Stats.instance.desertions = desertions;
+        Stats.instance.totalSick = totalSick;
+        Stats.instance.totalMoneyGained = totalMoneyGained;
 
         StartCoroutine(WaitForStart());
     }
@@ -558,5 +617,8 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
                 building.AssignVillagerRole(villager);
             }
         }
+
+        LoseCondition.instance.CheckLossPopulation();
+        LoseCondition.instance.CheckLossCondition();
     }
 }

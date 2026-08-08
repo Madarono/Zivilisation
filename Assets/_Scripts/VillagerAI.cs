@@ -109,6 +109,7 @@ public class VillagerAI : MonoBehaviour
 
     void Update()
     {
+        if(LoseCondition.instance.lost) return;
         if(Settings.instance.isOpen || ActiveWindow.instance.isActive || ActiveWindow.instance.briefActive) return;
         
         if(jobPlace == null) 
@@ -431,26 +432,39 @@ public class VillagerAI : MonoBehaviour
     }
 
     [ContextMenu("Kill this villager")]
-    public void Death() //From VillagerHealth.cs
+    public void Death(bool withCorpse = true) //From VillagerHealth.cs
     {
         TownManager.instance.villagers.Remove(this);
         if(house != null)
         {
-            if(house.TryGetComponent(out Building building))
+            if(house.TryGetComponent(out Building houseBuilding))
             {
-                building.RemoveVillagerRole(this);
+                houseBuilding.RemoveVillagerRole(this);
             }
         }
         if(jobPlace != null)
         {
-            if(jobPlace.TryGetComponent(out Building building))
+            if(jobPlace.TryGetComponent(out Building jobBuilding))
             {
-                building.RemoveVillagerRole(this);
+                jobBuilding.RemoveVillagerRole(this);
             }
         }
 
-        Vector2 posInt = new Vector2((int)transform.position.x, (int)transform.position.y);
+        TownManager.instance.totalDead++;
+        if(LoseCondition.instance.LossByPopulation())
+        {
+            LoseCondition.instance.CheckLossCondition();
+        }
 
+        if(!withCorpse) //Leave due to morality
+        {
+            Stats.instance.desertions++;
+
+            Destroy(gameObject);
+            return;
+        }
+
+        Vector2 posInt = new Vector2((int)transform.position.x, (int)transform.position.y);
         GameObject go = Instantiate(deathPrefab, posInt, Quaternion.identity);
 
         if(go.TryGetComponent(out VillagerDead goScript))

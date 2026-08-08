@@ -25,6 +25,8 @@ public class DayCycle : MonoBehaviour
 
     void Update()
     {
+        if(LoseCondition.instance.lost) return;
+
         seconds += clockMultiplyer * Time.deltaTime;
         if(seconds >= 60)
         {
