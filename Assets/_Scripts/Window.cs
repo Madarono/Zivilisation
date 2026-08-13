@@ -9,6 +9,7 @@ public class Window : MonoBehaviour
 
     [Header("Special")]
     public bool isHunger;
+    public bool isManual;
 
     void Start()
     {
@@ -46,14 +47,20 @@ public class Window : MonoBehaviour
             BuildSystem.instance.StopBuilding();
         }
 
-        if(tabs == null)
+        if(isManual) //For ManualSystem.cs
         {
-            return;
+            // ManualSystem.instance.DeselectAllButtons();
+            ManualSystem.instance.MakeInitialPages();
+            ManualSystem.instance.ReturnToFirstPages();
         }
-
         if(isHunger) //For HungerManager.cs
         {
             HungerManager.instance.UpdateVisuals();
+        }
+
+        if(tabs == null)
+        {
+            return;
         }
 
         tabs.DefaultWindow();

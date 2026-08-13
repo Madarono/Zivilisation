@@ -73,6 +73,9 @@ public class GameData
     public int totalSick;
     public int totalMoneyGained;
 
+    public List<string> pageInfo = new List<string>();
+    public List<string> headerInfo = new List<string>();
+
     public GameData()
     {
         //VillagerSavingSystem.cs
@@ -144,5 +147,8 @@ public class GameData
         desertions = 0;
         totalSick = 0;
         totalMoneyGained = 0;
+
+        pageInfo = new List<string>();
+        headerInfo = new List<string>();
     }
 }

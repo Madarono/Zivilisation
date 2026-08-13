@@ -53,7 +53,7 @@ public class CameraPinch : MonoBehaviour
 
     void Update()
     {
-        if(LoseCondition.instance.lost) return;
+        if(LoseCondition.instance.lost || ActiveWindow.instance.isActive) return;
         
         if ((Time.timeScale == 0 && TimeForward.instance.choosing != 0) || RoadSystem.instance.isMultiBrush) 
         {

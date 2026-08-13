@@ -97,6 +97,10 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
     public int totalSick;
     public int totalMoneyGained;
 
+    [Header("Player-Based Manual")]
+    public List<string> pageInfo = new List<string>();
+    public List<string> headerInfo = new List<string>();
+
     //Temporary then delete immediately
     private List<Building> lateStateBuildings = new List<Building>();
 
@@ -173,6 +177,8 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         data.totalSick = this.totalSick;
         data.totalMoneyGained = this.totalMoneyGained;
 
+        data.pageInfo = this.pageInfo;
+        data.headerInfo = this.headerInfo;
     }
 
     public void LoadData(GameData data)
@@ -246,6 +252,9 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         this.totalSick = data.totalSick;
         this.totalMoneyGained = data.totalMoneyGained;
 
+        this.pageInfo = data.pageInfo;
+        this.headerInfo = data.headerInfo;
+
         LoadInfo();
     }
 
@@ -256,6 +265,7 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         motelId.Clear(); motelTypeId.Clear(); motelTransform.Clear(); motelPos.Clear(); motelSellValue.Clear();
         workplaceId.Clear(); workplaceTypeId.Clear(); workplaceTransform.Clear(); workplaceSellValue.Clear(); workplacePos.Clear();
         roadPos.Clear(); viruses.Clear();
+        pageInfo.Clear(); headerInfo.Clear();
 
         //Gathering Buildings' Info
         GridManager grid = GridManager.instance;
@@ -376,6 +386,10 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         desertions = Stats.instance.desertions;
         totalSick = Stats.instance.totalSick;
         totalMoneyGained = Stats.instance.totalMoneyGained;
+
+        //Gathering the ManualSystem's info
+        pageInfo = new List<string>(ManualSystem.instance.pageInfo);
+        headerInfo = new List<string>(ManualSystem.instance.headerInfo);
     }
 
     public void LoadInfo()
@@ -544,6 +558,10 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         Stats.instance.desertions = desertions;
         Stats.instance.totalSick = totalSick;
         Stats.instance.totalMoneyGained = totalMoneyGained;
+
+        //ManualSyustem.cs
+        ManualSystem.instance.pageInfo = new List<string>(this.pageInfo);
+        ManualSystem.instance.headerInfo = new List<string>(this.headerInfo);
 
         StartCoroutine(WaitForStart());
     }
