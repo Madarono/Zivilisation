@@ -245,6 +245,19 @@ public class VillagerHealth : MonoBehaviour //ToDo: Infection that makes Infecti
             {
                 Debug.Log("Cough");
                 villager.Cough(coughStunt);
+
+                float range = HasCertainTrait(VirusTrait.Airborne) ? tileRange + airborneBonus : tileRange;
+                Vector2 boxSize = new Vector2(range, range);
+
+                Collider2D hit = Physics2D.OverlapBox(transform.position, boxSize, 0f, villagerLayer);
+
+                if(hit != null)
+                {
+                    if(hit.gameObject.TryGetComponent(out VillagerAI villager))
+                    {
+                        villager.villagerHealth.Infect(inflictedVirus); //Infecting others
+                    }
+                }
             }
         }
     }

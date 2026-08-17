@@ -3,6 +3,7 @@ using UnityEngine;
 public class Window : MonoBehaviour
 {
     public Tabs tabs;
+    public SwitchPages switchPages;
     public GameObject window;
     public bool isOpen;
     public bool stopBuild;
@@ -49,7 +50,6 @@ public class Window : MonoBehaviour
 
         if(isManual) //For ManualSystem.cs
         {
-            // ManualSystem.instance.DeselectAllButtons();
             ManualSystem.instance.MakeInitialPages();
             ManualSystem.instance.ReturnToFirstPages();
         }
@@ -58,12 +58,16 @@ public class Window : MonoBehaviour
             HungerManager.instance.UpdateVisuals();
         }
 
-        if(tabs == null)
+        if(tabs != null)
         {
-            return;
+            tabs.DefaultWindow();
         }
 
-        tabs.DefaultWindow();
+        if(switchPages != null)
+        {
+            switchPages.ResetMode();
+        }
+
     }
 
     public void CloseWindow()
@@ -75,11 +79,14 @@ public class Window : MonoBehaviour
         window.SetActive(false);
         isOpen = false;
         
-        if(tabs == null)
+        if(isManual)
         {
-            return;
+            LookAhead.instance.CloseWindow();
         }
-
-        tabs.CloseAllMenus();
+        
+        if(tabs != null)
+        {
+            tabs.CloseAllMenus();
+        }
     }
 }

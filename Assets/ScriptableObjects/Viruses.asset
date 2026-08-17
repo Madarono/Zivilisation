@@ -1,0 +1,83 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11b67086090581648b03d95be6a83b2b, type: 3}
+  m_Name: Viruses
+  m_EditorClassIdentifier: Assembly-CSharp::DevSidePage
+  leftPageInfo: '<align=center><size=140%>- VIRUSES -</size></align>
+
+    The <color=#305D42><size=110%><i>core
+    threat</i></size></color> in Feverfall. Synthesize cures and vaccinate your population
+    to survive.
+
+    <align=center>- - - -</align>
+
+    Infection Sources:
+
+    Newcomers
+    (<color=#305D42><size=110%><i>5%</i></size></color>): Introduces an undiscovered
+    strain.
+
+    Villagers (<color=#305D42><size=110%><i>6%</i></size></color>):
+    Contracts an existing strain at random.'
+  leftPageLayout: 1
+  leftPageIcons:
+  - {fileID: 2173206445449464362, guid: 90a87c7ca9cef5b4b9842fa97b2c7a7a, type: 3}
+  - {fileID: -902373727, guid: 90a87c7ca9cef5b4b9842fa97b2c7a7a, type: 3}
+  - {fileID: 1895119538, guid: 90a87c7ca9cef5b4b9842fa97b2c7a7a, type: 3}
+  leftPageWidth: 100
+  leftPageHeight: 100
+  leftPageSpacing: 10
+  leftPagePadding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 15
+    m_Bottom: 0
+  rightPageInfo: '  <size=140%>- Virus Traits -</size>
+
+    <b>Airborne</b>: <size=90%>Larger
+    range, <color=#305D42><i>1.5x</i></color> Infection </size>
+
+    <b>Overcrowding</b>:
+    <size=90%>Infects motels at <color=#305D42><i>2x</i></color> rate.</size>
+
+    <b>Muscle
+    Atrophy</b>: <size=90%><color=#305D42><i>1.5x</i></color> severity, efficiency
+    <color=#305D42><i>25%</i></color></size>
+
+    <b>Hyper Metabolism</b>: <size=90%><color=#305D42><i>2x</i></color>
+    Hunger drain</size>
+
+    <b>Coughing</b>: <size=90%>Stuns villager & instant
+    AOE infect.</size>
+
+    <b>Exhaustion Insomnia</b>: <size=90%>Disrupts schedules.</size>
+
+    <b>Sudden
+    Collapse</b>: <size=90%>Dies leaving a <color=#305D42><i>2x</i></color> toxic
+    corpse</size>'
+  rightPageLayout: 3
+  rightPageIcons:
+  - {fileID: -6415659402455822613, guid: 542bd6266d089104bb48346aa84df741, type: 3}
+  - {fileID: -2595053415140472170, guid: 542bd6266d089104bb48346aa84df741, type: 3}
+  - {fileID: 750799940376752702, guid: 542bd6266d089104bb48346aa84df741, type: 3}
+  - {fileID: 924210136, guid: 542bd6266d089104bb48346aa84df741, type: 3}
+  - {fileID: 1549679952, guid: 542bd6266d089104bb48346aa84df741, type: 3}
+  - {fileID: -1618274970, guid: 542bd6266d089104bb48346aa84df741, type: 3}
+  - {fileID: 496080882, guid: 542bd6266d089104bb48346aa84df741, type: 3}
+  rightPageWidth: 50
+  rightPageHeight: 50
+  rightPageSpacing: 33
+  rightPagePadding:
+    m_Left: 0
+    m_Right: 10
+    m_Top: 75
+    m_Bottom: 0

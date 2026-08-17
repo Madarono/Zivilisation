@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11b67086090581648b03d95be6a83b2b, type: 3}
+  m_Name: Villager
+  m_EditorClassIdentifier: Assembly-CSharp::DevSidePage
+  leftPageInfo: '<align=center><size=140%>- Villagers -</size></align>
+
+    Civilians
+    that live in your village
+
+    - <b>Fed</b> with wheat
+
+    - <b>Housed</b> in
+    Motels <size=80%>(Building) </size>
+
+    - <b>Employed</b> at Workplaces <size=80%>(e.g
+    Mines, Farms)</size>
+
+    <align=center>- - - -</align>
+
+    Taking good care
+    of them by feeding them well, housing them, and giving them jobs helps in improving
+    your <color=#305D42><size=110%><i>Global Morality.</i></size></color>'
+  leftPageLayout: 1
+  leftPageIcons:
+  - {fileID: 21300000, guid: f7be77a9266fe1640ad9bfb8d97484fb, type: 3}
+  - {fileID: 5781944544380164951, guid: 64af4027a25f0a34e97d48e38effbd0c, type: 3}
+  - {fileID: 4581440321176895008, guid: b4c79820a833ed14e8b5a347bd9a2497, type: 3}
+  leftPageWidth: 100
+  leftPageHeight: 100
+  leftPageSpacing: 10
+  leftPagePadding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 15
+    m_Bottom: 0
+  rightPageInfo: 'They can get infected by <color=#305D42><size=110%><i>Viruses</i></size></color>,
+    some come infected when entering your village, and some may catch a virus whilst
+    in your village
+
+'
+  rightPageLayout: 0
+  rightPageIcons: []
+  rightPageWidth: 100
+  rightPageHeight: 100
+  rightPageSpacing: 10
+  rightPagePadding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0

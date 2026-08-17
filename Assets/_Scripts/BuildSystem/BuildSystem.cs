@@ -14,8 +14,7 @@ public class OptionVisual
 public class BuildSystem : MonoBehaviour
 {
     public static BuildSystem instance {get; private set;}
-    public Window statsWindow;
-    public Window hungerWindow;
+    public Window[] windowsToClose;
     private TownManager townManager;
     private RoadSystem roadSystem;
     private BuildOptions buildOptions;
@@ -91,8 +90,11 @@ public class BuildSystem : MonoBehaviour
 
     public void StartBuilding()
     {
-        statsWindow.CloseWindow();
-        hungerWindow.CloseWindow();
+        foreach(var window in windowsToClose)
+        {
+            window.CloseWindow();
+        }
+
         ViewMode.instance.StopViewMode();
         if(activeMoving != null)
         {
