@@ -35,6 +35,11 @@ public class TimeForward : MonoBehaviour
             choosing = 0;
         }
 
+        if(choosing == 0 && TownManager.instance.availableLaboratory != null && TownManager.instance.availableLaboratory.isShowing) //Avoid going to Timescale 0
+        {
+            choosing = 1;
+        }
+
         UpdateTimeScale();
     }
 

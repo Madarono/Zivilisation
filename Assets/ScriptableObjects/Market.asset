@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11b67086090581648b03d95be6a83b2b, type: 3}
+  m_Name: Market
+  m_EditorClassIdentifier: Assembly-CSharp::DevSidePage
+  leftPageInfo: "<align=center><size=140%>- Market -</size></align>\nMarket is a
+    player building, you can only have one at a time.\n\n<align=center><size=120%>-
+    Usage -</size></align>\nSell resources, each have their own <color=#305D42><size=110%><i>base
+    worth</i></size></color> that changes every day based on <color=#305D42><size=110%><i>demand.</i></size></color>.
+    \n\n<align=center><size=120%>- Daily Demand -</size></align>\r\nDemands shift
+    daily (<color=#305D42><size=110%><i>50</i></color>-<color=#305D42><size=110%><i>200%</i></size></color>
+    of <color=#305D42><size=110%><i>base worth</i></size></color>):"
+  leftPageLayout: 1
+  leftPageIcons:
+  - {fileID: 21300000, guid: de06e6a8afb1439419d7b2dcd9f4c3fb, type: 3}
+  - {fileID: 21300000, guid: 68cfe7a1f6dbef5478d2f006f4ee5511, type: 3}
+  leftPageWidth: 100
+  leftPageHeight: 100
+  leftPageSpacing: 20
+  leftPagePadding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 10
+    m_Bottom: 0
+  rightPageInfo: '- <b>Up Arrow:</b> <color=#305D42><i>120</i></color>-<color=#305D42><i>200%</i></color>
+
+    -
+    <b>Neutral Arrow:</b> <color=#305D42><i>90</i></color>-<color=#305D42><i>110%</i></color>
+
+    -
+    <b>Down Arrow:</b> <color=#305D42><i>50</i></color>-<color=#305D42><i>80%</i></color>
+
+    
+
+    <align=center><size=120%>-
+    Price Per Resource -</size></align>
+
+    - <b>Wheat:</b> <color=#305D42><i>$1</i></color>
+
+    -
+    <b>Iron:</b> <color=#305D42><i>$4</i></color>
+
+    - <b>Copper:</b> <color=#305D42><i>$5</i></color>
+
+    -
+    <b>Quartz:</b> <color=#305D42><i>$20</i></color>
+
+    - <b>Titanium:</b> <color=#305D42><i>$50</i></color>'
+  rightPageLayout: 1
+  rightPageIcons:
+  - {fileID: -1033766676993296678, guid: 833ef595d1d481c458207edf76d8f5d8, type: 3}
+  - {fileID: 426477860, guid: 833ef595d1d481c458207edf76d8f5d8, type: 3}
+  - {fileID: 2138758238, guid: 833ef595d1d481c458207edf76d8f5d8, type: 3}
+  rightPageWidth: 70
+  rightPageHeight: 70
+  rightPageSpacing: 20
+  rightPagePadding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 15
+    m_Bottom: 0

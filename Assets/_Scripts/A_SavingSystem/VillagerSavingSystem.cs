@@ -101,6 +101,10 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
     public List<string> pageInfo = new List<string>();
     public List<string> headerInfo = new List<string>();
 
+    [Header("Laboratory System")]
+    public List<string> virusNames = new List<string>();
+    public List<int> manualPage = new List<int>();
+
     //Temporary then delete immediately
     private List<Building> lateStateBuildings = new List<Building>();
 
@@ -179,6 +183,9 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
 
         data.pageInfo = this.pageInfo;
         data.headerInfo = this.headerInfo;
+        
+        data.virusNames = this.virusNames;
+        data.manualPage = this.manualPage;
     }
 
     public void LoadData(GameData data)
@@ -255,6 +262,9 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         this.pageInfo = data.pageInfo;
         this.headerInfo = data.headerInfo;
 
+        this.virusNames = data.virusNames;
+        this.manualPage = data.manualPage;
+
         LoadInfo();
     }
 
@@ -266,6 +276,8 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         workplaceId.Clear(); workplaceTypeId.Clear(); workplaceTransform.Clear(); workplaceSellValue.Clear(); workplacePos.Clear();
         roadPos.Clear(); viruses.Clear();
         pageInfo.Clear(); headerInfo.Clear();
+        virusNames.Clear();
+        manualPage.Clear();
 
         //Gathering Buildings' Info
         GridManager grid = GridManager.instance;
@@ -390,6 +402,10 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         //Gathering the ManualSystem's info
         pageInfo = new List<string>(ManualSystem.instance.pageInfo);
         headerInfo = new List<string>(ManualSystem.instance.headerInfo);
+
+        //Gathering the LaboratorySystem's info
+        virusNames = new List<string>(LaboratorySystem.instance.virusNames);
+        manualPage = new List<int>(LaboratorySystem.instance.manualPage);
     }
 
     public void LoadInfo()
@@ -562,6 +578,10 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         //ManualSyustem.cs
         ManualSystem.instance.pageInfo = new List<string>(this.pageInfo);
         ManualSystem.instance.headerInfo = new List<string>(this.headerInfo);
+
+        //LaboratorySystem.cs
+        LaboratorySystem.instance.virusNames = new List<string>(this.virusNames);
+        LaboratorySystem.instance.manualPage = new List<int>(this.manualPage);
 
         StartCoroutine(WaitForStart());
     }

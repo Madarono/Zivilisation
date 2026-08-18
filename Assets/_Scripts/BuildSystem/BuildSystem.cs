@@ -90,6 +90,8 @@ public class BuildSystem : MonoBehaviour
 
     public void StartBuilding()
     {
+        TownManager.instance.availableLaboratory?.HideVisuals();
+        TownManager.instance.availableMarket?.HideVisuals();
         foreach(var window in windowsToClose)
         {
             window.CloseWindow();

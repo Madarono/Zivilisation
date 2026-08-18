@@ -12,13 +12,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11b67086090581648b03d95be6a83b2b, type: 3}
   m_Name: Quarantine
   m_EditorClassIdentifier: Assembly-CSharp::DevSidePage
-  leftPageInfo: 
-  leftPageLayout: 0
-  leftPageIcons: []
+  leftPageInfo: '<align=center><size=140%>- Quarantine -</size></align>
+
+    Quarantine
+    is a player building, you can only have one at a time.
+
+
+    <align=center><size=120%>-
+    Usage -</size></align>
+
+    Isolate <color=#305D42><size=110%><i>Infected Villagers</i></size></color>
+    for 2 In-game Days to gather the Virus DNA and attempt a cure in the <color=#305D42><size=110%><i>Laboratory</i></size></color> '
+  leftPageLayout: 1
+  leftPageIcons:
+  - {fileID: 21300000, guid: 98e7751ccfeb261458fec6b730eb4f40, type: 3}
+  - {fileID: 21300000, guid: 921a283ce7f918949a7177d0d7648331, type: 3}
+  - {fileID: 21300000, guid: f903fcf8eeeb2c845857dc9b52b87cd2, type: 3}
   leftPageWidth: 100
   leftPageHeight: 100
+  leftPageSpacing: 20
+  leftPagePadding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 10
+    m_Bottom: 0
   rightPageInfo: 
   rightPageLayout: 0
   rightPageIcons: []
   rightPageWidth: 100
   rightPageHeight: 100
+  rightPageSpacing: 10
+  rightPagePadding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0

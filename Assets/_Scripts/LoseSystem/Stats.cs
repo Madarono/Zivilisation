@@ -70,11 +70,10 @@ public class Stats : MonoBehaviour
     {
         int healthyVillagers = 0;
         int sickVillagers = 0;
-        int totalPopulation;
 
-        foreach(var villager in TownManager.instance.villagers)
+        foreach (var villager in TownManager.instance.villagers)
         {
-            if(villager.villagerHealth.health == Health.Healthy)
+            if (villager.villagerHealth.health == Health.Healthy)
             {
                 healthyVillagers++;
             }
@@ -84,8 +83,10 @@ public class Stats : MonoBehaviour
             }
         }
 
-        totalPopulation = healthyVillagers + sickVillagers;
+        int totalPopulation = healthyVillagers + sickVillagers;
+        
+        if (totalPopulation == 0) return 0f;
 
-        return (float)sickVillagers / totalPopulation;
+        return ((float)sickVillagers / totalPopulation) * 100f;
     }
 }

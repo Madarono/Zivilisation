@@ -372,9 +372,9 @@ MonoBehaviour:
   buildingId: 4
   isChoosing: 0
   isDisowning: 0
-  timeInsideDuration: 10
+  timeInsideDuration: 600
   timeInsideCurrent: 0
-  timeoutDuration: 10
+  timeoutDuration: 0
   timeoutCurrent: 0
   state: 0
 --- !u!1 &8831268799367074275

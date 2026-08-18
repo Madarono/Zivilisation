@@ -27,6 +27,10 @@ public class TownManager : MonoBehaviour
     [Header("For Quarantine")]
     public Quarantine availableQuarantine;
 
+    [Header("For Laboratory")]
+    public Laboratory availableLaboratory;
+    public GameObject laboratoryWindow;
+
     [Header("Village Hunger")]
     public int totalDead;
     public List<VillagerAI> villagers = new List<VillagerAI>();
@@ -505,5 +509,15 @@ public class TownManager : MonoBehaviour
         if(availableMarket == null) return;
 
         availableMarket.Sell();
+    }
+
+    //For Laboratory
+    public void CloseLaboratoryWindow()
+    {
+        if(availableLaboratory == null) return;
+
+        availableLaboratory.HideVisuals();
+        LookAhead.instance.SetValues(false);
+        LookAhead.instance.CloseWindow();
     }
 }

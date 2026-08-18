@@ -105,6 +105,18 @@ public class ManualSystem : MonoBehaviour
         UpdatePageContent();
     }
 
+    public void MakeNewPage()
+    {
+        leftPageId = pageInfo.Count;
+        rightPageId = leftPageId + 1;
+
+        pageInfo.Add("");
+        pageInfo.Add("");
+        headerInfo.Add("");
+        headerInfo.Add("");
+
+        UpdatePageContent();
+    }
     public void UpdatePageContent()
     {
         pages[0].text = pageInfo[leftPageId];

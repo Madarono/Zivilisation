@@ -45,6 +45,7 @@ public class BuildOptions : MonoBehaviour
     [Header("Only One Buildings")]
     public Market market;
     public Quarantine quarantine;
+    public Laboratory laboratory;
 
     [Line]
     [CenteredHeader("Camera Shake", 20)]
@@ -178,6 +179,12 @@ public class BuildOptions : MonoBehaviour
                 else if(hit.gameObject.TryGetComponent(out Quarantine hitQuarantine))
                 {
                     TownManager.instance.availableQuarantine = null;
+                    Destroy(hit.gameObject);
+                    if(Settings.instance.canScreenShake) PixelCameraShake.instance.Shake(shovelDuration, shovelMagnitude);
+                }
+                else if(hit.gameObject.TryGetComponent(out Laboratory hitLaboratory))
+                {
+                    TownManager.instance.availableLaboratory = null;
                     Destroy(hit.gameObject);
                     if(Settings.instance.canScreenShake) PixelCameraShake.instance.Shake(shovelDuration, shovelMagnitude);
                 }
@@ -541,25 +548,18 @@ public class BuildOptions : MonoBehaviour
         switch(id)
         {
             case 0:
-                if(market == null)
-                {
-                    return false;
-                }
-                else
-                {
-                    return true;
-                }
+                if(market == null) return false;
+                else return true;
                 break;
 
             case 1:
-                if(quarantine == null)
-                {
-                    return false;
-                }
-                else
-                {
-                    return true;
-                }
+                if(quarantine == null) return false;
+                else return true;
+                break;
+            case 2:
+                if(laboratory == null) return false;
+                else return true;
+                break;
         }
 
         return false;
@@ -569,5 +569,6 @@ public class BuildOptions : MonoBehaviour
     {
         market = TownManager.instance.availableMarket;
         quarantine = TownManager.instance.availableQuarantine;
+        laboratory = TownManager.instance.availableLaboratory;
     }
 }

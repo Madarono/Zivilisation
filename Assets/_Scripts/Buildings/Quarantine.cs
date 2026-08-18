@@ -113,6 +113,8 @@ public class Quarantine : Building, VillageBuildable
     public override void RemoveVillagerRole(VillagerAI villager)
     {
         villager.quarantine = null;
+        villager.villagerPF.CancelMovement();
+        villager.state = VillagerState.Idle;
         villager.gameObject.transform.position = new Vector3(transform.position.x, transform.position.y - 1, transform.position.z);
     }
 

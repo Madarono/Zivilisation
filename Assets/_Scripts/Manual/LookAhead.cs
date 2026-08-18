@@ -20,6 +20,16 @@ public class LookAhead : MonoBehaviour
     private List<string> availableHeaders = new List<string>();
     private List<int> availablePageNumbers = new List<int>();
 
+    private GameObject ownWindow;
+    private TMP_InputField ownSearchBar;
+    private Transform ownParent;
+
+    [Header("Laboratory's LookAhead")]
+    public GameObject laboratoryWindow;
+    public TMP_InputField laboratorySearchBar;
+    public Transform laboratoryParent;
+
+
     void Awake()
     {
         instance = this;
@@ -28,19 +38,31 @@ public class LookAhead : MonoBehaviour
     void Start()
     {
         manual = ManualSystem.instance;
+
+        ownWindow = window;
+        ownSearchBar = searchBar;
+        ownParent = parent;
         CloseWindow();
+    }
+
+    public void SetValues(bool laboratory)
+    {
+        window = laboratory ? laboratoryWindow : ownWindow;
+        searchBar = laboratory ? laboratorySearchBar : ownSearchBar;
+        parent = laboratory ? laboratoryParent : ownParent;
     }
     
     public void BothWindow()
     {
         isOpen = !isOpen;
 
-        if(isOpen) OpenWindow();
+        if(isOpen) OpenWindow(false);
         else CloseWindow();
     }
 
-    public void OpenWindow()
+    public void OpenWindow(bool laboratory)
     {
+        SetValues(laboratory);
         window.SetActive(true);
         isOpen = true;
         ClearList();
@@ -146,6 +168,7 @@ public class LookAhead : MonoBehaviour
         }
 
         manual.UpdatePageContent();
+        if(TownManager.instance.availableLaboratory != null && TownManager.instance.availableLaboratory.isShowing) LaboratorySystem.instance.SetNewPage(pageId);
         CloseWindow();
     }
 

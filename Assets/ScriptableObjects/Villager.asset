@@ -20,16 +20,16 @@ MonoBehaviour:
     - <b>Fed</b> with wheat
 
     - <b>Housed</b> in
-    Motels <size=80%>(Building) </size>
+    Motels <size=80%><i>(Building) </i></size>
 
-    - <b>Employed</b> at Workplaces <size=80%>(e.g
-    Mines, Farms)</size>
+    - <b>Employed</b> at Workplaces
+    <size=80%><i>(e.g. Mines, Farms)</size></i>
 
     <align=center>- - - -</align>
 
-    Taking good care
-    of them by feeding them well, housing them, and giving them jobs helps in improving
-    your <color=#305D42><size=110%><i>Global Morality.</i></size></color>'
+    Taking
+    good care of them by feeding them well, housing them, and giving them jobs helps
+    in improving your <color=#305D42><size=110%><i>Global Morality.</i></size></color>'
   leftPageLayout: 1
   leftPageIcons:
   - {fileID: 21300000, guid: f7be77a9266fe1640ad9bfb8d97484fb, type: 3}

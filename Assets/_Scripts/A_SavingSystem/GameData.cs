@@ -76,6 +76,9 @@ public class GameData
     public List<string> pageInfo = new List<string>();
     public List<string> headerInfo = new List<string>();
 
+    public List<string> virusNames = new List<string>();
+    public List<int> manualPage = new List<int>();
+
     public GameData()
     {
         //VillagerSavingSystem.cs
@@ -150,5 +153,8 @@ public class GameData
 
         pageInfo = new List<string>();
         headerInfo = new List<string>();
+
+        virusNames = new List<string>();
+        manualPage = new List<int>();
     }
 }
