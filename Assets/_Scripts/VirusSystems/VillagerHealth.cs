@@ -109,6 +109,15 @@ public class VillagerHealth : MonoBehaviour //ToDo: Infection that makes Infecti
         UpdateVisuals();
     }
 
+    public void Cure()
+    {
+        if(health == Health.Healthy) return;
+
+        health = Health.Healthy;
+        inflictedVirus = null;
+        UpdateVisuals();
+    }
+
     public void UpdateVisuals()
     {
         switch(health)

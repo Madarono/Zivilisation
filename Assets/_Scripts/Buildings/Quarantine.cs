@@ -116,6 +116,12 @@ public class Quarantine : Building, VillageBuildable
         villager.villagerPF.CancelMovement();
         villager.state = VillagerState.Idle;
         villager.gameObject.transform.position = new Vector3(transform.position.x, transform.position.y - 1, transform.position.z);
+
+        //To close the lab window if the Quarantine time ended whilst the player is using the Lab
+        if(TownManager.instance.availableLaboratory != null && TownManager.instance.availableLaboratory.isShowing)
+        {
+            TownManager.instance.availableLaboratory.HideVisuals();
+        }
     }
 
     public void HideVillager()

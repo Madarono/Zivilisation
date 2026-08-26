@@ -78,7 +78,7 @@ public class VillageNewGame : MonoBehaviour
             build.SpawnOption(building.prefab, buildingPos);
         }
 
-        TownStorage.instance.money = 100;
+        TownStorage.instance.Money = 100;
         TownStorage.instance.wheat = 3f;
         TownStorage.instance.iron = 0;
         TownStorage.instance.copper = 0;
@@ -88,7 +88,7 @@ public class VillageNewGame : MonoBehaviour
         DayCycle.instance.hours = 6;
         DayCycle.instance.minutes = 0;
         DayCycle.instance.seconds = 0;
-        DayCycle.instance.UpdateClock();
+        DayCycle.instance.UpdateClock(true);
     }
 
     [ContextMenu("Debug NewGame")]

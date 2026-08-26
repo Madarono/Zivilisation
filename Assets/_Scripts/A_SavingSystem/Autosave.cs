@@ -9,12 +9,12 @@ public class Autosave : MonoBehaviour
     {
         if (!hasFocus)
         {
-            Debug.Log("App moved to BACKGROUND (Lost Focus). Saving game state...");
+            // Debug.Log("App moved to BACKGROUND (Lost Focus). Saving game state...");
             TriggerAutoSave();
         }
         else
         {
-            Debug.Log("App moved to FOREGROUND (Gained Focus). Pause menus can open here.");
+            // Debug.Log("App moved to FOREGROUND (Gained Focus). Pause menus can open here.");
         }
     }
 
@@ -23,12 +23,12 @@ public class Autosave : MonoBehaviour
     {
         if (isPaused)
         {
-            Debug.Log("App suspended to BACKGROUND (Paused). Saving game state...");
+            // Debug.Log("App suspended to BACKGROUND (Paused). Saving game state...");
             TriggerAutoSave();
         }
         else
         {
-            Debug.Log("App resumed to FOREGROUND (Unpaused).");
+            // Debug.Log("App resumed to FOREGROUND (Unpaused).");
         }
     }
 

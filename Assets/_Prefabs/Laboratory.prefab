@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6434369372083169696}
   - component: {fileID: 6565508992882692688}
   - component: {fileID: 4100774226141362298}
-  - component: {fileID: 8153227393709363635}
+  - component: {fileID: 1233182532549228779}
   m_Layer: 0
   m_Name: Laboratory
   m_TagString: Untagged
@@ -154,7 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GridTaken
   width: 2
   height: 2
---- !u!114 &8153227393709363635
+--- !u!114 &1233182532549228779
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -163,11 +163,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 6718227901139635032}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f998022eeb672342b99f57daf8e3a22, type: 3}
+  m_Script: {fileID: 11500000, guid: 3eb6b1068dfcca04cb906ea70830d705, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Laboratory
   isShowing: 0
-  gridTaken: {fileID: 4100774226141362298}
+  gridTaken: {fileID: 0}
   buildingStates:
   - {fileID: 21300000, guid: 4d5f30ec390577949be40bb35dc3b9a8, type: 3}
   sellValue: 175

@@ -45,12 +45,16 @@ public class DayCycle : MonoBehaviour
             hours = 0;
         }
 
-        UpdateClock();
+        UpdateClock(false);
     }
 
-    public void UpdateClock()
+    public void UpdateClock(bool forceUpdate)
     {
-        string minuteString = minutes >= 10 ? minutes.ToString() : "0" + minutes.ToString();
+        if(minutes % 10 != 0 && !forceUpdate) return;
+
+        int minuteWithoutUnits = (minutes / 10) * 10;
+
+        string minuteString = minuteWithoutUnits >= 10 ? minuteWithoutUnits.ToString() : "0" + minuteWithoutUnits.ToString();
         string hoursString = hours >= 10 ? hours.ToString() : "0" + hours.ToString();
 
         clockVisual.text = hoursString + ":" + minuteString;

@@ -14,18 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DevSidePage
   leftPageInfo: '<align=center><size=140%>- Normal Mode -</size></align>
 
-    
 
     <align=center><size=120%>-
     Objective -</size></align>
 
-    Identify & synthesize <color=#305D42><size=110%><i>5</i></size></color>
-    distinct strain cures in the Laboratory.
+    Develop & synthesize <color=#305D42><size=110%><i>5</i></size></color>
+    vaccine batches in the Laboratory.
 
-    
 
-    <align=center><size=120%>-
-    Difficulty -</size></align>
+    <align=center><size=120%>- Difficulty
+    -</size></align>
 
     Scaled hardness with difficulty:
 
@@ -50,15 +48,13 @@ MonoBehaviour:
     m_Bottom: 0
   rightPageInfo: '<align=center><size=140%>- Endless Mode -</size></align>
 
-    
 
     <align=center><size=120%>-
     Objective -</size></align>
 
-    Cures delay the inevitable. Survive as long
-    as possible.
+    Cures delay the inevitable. Survive as long as
+    possible.
 
-    
 
     <align=center><size=120%>- Difficulty -</size></align>
 

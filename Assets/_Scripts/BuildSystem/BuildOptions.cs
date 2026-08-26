@@ -141,7 +141,7 @@ public class BuildOptions : MonoBehaviour
                         }
                     }
 
-                    TownStorage.instance.money += hitBuilding.sellValue;
+                    TownStorage.instance.Money += hitBuilding.sellValue;
                     Destroy(hit.gameObject);
                     if(Settings.instance.canScreenShake) PixelCameraShake.instance.Shake(shovelDuration, shovelMagnitude);
                 }
@@ -151,7 +151,7 @@ public class BuildOptions : MonoBehaviour
                     {
                         hitFarm.RemindVillagerStop();
                     }
-                    TownStorage.instance.money += hitBuilding.sellValue;
+                    TownStorage.instance.Money += hitBuilding.sellValue;
                     Destroy(hit.gameObject);
                     if(Settings.instance.canScreenShake) PixelCameraShake.instance.Shake(shovelDuration, shovelMagnitude);
                 }
@@ -161,7 +161,7 @@ public class BuildOptions : MonoBehaviour
                     {
                         hitMines.RemindVillagerStop();
                     }
-                    TownStorage.instance.money += hitBuilding.sellValue;
+                    TownStorage.instance.Money += hitBuilding.sellValue;
                     Destroy(hit.gameObject);
                     if(Settings.instance.canScreenShake) PixelCameraShake.instance.Shake(shovelDuration, shovelMagnitude);
                 }
@@ -380,7 +380,7 @@ public class BuildOptions : MonoBehaviour
         }
 
         this.item = item;
-        if(TownStorage.instance.money < item.price)
+        if(TownStorage.instance.Money < item.price)
         {
             PopupText.instance.Popup("Insufficient Money.");
             this.item = null;
@@ -465,9 +465,9 @@ public class BuildOptions : MonoBehaviour
 
     public void AcceptOption()
     {
-        if(TownStorage.instance.money < item.price || !isPositionLocked)
+        if(TownStorage.instance.Money < item.price || !isPositionLocked)
         {
-            if(TownStorage.instance.money < item.price) PopupText.instance.Popup("Insufficient Money.");
+            if(TownStorage.instance.Money < item.price) PopupText.instance.Popup("Insufficient Money.");
             return;
         }
 
@@ -476,7 +476,7 @@ public class BuildOptions : MonoBehaviour
             return;
         }
 
-        TownStorage.instance.money -= item.price;
+        TownStorage.instance.Money -= item.price;
         SpawnOption(item.itemPrefab, finalWorldPos, item.price * sellValueMultiplyer);
 
         if(item.onlyOne)

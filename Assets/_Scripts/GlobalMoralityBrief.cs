@@ -74,6 +74,9 @@ public class GlobalMoralityBrief : MonoBehaviour
             other.CloseWindow();
         }
         BuildSystem.instance.StopBuilding();
+        if(TownManager.instance.availableLaboratory != null) TownManager.instance.availableLaboratory.HideVisuals();
+        if(TownManager.instance.availableMarket != null) TownManager.instance.availableMarket.HideVisuals();
+        if(TownManager.instance.availableQuarantine != null) TownManager.instance.availableQuarantine.HideVisuals();
 
         isOpen = true;
         itself.sprite = selected;

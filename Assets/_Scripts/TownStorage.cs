@@ -1,13 +1,16 @@
 using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 using TMPro;
 
 public class TownStorage : MonoBehaviour
 {
     public static TownStorage instance {get; private set;}
 
-    public int money;
+    [SerializeField] private int money;
+    public UnityEvent<int> onMoneyChanged;
+
 
     [Header("Resources")]
     public float wheat;
@@ -47,6 +50,17 @@ public class TownStorage : MonoBehaviour
 
     private TownManager townManager;
     private Coroutine currentVillagerCooldown;
+    
+    public int Money
+    {
+        get => money;
+        set
+        {
+            if (money == value) return;
+            money = value;
+            onMoneyChanged?.Invoke(money);
+        }
+    }
 
     void Awake()
     {

@@ -39,7 +39,7 @@ public class Window : MonoBehaviour
             ActiveWindow.instance.currentActiveWindow.CloseWindow();
         }
 
-        TownManager.instance.availableLaboratory?.HideVisuals();
+        // TownManager.instance.availableLaboratory?.HideVisuals();
         TownManager.instance.availableMarket?.HideVisuals();
 
         ActiveWindow.instance.currentActiveWindow = this;

@@ -2,6 +2,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
+
 public enum VillagerState
 {
     Moving,

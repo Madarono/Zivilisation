@@ -68,8 +68,17 @@ public class Laboratory : Building, VillageBuildable
 
     public override void ShowVisuals()
     {
-        if(TownManager.instance.availableQuarantine == null) return;
-        if(TownManager.instance.availableQuarantine.villagers.Count == 0) return;
+        if (TownManager.instance.availableQuarantine == null) 
+        {
+            PopupText.instance.Popup("Need Quarantine to function.");
+            return;
+        }
+        
+        if (TownManager.instance.availableQuarantine.villagers.Count == 0) 
+        {
+            PopupText.instance.Popup("Need Quarantined Villagers to function.");
+            return;
+        }
         
         UpdateVisuals();
         isShowing = true;
@@ -86,6 +95,7 @@ public class Laboratory : Building, VillageBuildable
     {
         isShowing = false;
         laboratoryWindow.SetActive(false);
+        // LaboratorySystem.instance.HideAllVisuals();
     }
 
     public override void UpdateVisuals()

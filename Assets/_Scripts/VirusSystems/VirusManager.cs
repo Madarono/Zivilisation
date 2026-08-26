@@ -34,13 +34,10 @@ public class VirusTraitWeight
 public enum VirusResistance
 {
     None,
-    Wheat,
-    Iron,
-    Copper,
-    Quartz,
-    Titanium,
-    DoubleAll,
-    TripleAll
+    OneQuarterX,
+    OneHalfX,
+    TwoX,
+    ThreeX
 }
 
 public enum VirusTrait 

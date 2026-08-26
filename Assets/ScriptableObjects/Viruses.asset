@@ -18,16 +18,17 @@ MonoBehaviour:
     threat</i></size></color> in Feverfall. Synthesize cures and vaccinate your population
     to survive.
 
-    <align=center>- - - -</align>
 
-    Infection Sources:
+    <align=center><size=140%>- Virus Stats -</size></align>
 
-    Newcomers
-    (<color=#305D42><size=110%><i>5%</i></size></color>): Introduces an undiscovered
-    strain.
+    <b>Infection:</b>
+    <size=90%>Determines infection rate.</size>
 
-    Villagers (<color=#305D42><size=110%><i>6%</i></size></color>):
-    Contracts an existing strain at random.'
+    <b>Severity:</b> <size=90%>Cripples
+    villager movement speed & work efficiency.</size>
+
+    <b>Lethality:</b> <size=90%>Directly
+    drives sudden collapse & toxic corpse drops.</size> '
   leftPageLayout: 1
   leftPageIcons:
   - {fileID: 2173206445449464362, guid: 90a87c7ca9cef5b4b9842fa97b2c7a7a, type: 3}
@@ -50,8 +51,8 @@ MonoBehaviour:
     <size=90%>Infects motels at <color=#305D42><i>2x</i></color> rate.</size>
 
     <b>Muscle
-    Atrophy</b>: <size=90%><color=#305D42><i>1.5x</i></color> severity, efficiency
-    <color=#305D42><i>25%</i></color></size>
+    Atrophy</b>: <size=90%><color=#305D42><i>1.5x</i></color> severity, <color=#305D42><i>-25%</i></color></size>
+    efficiency
 
     <b>Hyper Metabolism</b>: <size=90%><color=#305D42><i>2x</i></color>
     Hunger drain</size>
@@ -75,7 +76,7 @@ MonoBehaviour:
   - {fileID: 496080882, guid: 542bd6266d089104bb48346aa84df741, type: 3}
   rightPageWidth: 50
   rightPageHeight: 50
-  rightPageSpacing: 33
+  rightPageSpacing: 35
   rightPagePadding:
     m_Left: 0
     m_Right: 10

@@ -156,7 +156,7 @@ public class Market : Building, VillageBuildable
         townStorage.copper -= Mathf.RoundToInt(sliders[2].value);
         townStorage.quartz -= Mathf.RoundToInt(sliders[3].value);
         townStorage.titanium -= Mathf.RoundToInt(sliders[4].value);
-        townStorage.money += finalPrice;
+        townStorage.Money += finalPrice;
 
         Stats.instance.totalMoneyGained += finalPrice;
 

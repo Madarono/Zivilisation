@@ -27,14 +27,6 @@ public class PopupText : MonoBehaviour
         popupVisual.gameObject.SetActive(false);
     }
 
-    // void Update()
-    // {
-    //     if(Input.GetKeyDown(KeyCode.P))
-    //     {
-    //         Popup(input);
-    //     }
-    // }
-
     public void Popup(string input)
     {
         if(currentPopup != null)
@@ -56,7 +48,7 @@ public class PopupText : MonoBehaviour
         float t = 0f;
         while (t < duration * 0.5f)
         {
-            t += Time.deltaTime;
+            t += Time.unscaledDeltaTime;
             float alpha = Mathf.Lerp(0f, 1f, t / (duration * 0.5f));
 
             c.a = alpha;
@@ -73,7 +65,7 @@ public class PopupText : MonoBehaviour
         t = 0f;
         while (t < duration * 0.5f)
         {
-            t += Time.deltaTime;
+            t += Time.unscaledDeltaTime;
             float alpha = Mathf.Lerp(1f, 0f, t / (duration * 0.5f));
 
             c.a = alpha;

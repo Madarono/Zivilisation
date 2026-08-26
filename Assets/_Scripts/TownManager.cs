@@ -376,7 +376,7 @@ public class TownManager : MonoBehaviour
                 {
                     villager.villagerSprite.Selected();
                 }
-                else
+                else if(villager.state != VillagerState.Sleeping && villagers[0].rend.sprite != null)
                 {
                     villager.villagerSprite.DeSelected();
                 }
@@ -430,7 +430,10 @@ public class TownManager : MonoBehaviour
     {
         foreach(var villager in villagers)
         {
-            villager.villagerSprite.DeSelected();
+            if(villager.state != VillagerState.Sleeping && villagers[0].rend.sprite != null)
+            {
+                villager.villagerSprite.DeSelected();
+            }
         }
         activeBuilding.isChoosing = false;
         activeBuilding = null;
@@ -448,7 +451,10 @@ public class TownManager : MonoBehaviour
 
         foreach(var villager1 in villagers)
         {
-            villager1.villagerSprite.DeSelected();
+            if(villager.state != VillagerState.Sleeping && villagers[0].rend.sprite != null)
+            {
+                villager.villagerSprite.DeSelected();
+            }
         }
     }
 

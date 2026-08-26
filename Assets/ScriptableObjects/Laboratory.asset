@@ -12,13 +12,44 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11b67086090581648b03d95be6a83b2b, type: 3}
   m_Name: Laboratory
   m_EditorClassIdentifier: Assembly-CSharp::DevSidePage
-  leftPageInfo: 
-  leftPageLayout: 0
-  leftPageIcons: []
+  leftPageInfo: '<align=center><size=140%>- Laboratory -</size></align>
+
+    Laboratory
+    is a player building, you can only have one at a time.
+
+
+    <align=center><size=120%>-
+    Curing -</size></align>
+
+    - Collect <color=#305D42><size=110%><i>Virus DNA</i></size></color>
+    from quarantined Villager.
+
+    - Use the <color=#305D42><size=110%><i>Sliders</i></size></color>
+    to match the target Virus DNA.
+
+    - Take <color=#305D42><size=110%><i>Notes</i></size></color>
+    of your process for future cures.'
+  leftPageLayout: 1
+  leftPageIcons:
+  - {fileID: 21300000, guid: 4d5f30ec390577949be40bb35dc3b9a8, type: 3}
+  - {fileID: 21300000, guid: 38f9493f1e81c354b86c04e7368cc48c, type: 3}
+  - {fileID: 21300000, guid: fbfb1a422f2d185409a62e37babca9fa, type: 3}
   leftPageWidth: 100
   leftPageHeight: 100
+  leftPageSpacing: 10
+  leftPagePadding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 10
+    m_Bottom: 0
   rightPageInfo: 
   rightPageLayout: 0
   rightPageIcons: []
   rightPageWidth: 100
   rightPageHeight: 100
+  rightPageSpacing: 10
+  rightPagePadding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0

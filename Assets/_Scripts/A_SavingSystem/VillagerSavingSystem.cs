@@ -345,7 +345,7 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         }
 
         //Gathering the Town Storage's Info
-        moneySave = TownStorage.instance.money;
+        moneySave = TownStorage.instance.Money;
         wheatSave = TownStorage.instance.wheat;
         ironSave = TownStorage.instance.iron;
         copperSave = TownStorage.instance.copper;
@@ -505,9 +505,11 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         }
 
         TownManager.instance.totalDead = totalDead;
+
+        MoneyCounter.instance.deltaPrice = moneySave;
         
         //TownStorage
-        TownStorage.instance.money = moneySave;
+        TownStorage.instance.Money = moneySave;
         TownStorage.instance.wheat = wheatSave;
         TownStorage.instance.iron = ironSave;
         TownStorage.instance.copper = copperSave;
@@ -520,7 +522,7 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         DayCycle.instance.hours = hourSave;
         DayCycle.instance.minutes = minuteSave;
         DayCycle.instance.seconds = secondSave;
-        DayCycle.instance.UpdateClock();
+        DayCycle.instance.UpdateClock(true); //To force update on the time
 
         //Settings
         Settings.instance.sfxValue = sfxValue;
