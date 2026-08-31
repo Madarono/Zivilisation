@@ -105,6 +105,10 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
     public List<string> virusNames = new List<string>();
     public List<int> manualPage = new List<int>();
 
+    [Header("Vaccine System")]
+    public List<int> curedVirusId = new List<int>();
+    public List<int> vaccinatedVirusId = new List<int>();
+
     //Temporary then delete immediately
     private List<Building> lateStateBuildings = new List<Building>();
 
@@ -186,6 +190,9 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         
         data.virusNames = this.virusNames;
         data.manualPage = this.manualPage;
+
+        data.curedVirusId = this.curedVirusId;
+        data.vaccinatedVirusId = this.vaccinatedVirusId;
     }
 
     public void LoadData(GameData data)
@@ -265,6 +272,9 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         this.virusNames = data.virusNames;
         this.manualPage = data.manualPage;
 
+        this.curedVirusId = data.curedVirusId;
+        this.vaccinatedVirusId = data.vaccinatedVirusId;
+
         LoadInfo();
     }
 
@@ -278,6 +288,7 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         pageInfo.Clear(); headerInfo.Clear();
         virusNames.Clear();
         manualPage.Clear();
+        curedVirusId.Clear(); vaccinatedVirusId.Clear();
 
         //Gathering Buildings' Info
         GridManager grid = GridManager.instance;
@@ -406,6 +417,10 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         //Gathering the LaboratorySystem's info
         virusNames = new List<string>(LaboratorySystem.instance.virusNames);
         manualPage = new List<int>(LaboratorySystem.instance.manualPage);
+
+        //Gathering the VaccineSystem's info
+        curedVirusId = new List<int>(VaccineSystem.instance.curedVirusId);
+        vaccinatedVirusId = new List<int>(VaccineSystem.instance.vaccinatedVirusId);
     }
 
     public void LoadInfo()
@@ -584,6 +599,10 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         //LaboratorySystem.cs
         LaboratorySystem.instance.virusNames = new List<string>(this.virusNames);
         LaboratorySystem.instance.manualPage = new List<int>(this.manualPage);
+
+        //VaccineSystem.cs
+        VaccineSystem.instance.curedVirusId = new HashSet<int>(this.curedVirusId);
+        VaccineSystem.instance.vaccinatedVirusId = new HashSet<int>(this.vaccinatedVirusId);
 
         StartCoroutine(WaitForStart());
     }

@@ -217,6 +217,29 @@ public class LaboratorySystem : MonoBehaviour
         }
     }
 
+    public int GetVirusIdCustom(Virus virus)
+    {
+        if (virus == null) return -1;
+
+        for (int i = 0; i < VirusManager.instance.viruses.Count; i++)
+        {
+            Virus masterVirus = VirusManager.instance.viruses[i];
+            if (virus.infection == masterVirus.infection &&
+                virus.severity == masterVirus.severity &&
+                virus.lethality == masterVirus.lethality && 
+                virus.resistanceType == masterVirus.resistanceType &&
+                virus.trait1 == masterVirus.trait1 && 
+                virus.trait2 == masterVirus.trait2 &&
+                virus.trait3 == masterVirus.trait3)
+            {
+                return i;
+                break;
+            }
+        }
+
+        return -1;
+    }
+
     //Mimicing Viruses
     public void UpdateMimicVirus()
     {
@@ -409,6 +432,7 @@ public class LaboratorySystem : MonoBehaviour
                 TownManager.instance.availableQuarantine.villagers[0].villagerHealth.Cure();
                 TownManager.instance.availableQuarantine.RemoveHuman();
             }
+            VaccineSystem.instance.curedVirusId.Add(virusId);
             TownManager.instance.availableLaboratory.HideVisuals();
             HideAllVisuals();
             return;
@@ -431,4 +455,6 @@ public class LaboratorySystem : MonoBehaviour
             obj.SetActive(false);
         }
     }
+
+    
 }

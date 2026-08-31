@@ -373,7 +373,7 @@ MonoBehaviour:
   isChoosing: 0
   isDisowning: 0
   timeInsideDuration: 600
-  timeInsideCurrent: 0
+  timeInsideCurrent: 300
   timeoutDuration: 0
   timeoutCurrent: 0
   state: 0

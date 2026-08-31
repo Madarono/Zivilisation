@@ -79,6 +79,9 @@ public class GameData
     public List<string> virusNames = new List<string>();
     public List<int> manualPage = new List<int>();
 
+    public List<int> curedVirusId = new List<int>();
+    public List<int> vaccinatedVirusId = new List<int>();
+
     public GameData()
     {
         //VillagerSavingSystem.cs
@@ -156,5 +159,8 @@ public class GameData
 
         virusNames = new List<string>();
         manualPage = new List<int>();
+
+        curedVirusId = new List<int>();
+        vaccinatedVirusId = new List<int>();
     }
 }

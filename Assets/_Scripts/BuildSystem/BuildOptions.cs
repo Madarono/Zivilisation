@@ -241,6 +241,8 @@ public class BuildOptions : MonoBehaviour
         window.SetActive(true);
         isOpen = true;
         priceObj.SetActive(false);
+        TownManager.instance.CloseLaboratoryWindow();
+        TownManager.instance.availableMarket?.HideVisuals();
         shovelBuilds.gameObject.SetActive(true);
         moveBuilds.gameObject.SetActive(true);
 

@@ -11,6 +11,7 @@ public class Window : MonoBehaviour
     [Header("Special")]
     public bool isHunger;
     public bool isManual;
+    public bool closeLaboratory = true;
 
     void Start()
     {
@@ -39,7 +40,8 @@ public class Window : MonoBehaviour
             ActiveWindow.instance.currentActiveWindow.CloseWindow();
         }
 
-        // TownManager.instance.availableLaboratory?.HideVisuals();
+        if(closeLaboratory) TownManager.instance.CloseLaboratoryWindow();
+        if(!closeLaboratory) TownManager.instance.availableLaboratory?.laboratoryWindow.SetActive(false);
         TownManager.instance.availableMarket?.HideVisuals();
 
         ActiveWindow.instance.currentActiveWindow = this;
@@ -91,5 +93,7 @@ public class Window : MonoBehaviour
         {
             tabs.CloseAllMenus();
         }
+
+        if(!closeLaboratory && TownManager.instance.availableLaboratory != null && TownManager.instance.availableLaboratory.isShowing) TownManager.instance.availableLaboratory.laboratoryWindow.SetActive(true);
     }
 }

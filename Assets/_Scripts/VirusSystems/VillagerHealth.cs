@@ -87,6 +87,14 @@ public class VillagerHealth : MonoBehaviour //ToDo: Infection that makes Infecti
 
     public void Inflict(Virus virus, int days)
     {
+        int virusId = LaboratorySystem.instance.GetVirusIdCustom(virus);
+        if(VaccineSystem.instance.vaccinatedVirusId.Contains(virusId))
+        {
+            PopupText.instance.Popup($"<size=110%>- Vaccine Immunity -</size>\n Blocked \"{LaboratorySystem.instance.virusNames[virusId]}\" exposure on a villager.");
+            Cure();
+            return;
+        }
+
         if(health != Health.Healthy) return;
 
         inflictedVirus = virus;
@@ -97,6 +105,14 @@ public class VillagerHealth : MonoBehaviour //ToDo: Infection that makes Infecti
 
     public void Infect(Virus virus)
     {
+        int virusId = LaboratorySystem.instance.GetVirusIdCustom(virus);
+        if(VaccineSystem.instance.vaccinatedVirusId.Contains(virusId))
+        {
+            PopupText.instance.Popup($"<size=110%>- Vaccine Immunity -</size>\n Blocked \"{LaboratorySystem.instance.virusNames[virusId]}\" exposure on a villager.");
+            Cure();
+            return;
+        }
+
         if(LoseCondition.instance.LossBySickness())
         {
             LoseCondition.instance.CheckLossCondition();

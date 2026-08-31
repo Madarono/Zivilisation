@@ -518,11 +518,50 @@ public class TownManager : MonoBehaviour
     }
 
     //For Laboratory
+    public void OpenLaboratoryWindow()
+    {
+        if (TownManager.instance.availableQuarantine == null && VaccineSystem.instance.curedVirusId.Count == 0) 
+        {
+            PopupText.instance.Popup("Need Quarantine to function.");
+            return;
+        }
+        
+        if (TownManager.instance.availableQuarantine.villagers.Count == 0 && VaccineSystem.instance.curedVirusId.Count == 0) 
+        {
+            PopupText.instance.Popup("Need Quarantined Villagers to function.");
+            return;
+        }
+
+        TownManager.instance.availableLaboratory.isShowing = true;
+
+        if(TimeForward.instance.choosing == 0)
+        {
+            TimeForward.instance.choosing = 1;
+            TimeForward.instance.UpdateTimeScale();
+        }
+
+        if(TownManager.instance.availableQuarantine.villagers.Count > 0)
+        {
+            TownManager.instance.availableLaboratory.laboratoryWindow.SetActive(true);
+            foreach(var sideButton in VaccineSystem.instance.sideButtons)
+            {
+                sideButton.SetActive(true);
+            }
+            LaboratorySystem.instance.UpdateVisuals();
+        }
+        else if(VaccineSystem.instance.curedVirusId.Count > 0)
+        {
+            VaccineSystem.instance.OpenWindow(true);
+        }
+    }
+
     public void CloseLaboratoryWindow()
     {
         if(availableLaboratory == null) return;
 
-        availableLaboratory.HideVisuals();
+        availableLaboratory.laboratoryWindow.SetActive(false);
+        VaccineSystem.instance.CloseWindow();
+        availableLaboratory.isShowing = false;
         LookAhead.instance.SetValues(false);
         LookAhead.instance.CloseWindow();
     }

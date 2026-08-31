@@ -42,7 +42,20 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 10
     m_Bottom: 0
-  rightPageInfo: 
+  rightPageInfo: '<align=center><size=140%>- Vaccination -</size></align>
+
+    -
+    Research <color=#305D42><size=110%><i>Vaccines</i></size></color> for cured virus
+    DNA.
+
+    - vaccinate using <color=#305D42><size=110%><i>village resources</i></size></color>.
+
+    -
+    Instantly cures <color=#305D42><size=110%><i>All active infections</i></size></color>
+    upon completion.
+
+    - Carries <color=#305D42><size=110%><i>permanent Immunity</i></size></color>
+    against future exposure.'
   rightPageLayout: 0
   rightPageIcons: []
   rightPageWidth: 100
