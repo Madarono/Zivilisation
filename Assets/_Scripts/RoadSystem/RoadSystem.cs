@@ -23,6 +23,9 @@ public class RoadSystem : MonoBehaviour
     public Image brushButton;
     public Sprite[] multiBrushStates;
     public bool isMultiBrush = false;
+    public float delayBetweenSounds = 0.1f;
+    bool onCooldown = false;
+    Coroutine activeCooldown;
 
     void Awake()
     {
@@ -116,7 +119,7 @@ public class RoadSystem : MonoBehaviour
         }
     }
 
-    public void PutRoad(Vector2Int pos)
+    public void PutRoad(Vector2Int pos, bool sound = true)
     {
         Vector3 goPos = new Vector3(pos.x, pos.y, 0);
         GameObject go = Instantiate(roadPrefab, goPos, Quaternion.identity);
@@ -132,6 +135,12 @@ public class RoadSystem : MonoBehaviour
         }
 
         UpdateOneRoad(pos);
+        if(sound && !isMultiBrush) AudioManager.instance.Play(AudioManager.instance.roadPut);
+        if(sound && isMultiBrush && !onCooldown)
+        {
+            AudioManager.instance.Play(AudioManager.instance.roadPut);
+            activeCooldown = StartCoroutine(SoundCooldown());
+        }
     }
 
     bool CheckNeighbors(Vector2Int pos)
@@ -186,6 +195,7 @@ public class RoadSystem : MonoBehaviour
             roadPos.Remove(pos);
             Destroy(road);
             GridManager.instance.PlaceBuilding(pos.x, pos.y); //To make the tile unwalkable
+            AudioManager.instance.Play(AudioManager.instance.roadShovel);
         }
     }
 
@@ -201,5 +211,12 @@ public class RoadSystem : MonoBehaviour
         roadPos.Clear();
     }
 
+    IEnumerator SoundCooldown()
+    {
+        onCooldown = true;
+        yield return new WaitForSecondsRealtime(delayBetweenSounds);
+        onCooldown = false;
+        activeCooldown = null;
+    }
 
 }

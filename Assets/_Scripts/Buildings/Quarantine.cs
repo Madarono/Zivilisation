@@ -33,7 +33,7 @@ public class Quarantine : Building, VillageBuildable
             GridManager.instance.buildings.Add(this);
         }
 
-        HideVisuals();
+        HideVisuals(false);
     }
     
     public override void ShowVisuals()
@@ -42,13 +42,15 @@ public class Quarantine : Building, VillageBuildable
         rend.sprite = buildingStates[1];
         buildingStats.gameObject.SetActive(true);
         isShowing = true;
+        AudioManager.instance.Play(AudioManager.instance.select);
     }
 
-    public override void HideVisuals()
+    public override void HideVisuals(bool withSound = false)
     {
         rend.sprite = buildingStates[0];
         buildingStats.gameObject.SetActive(false);
         isShowing = false;
+        if(withSound) AudioManager.instance.Play(AudioManager.instance.buttonClicks[1]);
     }
 
     protected override void AddHuman()
@@ -87,7 +89,7 @@ public class Quarantine : Building, VillageBuildable
         }
     }
 
-    public override void AssignVillagerRole(VillagerAI villager)
+    public override void AssignVillagerRole(VillagerAI villager, bool withSound = true)
     {
         villager.quarantine = this.transform;
         villager.villagerSprite.DeSelected();
@@ -108,9 +110,11 @@ public class Quarantine : Building, VillageBuildable
         {
             insideCoroutine = StartCoroutine(InsideDuration());
         }
+        
+        if(withSound) AudioManager.instance.Play(AudioManager.instance.villagerAssign);
     }
 
-    public override void RemoveVillagerRole(VillagerAI villager)
+    public override void RemoveVillagerRole(VillagerAI villager, bool withSound = true)
     {
         villager.quarantine = null;
         villager.villagerPF.CancelMovement();
@@ -122,6 +126,8 @@ public class Quarantine : Building, VillageBuildable
         {
             TownManager.instance.availableLaboratory.HideVisuals();
         }
+
+        if(withSound) AudioManager.instance.Play(AudioManager.instance.villagerRevoke);
     }
 
     public void HideVillager()

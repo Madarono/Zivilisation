@@ -23,10 +23,14 @@ public class Market : Building, VillageBuildable
     public int[] price = new int[5];
     public int finalPrice;
 
+    [Header("Audio Sliders")]
+    public AudioSlider[] audioSliders;
+
     protected override void Start()
     {
         marketSystem = MarketSystem.instance;
         townStorage = TownStorage.instance;
+        audioSliders = (AudioSlider[])TownManager.instance.audioSliders.Clone();
 
         marketWindow = TownManager.instance.marketWindow;
         sliders = TownManager.instance.marketSliders;
@@ -40,7 +44,7 @@ public class Market : Building, VillageBuildable
         {
             GridManager.instance.buildings.Add(this);
         }
-        HideVisuals();
+        HideVisuals(false);
     }
 
     protected override void Update()
@@ -81,6 +85,15 @@ public class Market : Building, VillageBuildable
 
     protected override void OnSpriteClicked()
     {
+        if(TownManager.instance.availableLaboratory != null && TownManager.instance.availableLaboratory.isShowing) return;
+
+        //HideVisual(false) any other villager building
+        if(TownManager.instance.currentBuilding != null)
+        {
+            TownManager.instance.currentBuilding.HideVisuals(false);
+            TownManager.instance.currentBuilding = null;
+        }
+
         ShowVisuals();
     }
 
@@ -92,14 +105,20 @@ public class Market : Building, VillageBuildable
         }
 
         UpdateVisuals();
+        foreach(var audioSlider in audioSliders)
+        {
+            audioSlider.CalculateStepInterval();
+        }
+        AudioManager.instance.Play(AudioManager.instance.select);
         isShowing = true;
         marketWindow.SetActive(true);
     }
 
-    public override void HideVisuals()
+    public override void HideVisuals(bool withSound = false)
     {
         isShowing = false;
         marketWindow.SetActive(false);
+        if(withSound) AudioManager.instance.Play(AudioManager.instance.buttonClicks[1]);
     }
 
     public override void UpdateVisuals()
@@ -148,8 +167,13 @@ public class Market : Building, VillageBuildable
 
     public void Sell()
     {
-        if(finalPrice == 0) return;
+        if(finalPrice == 0)
+        {
+            AudioManager.instance.Play(AudioManager.instance.buttonClicks[Random.Range(0, AudioManager.instance.buttonClicks.Length)]);
+            return;
+        }
 
+        AudioManager.instance.Play(AudioManager.instance.sellMarket);
         CalculateFinalPrice();
         townStorage.wheat -= (float)sliders[0].value;
         townStorage.iron -= Mathf.RoundToInt(sliders[1].value);

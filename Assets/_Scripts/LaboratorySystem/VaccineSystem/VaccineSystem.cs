@@ -353,19 +353,32 @@ public class VaccineSystem : MonoBehaviour
         UpdateVisuals();
     }
 
-    public void CureAllVaccinated(int virusId)
+    public void CureAllVaccinated(int virusId, bool showPopup = true)
     {
         int amountVaccinated = 0;
         foreach(var villager in TownManager.instance.villagers)
         {
-            if(villager.villagerHealth.health != Health.Healthy && villager.villagerHealth.inflictedVirus == VirusManager.instance.viruses[virusId])
+            if(villager.villagerHealth.health != Health.Healthy && SameVirus(villager.villagerHealth.inflictedVirus, VirusManager.instance.viruses[virusId]))
             {
                 villager.villagerHealth.Cure();
                 amountVaccinated++;
             }
         }
         
+        if(!showPopup) return;
+        
         if(amountVaccinated > 0) PopupText.instance.Popup($"Vaccinated {amountVaccinated} Villagers. This virus is no longer dangerous.");
         else PopupText.instance.Popup($"{LaboratorySystem.instance.virusNames[virusId]} is now fully vaccinated, No active infections were found.");
+    }
+
+    bool SameVirus(Virus virus, Virus targetVirus)
+    {
+        return virus.infection == targetVirus.infection &&
+            virus.severity == targetVirus.severity &&
+            virus.lethality == targetVirus.lethality && 
+            virus.resistanceType == targetVirus.resistanceType &&
+            virus.trait1 == targetVirus.trait1 && 
+            virus.trait2 == targetVirus.trait2 &&
+            virus.trait3 == targetVirus.trait3;
     }
 }

@@ -47,7 +47,7 @@ public class Building : MonoBehaviour, VillageBuildable
         {
             GridManager.instance.buildings.Add(this);
         }
-        HideVisuals();
+        HideVisuals(false);
     }
 
     protected virtual void Update()
@@ -90,6 +90,13 @@ public class Building : MonoBehaviour, VillageBuildable
 
     protected virtual void OnSpriteClicked()
     {
+        if(TownManager.instance.availableLaboratory != null && TownManager.instance.availableLaboratory.isShowing) return;
+        if(TownManager.instance.availableMarket != null && TownManager.instance.availableMarket.isShowing) return;
+
+        if(TownManager.instance.currentBuilding != null && TownManager.instance.currentBuilding != this) TownManager.instance.currentBuilding.HideVisuals(false);
+
+        TownManager.instance.currentBuilding = this;
+
         BothVisuals();
     }
 
@@ -115,15 +122,19 @@ public class Building : MonoBehaviour, VillageBuildable
         rend.sprite = buildingStates[1];
         buildingStats.gameObject.SetActive(true);
         isShowing = true;
+        AudioManager.instance.Play(AudioManager.instance.select);
         TownManager.instance.ShowSelectedHumans(this);
     }
 
-    public virtual void HideVisuals()
+    public virtual void HideVisuals(bool withSound = true)
     {
         rend.sprite = buildingStates[0];
         buildingStats.gameObject.SetActive(false);
         isShowing = false;
+        if(withSound) AudioManager.instance.Play(AudioManager.instance.buttonClicks[1]);
         TownManager.instance.HideSelectedHumans(this);
+        
+        if(TownManager.instance.currentBuilding != null && TownManager.instance.currentBuilding == this) TownManager.instance.currentBuilding = null;
     }
 
     public virtual void UpdateVisuals()
@@ -159,12 +170,14 @@ public class Building : MonoBehaviour, VillageBuildable
         TownManager.instance.SelectingHumanMode(this, true);
     }
 
-    public virtual void AssignVillagerRole(VillagerAI villager)
+    public virtual void AssignVillagerRole(VillagerAI villager, bool withSound = true)
     {
         villager.house = this.transform;
+        if(withSound) AudioManager.instance.Play(AudioManager.instance.villagerAssign);
     }
-    public virtual void RemoveVillagerRole(VillagerAI villager)
+    public virtual void RemoveVillagerRole(VillagerAI villager, bool withSound = true)
     {
         villager.house = null;
+        if(withSound) AudioManager.instance.Play(AudioManager.instance.villagerRevoke);
     }
 }

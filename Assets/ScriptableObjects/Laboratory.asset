@@ -55,7 +55,11 @@ MonoBehaviour:
     upon completion.
 
     - Carries <color=#305D42><size=110%><i>permanent Immunity</i></size></color>
-    against future exposure.'
+    against future exposure.
+
+    - The <color=#305D42><size=110%><i>stats</i></size></color>
+    and <color=#305D42><size=110%><i>traits</i></size></color> of the Virus determine
+    the resources needed to vaccinate.'
   rightPageLayout: 0
   rightPageIcons: []
   rightPageWidth: 100

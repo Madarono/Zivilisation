@@ -37,7 +37,7 @@ public class Mines : Building, VillageBuildable
         {
             GridManager.instance.buildings.Add(this);
         }
-        HideVisuals();
+        HideVisuals(false);
     }
 
     protected override void Update()
@@ -89,13 +89,15 @@ public class Mines : Building, VillageBuildable
         isShowing = true;
         TownManager.instance.ShowSelectedHumans(this);
         UpdateVisuals();
+        AudioManager.instance.Play(AudioManager.instance.select);
     }
 
-    public override void HideVisuals()
+    public override void HideVisuals(bool withSound = true)
     {
         buildingStats.gameObject.SetActive(false);
         isShowing = false;
         TownManager.instance.HideSelectedHumans(this);
+        if(withSound) AudioManager.instance.Play(AudioManager.instance.buttonClicks[1]);
         UpdateVisuals();
     }
 
@@ -241,19 +243,21 @@ public class Mines : Building, VillageBuildable
     }
 
     
-    public override void AssignVillagerRole(VillagerAI villager)
+    public override void AssignVillagerRole(VillagerAI villager, bool withSound = true)
     {
         currentVillager = villager;
         villager.jobPlace = this.transform;
         villager.jobPlaceID = jobPlaceID;
         villager.villagerSprite.UpdateLooks();
+        if(withSound) AudioManager.instance.Play(AudioManager.instance.villagerAssign);
     }
 
-    public override void RemoveVillagerRole(VillagerAI villager)
+    public override void RemoveVillagerRole(VillagerAI villager, bool withSound = true)
     {
         currentVillager = null;
         villager.jobPlace = null;
         villager.jobPlaceID = 0;
         villager.villagerSprite.UpdateLooks();
+        if(withSound) AudioManager.instance.Play(AudioManager.instance.villagerRevoke);
     }
 }

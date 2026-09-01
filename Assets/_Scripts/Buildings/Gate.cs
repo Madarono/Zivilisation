@@ -25,7 +25,7 @@ public class Gate : MonoBehaviour
     public void PutRoadUnder()
     {
         underPos = new Vector2Int((int)transform.position.x, (int)transform.position.y - 1);
-        RoadSystem.instance.PutRoad(underPos);
+        RoadSystem.instance.PutRoad(underPos, false);
     }
     public void SpawnNewVillager()
     {
@@ -40,7 +40,7 @@ public class Gate : MonoBehaviour
         }
 
         newVillagerSpawned = go;
-
+        AudioManager.instance.Play(AudioManager.instance.villagerCome);
     }
 
     public GameObject SpawnNewVillagerInfo()

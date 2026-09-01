@@ -10,12 +10,17 @@ public class PopupText : MonoBehaviour
     public TextMeshProUGUI popupVisual;
     private Coroutine currentPopup;
 
+    [Header("Audio")]
+    public float amplification = 0.75f;
+
     [Header("Animation")]
     public float duration;
     public float stayFullDuration = 3f;
 
     [Header("Debug")]
     public string input;
+
+    private GameObject currentSound;
 
     void Awake()
     {
@@ -35,6 +40,8 @@ public class PopupText : MonoBehaviour
         }
 
         popupVisual.text = input;
+        if(currentSound != null) Destroy(currentSound);
+        currentSound = AudioManager.instance.PlayGameObject(AudioManager.instance.popupText, amplification);
 
         currentPopup = StartCoroutine(DoPopupText());
     }

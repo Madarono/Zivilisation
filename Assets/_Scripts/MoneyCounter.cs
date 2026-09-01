@@ -37,6 +37,17 @@ public class MoneyCounter : MonoBehaviour
     private Coroutine currentUpdateMoney;
     private Coroutine currentDifference;
 
+    [Header("Sound")]
+    public float stepPercent = 0.02f;
+    public float minAmplification = 0.75f;
+    public float maxAmplification = 1.15f;
+    public float minSoundCooldown = 0.04f;
+
+    private float stepInterval;
+    private float lastPlayedValue;
+    private float lastPlayTime;
+    private float maxExpectedSpeed;
+
     void Awake()
     {
         instance = this;
@@ -155,6 +166,13 @@ public class MoneyCounter : MonoBehaviour
     {
         int money = TownStorage.instance.Money;
         int startPrice = deltaPrice;
+        bool increase = (money - deltaPrice) > 0;
+
+        lastPlayedValue = startPrice;
+        lastPlayTime = Time.unscaledTime;
+
+        CalculateStepInterval(startPrice, money);
+
         float t = 0;
 
         while (t < getToPriceDuration)
@@ -162,6 +180,9 @@ public class MoneyCounter : MonoBehaviour
             t += Time.unscaledDeltaTime;
             float smoothT = Mathf.SmoothStep(0f, 1f, t / getToPriceDuration);
             deltaPrice = Mathf.RoundToInt(Mathf.Lerp(startPrice, money, smoothT));
+            
+            TrySound(increase);
+
             moneyVisual.text = $"${deltaPrice:N0}";
             yield return null;
         }
@@ -170,5 +191,34 @@ public class MoneyCounter : MonoBehaviour
         moneyVisual.text = $"${deltaPrice:N0}";
 
         currentUpdateMoney = null;
+    }
+
+    void CalculateStepInterval(int startPrice, int money)
+    {
+        float range = Mathf.Abs(money - startPrice);
+        stepInterval = Mathf.Max(1f, range * stepPercent);
+
+        float avgSpeed = range / Mathf.Max(0.01f, getToPriceDuration);
+        maxExpectedSpeed = avgSpeed * 1.5f;
+    }
+
+    void TrySound(bool increase)
+    {
+        int currentValue = deltaPrice;
+        float valueDelta = Mathf.Abs(currentValue - lastPlayedValue);
+        float timeDelta = Time.unscaledTime - lastPlayTime;
+
+        if (valueDelta >= stepInterval && timeDelta >= minSoundCooldown)
+        {
+            float currentSpeed = valueDelta / timeDelta;
+            float speedRatio = Mathf.Clamp01(currentSpeed / Mathf.Max(1f, maxExpectedSpeed));
+            float amplification = Mathf.Lerp(minAmplification, maxAmplification, speedRatio);
+
+            var audioClip = increase ? AudioManager.instance.moneyIncrease : AudioManager.instance.moneyDecrease;
+            AudioManager.instance.Play(audioClip, amplification);
+
+            lastPlayedValue = currentValue;
+            lastPlayTime = Time.unscaledTime;
+        }
     }
 }

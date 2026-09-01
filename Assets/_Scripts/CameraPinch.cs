@@ -181,6 +181,7 @@ public class CameraPinch : MonoBehaviour
 
         if (zoomCoroutine != null) StopCoroutine(zoomCoroutine);
         zoomCoroutine = StartCoroutine(ExecuteZoomSwap(isZoomedIn, targetX, targetY));
+        AudioManager.instance.Play(isZoomedIn ? AudioManager.instance.zoomIn : AudioManager.instance.zoomOut);
     }
 
     private IEnumerator ExecuteZoomSwap(bool isZoomedIn, int targetX, int targetY)

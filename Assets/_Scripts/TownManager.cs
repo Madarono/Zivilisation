@@ -23,6 +23,7 @@ public class TownManager : MonoBehaviour
     public TextMeshProUGUI[] marketSellVisuals;
     public TextMeshProUGUI marketSellValue;
     public Image[] marketArrows;
+    public AudioSlider[] audioSliders;
 
     [Header("For Quarantine")]
     public Quarantine availableQuarantine;
@@ -30,6 +31,10 @@ public class TownManager : MonoBehaviour
     [Header("For Laboratory")]
     public Laboratory availableLaboratory;
     public GameObject laboratoryWindow;
+
+    [Header("Active Selection")]
+    public VillagerAI currentVillager;
+    public Building currentBuilding;
 
     [Header("Village Hunger")]
     public int totalDead;
@@ -50,6 +55,8 @@ public class TownManager : MonoBehaviour
     public TextMeshProUGUI housesVisual;
     public TextMeshProUGUI farmsVisual;
     public TextMeshProUGUI minesVisual;
+    public TextMeshProUGUI curesVisual;
+    public TextMeshProUGUI vaccinationsVisual;
 
     [Header("Villager Check")]
     public LayerMask villagerLayer;
@@ -116,7 +123,7 @@ public class TownManager : MonoBehaviour
                 {
                     if (villagers[i] != null && villagers[i].isShowing && !villagers[i].goingToHouse)
                     {
-                        villagers[i].HideVisuals();
+                        villagers[i].HideVisuals(false);
                     }
                 }
             }
@@ -195,13 +202,16 @@ public class TownManager : MonoBehaviour
         CalculateFarms(); 
         CalculateHouses();
         CalculateMines();
-        moralityVisual.text = "Global Morality: " + TownStorage.instance.globalMorality.ToString("F2") + " / 1.00";
-        populationVisual.text = "Population: " + villagers.Count.ToString();
-        housedPopulationVisual.text = "Housed Population: " + housedPopulation.ToString();
-        workingPopulationVisual.text = "Working Population: " + workingPopulation.ToString();
-        housesVisual.text = "Houses: " + houses.ToString();
-        farmsVisual.text = "Farms: " + farms.ToString();
-        minesVisual.text = "Mines: " + mines.ToString();
+
+        moralityVisual.text = $"Global Morality: {TownStorage.instance.globalMorality.ToString("F2")} / 1.00";
+        populationVisual.text = $"Population: {villagers.Count}";
+        housedPopulationVisual.text = $"Housed Population: {housedPopulation}";
+        workingPopulationVisual.text = $"Working Population: {workingPopulation}";
+        housesVisual.text = $"Houses: {houses}";
+        farmsVisual.text = $"Farms: {farms}";
+        minesVisual.text = $"Mines: {mines}";
+        curesVisual.text = $"Cures: {VaccineSystem.instance.curedVirusId.Count}";
+        vaccinationsVisual.text = $"Vaccines: {VaccineSystem.instance.vaccinatedVirusId.Count}";
     }
 
     public void CheckHour()
@@ -318,6 +328,7 @@ public class TownManager : MonoBehaviour
     public void SelectingHumanMode(VillageBuildable building, bool? inverse = false, bool infected = false)
     {
         denyButton.SetActive(true);
+        AudioManager.instance.Play(AudioManager.instance.buttonClicks[Random.Range(0, AudioManager.instance.buttonClicks.Length)]);
         
         bool isWorkplace = (building is Farm) || (building is Mines);
         Building buildingScript = building as Building;
@@ -340,6 +351,8 @@ public class TownManager : MonoBehaviour
                 villager.villagerSprite.Selected();
 
             }
+
+            
             return;
         }
         else if(infected)
@@ -354,6 +367,7 @@ public class TownManager : MonoBehaviour
                 }
             }
 
+            
             return;
         }
 
@@ -430,7 +444,7 @@ public class TownManager : MonoBehaviour
     {
         foreach(var villager in villagers)
         {
-            if(villager.state != VillagerState.Sleeping && villagers[0].rend.sprite != null)
+            if(villager.state != VillagerState.Sleeping && villager.rend.sprite != null)
             {
                 villager.villagerSprite.DeSelected();
             }
@@ -451,9 +465,9 @@ public class TownManager : MonoBehaviour
 
         foreach(var villager1 in villagers)
         {
-            if(villager.state != VillagerState.Sleeping && villagers[0].rend.sprite != null)
+            if(villager1.state != VillagerState.Sleeping && villager1.rend.sprite != null)
             {
-                villager.villagerSprite.DeSelected();
+                villager1.villagerSprite.DeSelected();
             }
         }
     }

@@ -28,6 +28,8 @@ public class Stats : MonoBehaviour
     public TextMeshProUGUI infectionPerVisual;
     public TextMeshProUGUI totalSickVisual;
     public TextMeshProUGUI totalMoneyGainedVisual;
+    public TextMeshProUGUI totalCuresVisual;
+    public TextMeshProUGUI totalVaccinesVisual;
 
     void Awake()
     {
@@ -64,6 +66,8 @@ public class Stats : MonoBehaviour
         infectionPerVisual.text = infectionPer.ToString("F2") + "%";
         totalSickVisual.text = totalSick.ToString();
         totalMoneyGainedVisual.text = totalMoneyGained.ToString();
+        totalCuresVisual.text = VaccineSystem.instance.curedVirusId.Count.ToString();
+        totalVaccinesVisual.text = VaccineSystem.instance.vaccinatedVirusId.Count.ToString();
     }
 
     public float SickPercentage()

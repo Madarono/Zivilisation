@@ -104,7 +104,7 @@ public class VillagerAI : MonoBehaviour
         col = GetComponent<Collider2D>();
         canWander = false;
         hungerDown = StartCoroutine(HungerGoDown());
-        HideVisuals();
+        HideVisuals(false);
         // StartCoroutine(Wandering());
     }
 
@@ -196,7 +196,7 @@ public class VillagerAI : MonoBehaviour
             }
         }
         else if (!goingToHouse && !TownManager.instance.isBuilding && quarantine == null)
-        {
+        {          
             OnSpriteClicked();
         }
     }
@@ -213,12 +213,17 @@ public class VillagerAI : MonoBehaviour
     void OnSpriteClicked()
     {
         if(TownManager.instance.availableMarket != null && TownManager.instance.availableMarket.isShowing) return;
+        if(TownManager.instance.availableLaboratory != null && TownManager.instance.availableLaboratory.isShowing) return;
 
         if(goingToHouse)
         {
             return;
         }
 
+        //This aims to only have one Villager's status shown and avoid doing too many villagerDeselect Audio from multiple villagers
+        if(TownManager.instance.currentVillager != null && TownManager.instance.currentVillager != this) TownManager.instance.currentVillager.HideVisuals(false);
+
+        TownManager.instance.currentVillager = this;
         BothVisuals();
     }
 
@@ -247,13 +252,24 @@ public class VillagerAI : MonoBehaviour
         villagerStatsWindow.gameObject.SetActive(true);
         isShowing = true;
         villagerSprite.UpdateLooks();
+
+        if(TownManager.instance.currentBuilding != null)
+        {
+            TownManager.instance.currentBuilding.HideVisuals(false);
+            TownManager.instance.currentBuilding = null;
+        }
+
+        AudioManager.instance.Play(AudioManager.instance.villagerSelect);
     }
 
-    public void HideVisuals()
+    public void HideVisuals(bool sound = true)
     {
         villagerStatsWindow.gameObject.SetActive(false);
         isShowing = false;
         villagerSprite.UpdateLooks();
+        if(sound) AudioManager.instance.Play(AudioManager.instance.villagerDeselect);
+
+        if(TownManager.instance.currentVillager != null && TownManager.instance.currentVillager == this) TownManager.instance.currentVillager = null;
     }
 
     void UpdateVisuals()
@@ -433,6 +449,17 @@ public class VillagerAI : MonoBehaviour
     }
 
     [ContextMenu("Kill this villager")]
+    public void DeathWithCorpse()
+    {
+        Death(true);
+    }
+
+    [ContextMenu("Desert this villager")]
+    public void DeathWithoutCorpse()
+    {
+        Death(false);
+    }
+
     public void Death(bool withCorpse = true) //From VillagerHealth.cs
     {
         TownManager.instance.villagers.Remove(this);
@@ -461,6 +488,8 @@ public class VillagerAI : MonoBehaviour
         {
             Stats.instance.desertions++;
 
+            PopupText.instance.Popup("A villager has left your village");
+            AudioManager.instance.Play(AudioManager.instance.villagerLeave);
             Destroy(gameObject);
             return;
         }
@@ -476,6 +505,7 @@ public class VillagerAI : MonoBehaviour
         PopupText.instance.Popup("A villager has died.");
 
         if(Settings.instance.canScreenShake) PixelCameraShake.instance.Shake(deathDuration, deathMagnitude);
+        AudioManager.instance.Play(AudioManager.instance.villagerDie);
 
         Destroy(gameObject);
     }

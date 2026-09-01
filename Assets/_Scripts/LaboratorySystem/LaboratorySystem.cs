@@ -350,12 +350,14 @@ public class LaboratorySystem : MonoBehaviour
             {
                 textAnim[idOrder].SetActive(true);
                 idOrder++;
+                AudioManager.instance.Play(AudioManager.instance.stats);
             }
 
             yield return null;
         }
 
         yield return new WaitForSecondsRealtime(showResultDelay);
+        AudioManager.instance.Play(cured ? AudioManager.instance.cureSuccess : AudioManager.instance.cureFailure);
         resultStat.gameObject.SetActive(true);
         yield return new WaitForSecondsRealtime(showOptionsDelay);
 

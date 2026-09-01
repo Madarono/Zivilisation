@@ -156,6 +156,7 @@ public class Settings : MonoBehaviour
     {
         musicValue = musicSlider.value / audioDivider;
         sfxValue = sfxSlider.value / audioDivider;
+        AudioManager.instance.UpdateVolume();
     }
 
     public void MuteSFX()

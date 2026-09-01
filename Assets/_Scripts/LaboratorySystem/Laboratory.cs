@@ -22,7 +22,7 @@ public class Laboratory : Building, VillageBuildable
             GridManager.instance.buildings.Add(this);
         }
 
-        HideVisuals();
+        // HideVisuals(false);
     }
 
     protected override void Update()
@@ -63,15 +63,24 @@ public class Laboratory : Building, VillageBuildable
 
     protected override void OnSpriteClicked()
     {
+        if(TownManager.instance.availableMarket != null && TownManager.instance.availableMarket.isShowing) return;
+        
+        if(TownManager.instance.currentBuilding != null)
+        {
+            TownManager.instance.currentBuilding.HideVisuals(false);
+            TownManager.instance.currentBuilding = null;
+        }
+
         ShowVisuals();
     }
 
     public override void ShowVisuals()
     {
         TownManager.instance.OpenLaboratoryWindow();
+        AudioManager.instance.Play(AudioManager.instance.select);
     }
 
-    public override void HideVisuals()
+    public override void HideVisuals(bool withSound = true)
     {
         // isShowing = false;
         // LaboratorySystem.instance.HideAllVisuals();

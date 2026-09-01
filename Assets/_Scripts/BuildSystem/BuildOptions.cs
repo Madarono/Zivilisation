@@ -142,8 +142,8 @@ public class BuildOptions : MonoBehaviour
                     }
 
                     TownStorage.instance.Money += hitBuilding.sellValue;
-                    Destroy(hit.gameObject);
-                    if(Settings.instance.canScreenShake) PixelCameraShake.instance.Shake(shovelDuration, shovelMagnitude);
+                    // Destroy(hit.gameObject);
+                    // if(Settings.instance.canScreenShake) PixelCameraShake.instance.Shake(shovelDuration, shovelMagnitude);
                 }
                 else if(hit.gameObject.TryGetComponent(out Farm hitFarm))
                 {
@@ -152,8 +152,8 @@ public class BuildOptions : MonoBehaviour
                         hitFarm.RemindVillagerStop();
                     }
                     TownStorage.instance.Money += hitBuilding.sellValue;
-                    Destroy(hit.gameObject);
-                    if(Settings.instance.canScreenShake) PixelCameraShake.instance.Shake(shovelDuration, shovelMagnitude);
+                    // Destroy(hit.gameObject);
+                    // if(Settings.instance.canScreenShake) PixelCameraShake.instance.Shake(shovelDuration, shovelMagnitude);
                 }
                 else if(hit.gameObject.TryGetComponent(out Mines hitMines))
                 {
@@ -162,8 +162,8 @@ public class BuildOptions : MonoBehaviour
                         hitMines.RemindVillagerStop();
                     }
                     TownStorage.instance.Money += hitBuilding.sellValue;
-                    Destroy(hit.gameObject);
-                    if(Settings.instance.canScreenShake) PixelCameraShake.instance.Shake(shovelDuration, shovelMagnitude);
+                    // Destroy(hit.gameObject);
+                    // if(Settings.instance.canScreenShake) PixelCameraShake.instance.Shake(shovelDuration, shovelMagnitude);
                 }
                 else if(hit.gameObject.TryGetComponent(out Gate hitGate))
                 {
@@ -173,21 +173,25 @@ public class BuildOptions : MonoBehaviour
                 else if(hit.gameObject.TryGetComponent(out Market hitMarket))
                 {
                     TownManager.instance.availableMarket = null;
-                    Destroy(hit.gameObject);
-                    if(Settings.instance.canScreenShake) PixelCameraShake.instance.Shake(shovelDuration, shovelMagnitude);
+                    // Destroy(hit.gameObject);
+                    // if(Settings.instance.canScreenShake) PixelCameraShake.instance.Shake(shovelDuration, shovelMagnitude);
                 }
                 else if(hit.gameObject.TryGetComponent(out Quarantine hitQuarantine))
                 {
                     TownManager.instance.availableQuarantine = null;
-                    Destroy(hit.gameObject);
-                    if(Settings.instance.canScreenShake) PixelCameraShake.instance.Shake(shovelDuration, shovelMagnitude);
+                    // Destroy(hit.gameObject);
+                    // if(Settings.instance.canScreenShake) PixelCameraShake.instance.Shake(shovelDuration, shovelMagnitude);
                 }
                 else if(hit.gameObject.TryGetComponent(out Laboratory hitLaboratory))
                 {
                     TownManager.instance.availableLaboratory = null;
-                    Destroy(hit.gameObject);
-                    if(Settings.instance.canScreenShake) PixelCameraShake.instance.Shake(shovelDuration, shovelMagnitude);
+                    // Destroy(hit.gameObject);
+                    // if(Settings.instance.canScreenShake) PixelCameraShake.instance.Shake(shovelDuration, shovelMagnitude);
                 }
+
+                Destroy(hit.gameObject);
+                if(Settings.instance.canScreenShake) PixelCameraShake.instance.Shake(shovelDuration, shovelMagnitude);
+                AudioManager.instance.Play(AudioManager.instance.shovel);
             }
         }
 
@@ -346,6 +350,7 @@ public class BuildOptions : MonoBehaviour
         finalPos = Vector2Int.zero;
 
         if(Settings.instance.canScreenShake) PixelCameraShake.instance.Shake(moveDuration, moveMagnitude);
+        AudioManager.instance.Play(AudioManager.instance.pickup);
     }
 
     public bool CheckBuildingUnTouched(Building building)
@@ -463,6 +468,7 @@ public class BuildOptions : MonoBehaviour
         moveableBuilding = null;
 
         if(Settings.instance.canScreenShake) PixelCameraShake.instance.Shake(confirmDuration, confirmMagnitude);
+        AudioManager.instance.Play(AudioManager.instance.place);
     }
 
     public void AcceptOption()
@@ -499,6 +505,7 @@ public class BuildOptions : MonoBehaviour
         }
 
         if(Settings.instance.canScreenShake) PixelCameraShake.instance.Shake(placeDuration, placeMagnitude);
+        AudioManager.instance.Play(AudioManager.instance.place);
     }
 
     bool CheckBoundries(Vector2Int pos, Building? building = null)
@@ -513,11 +520,13 @@ public class BuildOptions : MonoBehaviour
                 Vector2Int checkPos = new Vector2Int(pos.x + w, pos.y + h); //Check for roads
                 if(RoadSystem.instance.roadPos.ContainsKey(checkPos))
                 {
+                    PopupText.instance.Popup("Can't place building overlapping road(s).");
                     return false;
                 }
 
                 if(GridManager.instance.placesTaken.Contains(checkPos)) //Check for buildings
                 {
+                    PopupText.instance.Popup("Can't place building over another building.");
                     return false;
                 }
             }
@@ -526,8 +535,20 @@ public class BuildOptions : MonoBehaviour
         Vector2Int underPos = new Vector2Int(pos.x, pos.y - 1);
         if(GridManager.instance.placesTaken.Contains(underPos)) //Check for buildings
         {
+            PopupText.instance.Popup("Can't place building over another building.");
             return false;
         }
+
+        for(int i = 0; i < width; i++)
+        {
+            Vector2Int heightPos = new Vector2Int(pos.x + i, pos.y + height);
+            if(GridManager.instance.placesTaken.Contains(heightPos))
+            {
+                PopupText.instance.Popup("Can't place building blocking other building(s).");
+                return false;
+            }
+        }
+        
 
         for(int side = 0; side < width; side++)
         {
@@ -535,6 +556,7 @@ public class BuildOptions : MonoBehaviour
             Vector2Int gatePos = new Vector2Int((int)GridManager.instance.gate.gameObject.transform.position.x, (int)GridManager.instance.gate.gameObject.transform.position.y);
             if(overPos == gatePos) //Check for gate
             {
+                PopupText.instance.Popup("Can't place building over gate.");
                 return false;
             }
         }

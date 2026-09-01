@@ -194,7 +194,6 @@ public class LoseCondition : MonoBehaviour
         VillagerAI randomVillager = TownManager.instance.villagers[Random.Range(0, TownManager.instance.villagers.Count)];
 
         randomVillager.Death(false);
-        PopupText.instance.Popup("A villager has left your village.");
     }
 
     IEnumerator LossPopulation()

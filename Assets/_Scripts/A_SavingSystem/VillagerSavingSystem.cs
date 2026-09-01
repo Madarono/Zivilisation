@@ -432,7 +432,7 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         for(int i = 0; i < roadPos.Count; i++)
         {
             Vector2Int pos = new Vector2Int((int)roadPos[i].x, (int)roadPos[i].y);
-            RoadSystem.instance.PutRoad(pos);
+            RoadSystem.instance.PutRoad(pos, false);
         }
 
         //Buildings
@@ -477,7 +477,7 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
                     goScript.house = GetTransformFromId(houseId[i], motelTransform, motelId);
                     if(goScript.house != null && goScript.house.TryGetComponent(out Building building))
                     {
-                        building.AssignVillagerRole(goScript);
+                        building.AssignVillagerRole(goScript, false);
                         building.villagers.Add(goScript);
                     }
                 }
@@ -487,7 +487,7 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
                     goScript.jobPlace = GetTransformFromId(jobId[i], workplaceTransform, workplaceId);
                     if(goScript.jobPlace != null && goScript.jobPlace.TryGetComponent(out Building building))
                     {
-                        building.AssignVillagerRole(goScript);
+                        building.AssignVillagerRole(goScript, false);
                         building.villagers.Add(goScript);
                     }
                 }
@@ -552,6 +552,7 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         Settings.instance.UpdateValues();
         Settings.instance.SetFPS();
         Settings.instance.ApplyChanges();
+        AudioManager.instance.UpdateVolume();
 
         //VirusManager
         VirusManager.instance.viruses = new List<Virus>(viruses);
@@ -673,11 +674,16 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
 
             foreach(var villager in building.villagers)
             {
-                building.AssignVillagerRole(villager);
+                building.AssignVillagerRole(villager, false);
             }
         }
 
         LoseCondition.instance.CheckLossPopulation();
         LoseCondition.instance.CheckLossCondition();
+
+        foreach(var vaccinated in VaccineSystem.instance.vaccinatedVirusId)
+        {
+            VaccineSystem.instance.CureAllVaccinated(vaccinated, false);
+        }
     }
 }
