@@ -30,6 +30,7 @@ public class VillagerAI : MonoBehaviour
     public float hunger = 1f;
     public float hungerDepletionAmount = 0.1f;
     public float hungerDepletionCooldown = 10f;
+    public bool showedStarvation;
     public bool isCoughing = false;
 
     [Header("Icon Visuals")]
@@ -302,6 +303,7 @@ public class VillagerAI : MonoBehaviour
         {
             rend.sprite = null;
             state = VillagerState.Sleeping;
+            HideVisuals(false);
             return;
         }
         else if(state == VillagerState.Working)
@@ -375,6 +377,8 @@ public class VillagerAI : MonoBehaviour
         }
 
         goingToHouse = (target == house && house != null);
+        if(goingToHouse) HideVisuals(false);
+
         villagerPF.OrderMoveTo(pos);
 
         cacheTarget = target;
@@ -532,7 +536,7 @@ public class VillagerAI : MonoBehaviour
                 if(hunger > HungerManager.instance.minFullFeed && HungerManager.instance.percentageState == FeedPer.FullFeed) continue;
                 if(hunger > HungerManager.instance.minBareFeed && HungerManager.instance.percentageState == FeedPer.BareMinimum) continue;
 
-                HungerManager.instance.FeedVillager(this);
+                HungerManager.instance.FeedVillager(this, !showedStarvation);
             }
         }
     }

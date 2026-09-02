@@ -33,6 +33,7 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
     public List<int> workplaceId = new List<int>();
     public List<int> workplaceTypeId = new List<int>();
     public List<int> workplaceSellValue = new List<int>();
+    public List<int> matSelectionId = new List<int>();
     public List<Transform> workplaceTransform = new List<Transform>();
     public List<Vector3> workplacePos = new List<Vector3>();
 
@@ -140,6 +141,7 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         data.workplaceTypeId = this.workplaceTypeId;
         data.workplaceSellValue = this.workplaceSellValue;
         data.workplacePos = this.workplacePos;
+        data.matSelectionId = this.matSelectionId;
 
         data.dailyDemand = this.dailyDemand;
         data.demandPower = this.demandPower;
@@ -221,6 +223,7 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         this.workplaceTypeId = data.workplaceTypeId;
         this.workplaceSellValue = data.workplaceSellValue;
         this.workplacePos = data.workplacePos;
+        this.matSelectionId = data.matSelectionId;
 
         this.dailyDemand = data.dailyDemand;
         this.demandPower = data.demandPower;
@@ -283,7 +286,7 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
     {
         villagerId.Clear(); quarantineId.Clear(); houseId.Clear(); jobId.Clear(); villagerPos.Clear(); villagerHunger.Clear(); villagerHealth.Clear(); villagerVirus.Clear(); daysLeft.Clear(); deadVillagerPos.Clear(); deadVillagerVirus.Clear();
         motelId.Clear(); motelTypeId.Clear(); motelTransform.Clear(); motelPos.Clear(); motelSellValue.Clear();
-        workplaceId.Clear(); workplaceTypeId.Clear(); workplaceTransform.Clear(); workplaceSellValue.Clear(); workplacePos.Clear();
+        workplaceId.Clear(); workplaceTypeId.Clear(); workplaceTransform.Clear(); workplaceSellValue.Clear(); workplacePos.Clear(); matSelectionId.Clear();
         roadPos.Clear(); viruses.Clear();
         pageInfo.Clear(); headerInfo.Clear();
         virusNames.Clear();
@@ -319,6 +322,9 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
             workplaceTransform.Add(buildingScript.gameObject.transform);
             workplacePos.Add(buildingScript.gameObject.transform.position);
             workplaceSellValue.Add(buildingScript.sellValue);
+            int matId = -1;
+            if(minesScript != null) matId = minesScript.matSelectionId;
+            matSelectionId.Add(matId);
             idCounter++;
         }
 
@@ -460,12 +466,18 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
                 goBuilding.sellValue = workplaceSellValue[i];
                 GridManager.instance.buildings.Add(goBuilding);
             }
+            if(go.TryGetComponent(out Mines goMines))
+            {
+                goMines.matSelectionId = matSelectionId[i];
+            }
         }
 
         //Villagers
         for(int i = 0; i < villagerId.Count; i++)
         {
-            GameObject go = Instantiate(villagerPrefab, villagerPos[i], Quaternion.identity);
+            Vector3 villagerIntPos = new Vector3(Mathf.FloorToInt(villagerPos[i].x), Mathf.FloorToInt(villagerPos[i].y), Mathf.FloorToInt(villagerPos[i].z));
+            GameObject go = Instantiate(villagerPrefab, villagerIntPos, Quaternion.identity);
+            Debug.Log(go.transform.position);
             if(go.TryGetComponent(out VillagerAI goScript))
             {
                 goScript.villagerHealth.health = villagerHealth[i];

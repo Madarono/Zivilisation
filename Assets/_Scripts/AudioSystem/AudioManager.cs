@@ -27,6 +27,7 @@ public class AudioManager : MonoBehaviour
     public AudioClip moneyIncrease;
     public AudioClip moneyDecrease;
     public AudioClip popupText;
+    public AudioClip textFieldSelect;
 
     [Header("Laboratory")]
     public AudioClip cureFailure;
@@ -84,7 +85,7 @@ public class AudioManager : MonoBehaviour
     
     public void UpdateVolume()
     {
-        music = Settings.instance.sfxValue;
-        master = Settings.instance.musicValue;
+        master = Settings.instance.sfxValue;
+        music = Settings.instance.musicValue;
     }
 }

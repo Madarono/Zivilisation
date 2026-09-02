@@ -167,6 +167,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebbab5b3657a04d4cb1107cefe82ebdf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Building
+  isShowing: 0
   gridTaken: {fileID: 7907104940343232892}
   buildingStates:
   - {fileID: 21300000, guid: f8f85ea8749c07d4d93ac250965ab3ce, type: 3}
@@ -185,6 +186,7 @@ MonoBehaviour:
   villagers: []
   deleteCol: {fileID: 6237047626795260634}
   deleteButton: {fileID: 2395767370193534221}
+  buildingId: 0
   isChoosing: 0
   isDisowning: 0
 --- !u!1 &2227912773158120535
@@ -305,8 +307,8 @@ Transform:
   m_GameObject: {fileID: 2395767370193534221}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.25, z: 0}
-  m_LocalScale: {x: 1.1428572, y: 1.1428572, z: 1.4285715}
+  m_LocalPosition: {x: -2.15, y: 0, z: 0}
+  m_LocalScale: {x: 1.1, y: 1.1, z: 1.1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8986628036125343585}
@@ -442,8 +444,8 @@ Transform:
   m_GameObject: {fileID: 2588263008549406870}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: 0}
-  m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
+  m_LocalPosition: {x: 0, y: 2.2, z: 0}
+  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3144685465054095507}
@@ -539,8 +541,8 @@ Transform:
   m_GameObject: {fileID: 4542575005726264309}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.142857, y: 0, z: 0}
-  m_LocalScale: {x: 1.1428572, y: 1.1428572, z: 1.4285715}
+  m_LocalPosition: {x: -2.15, y: 0, z: 0}
+  m_LocalScale: {x: 1.1, y: 1.1, z: 1.1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8986628036125343585}

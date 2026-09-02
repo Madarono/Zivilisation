@@ -22,7 +22,7 @@ MonoBehaviour:
     Usage -</size></align>
 
     Isolate <color=#305D42><size=110%><i>Infected Villagers</i></size></color>
-    for 2 In-game Days to gather the Virus DNA and attempt a cure in the <color=#305D42><size=110%><i>Laboratory</i></size></color> '
+    for 2 In-game Days to gather the Virus DNA and attempt a cure in the <color=#305D42><size=110%><i>Laboratory</i></size></color>. '
   leftPageLayout: 1
   leftPageIcons:
   - {fileID: 21300000, guid: 98e7751ccfeb261458fec6b730eb4f40, type: 3}

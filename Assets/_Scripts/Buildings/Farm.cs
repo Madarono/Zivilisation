@@ -58,6 +58,11 @@ public class Farm : Building, VillageBuildable
         TownManager.instance.SelectingHumanMode(this);
     }
 
+    public override void RemoveHuman()
+    {
+        TownManager.instance.RemoveHumanManually(villagers[0], this);
+        StopFarming();
+    }
 
     public override void UpdateVisuals()
     {
@@ -188,6 +193,7 @@ public class Farm : Building, VillageBuildable
         villager.jobPlace = null;
         villager.jobPlaceID = 0;
         villager.villagerSprite.UpdateLooks();
+        StopFarming();
         if(withSound) AudioManager.instance.Play(AudioManager.instance.villagerRevoke);
     }
 }

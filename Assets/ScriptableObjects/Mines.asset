@@ -1,0 +1,72 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11b67086090581648b03d95be6a83b2b, type: 3}
+  m_Name: Mines
+  m_EditorClassIdentifier: Assembly-CSharp::DevSidePage
+  leftPageInfo: '<align=center><size=140%>- Mine -</size></align>
+
+    a Mine is
+    a villager building, you can have multiple at a time.
+
+
+    <align=center><size=120%>-
+    Usage -</size></align>
+
+    Assign villagers to mine various <color=#305D42><size=110%><i>materials</i></size></color>
+    for your village.
+
+
+    every material has their own time to <color=#305D42><size=110%><i>mine</i></size></color>
+    and <color=#305D42><size=110%><i>collect</i></size></color>.'
+  leftPageLayout: 1
+  leftPageIcons:
+  - {fileID: 21300000, guid: 2f24b13184a4b494b864ac5aaaf31413, type: 3}
+  - {fileID: 21300000, guid: d94455fe98a3b9c4896fe5f5830b70e2, type: 3}
+  - {fileID: 21300000, guid: e79ceebd7c4cb564b9e2320220d3cd89, type: 3}
+  leftPageWidth: 100
+  leftPageHeight: 100
+  leftPageSpacing: 20
+  leftPagePadding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 20
+    m_Bottom: 0
+  rightPageInfo: '<align=center><size=120%>- Stats -</size></align>
+
+    A miner
+    mines <size=80%><i>(Per Hour | Shift)</i></size>:
+
+    - <b>Iron:</b> <color=#305D42><size=110%><i>3</i></size></color>
+    <size=90%><i>(24 / shift)</i></size>
+
+    - <b>Copper:</b> <color=#305D42><size=110%><i>1.6</i></size></color>
+    <size=90%><i>(12.8 / shift)</i></size>
+
+    - <b>Quartz:</b> <color=#305D42><size=110%><i>1</i></size></color>
+    <size=90%><i>(8 / shift)</i></size>
+
+    - <b>Titanium:</b> <color=#305D42><size=110%><i>0.5</i></size></color>
+    <size=90%><i>(4 / shift)</i></size>'
+  rightPageLayout: 0
+  rightPageIcons:
+  - {fileID: 21300000, guid: 444a598f708ccaa4ea87c346b56c7853, type: 3}
+  - {fileID: 21300000, guid: c3f7b3cde7e11fc4db70165c5658e8d7, type: 3}
+  - {fileID: 21300000, guid: 3ee4d77ba43b3c141b243735ab8d0311, type: 3}
+  - {fileID: 21300000, guid: 775298ab1eeab7b49b8f3ba5f15a03e3, type: 3}
+  rightPageWidth: 50
+  rightPageHeight: 50
+  rightPageSpacing: 5
+  rightPagePadding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 150
+    m_Bottom: 0

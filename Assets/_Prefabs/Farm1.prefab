@@ -28,7 +28,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -1.5, y: 0, z: 0}
-  m_LocalScale: {x: 1.1428572, y: 1.1428572, z: 1.4285715}
+  m_LocalScale: {x: 1.1, y: 1.1, z: 1.1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4738379643902816239}
@@ -255,8 +255,8 @@ Transform:
   m_GameObject: {fileID: 1319758889383101128}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.5, y: 2, z: 0}
-  m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
+  m_LocalPosition: {x: 0.5, y: 2.2, z: 0}
+  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6759273674607929115}
@@ -350,8 +350,8 @@ Transform:
   m_GameObject: {fileID: 7414992844823304281}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.25, z: 0}
-  m_LocalScale: {x: 1.1428571, y: 1.1428571, z: 1.4285715}
+  m_LocalPosition: {x: -1.5, y: 0, z: 0}
+  m_LocalScale: {x: 1.1, y: 1.1, z: 1.1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4738379643902816239}
@@ -629,6 +629,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e501ac12a23e0514ea2d58f4dc314257, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Farm
+  isShowing: 0
   gridTaken: {fileID: 0}
   buildingStates:
   - {fileID: 21300000, guid: 3632423a150ec4a43b14609469766b13, type: 3}
@@ -648,12 +649,13 @@ MonoBehaviour:
   buildingId: 1
   isChoosing: 0
   isDisowning: 0
+  currentVillager: {fileID: 0}
   isWorkedOn: 0
   workedOnStates:
   - {fileID: 21300000, guid: 5ac9bbbd0d1445746bad4a67c9038369, type: 3}
   - {fileID: 21300000, guid: d35183e55fefbc740bb12afaae6c9360, type: 3}
   jobPlaceID: 1
-  wheatPerGain: 0.1
+  wheatPerGain: 0.3
   cooldownDuration: 3.3333333
   matGatherIcon: {fileID: 2646180748845067248}
   wheatStages:

@@ -4,39 +4,45 @@ using UnityEngine;
 
 public class Autosave : MonoBehaviour
 {
-    //For Desktop (Windows/Mac) and WebGL windows
+    public static Autosave instance { get; private set; }
+    
+    private float lastSaveTime;
+    private const float saveCooldown = 1.0f;
+
+    private void Awake()
+    {
+        if (instance != null && instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        instance = this;
+    }
+
     private void OnApplicationFocus(bool hasFocus)
     {
         if (!hasFocus)
         {
-            // Debug.Log("App moved to BACKGROUND (Lost Focus). Saving game state...");
             TriggerAutoSave();
-        }
-        else
-        {
-            // Debug.Log("App moved to FOREGROUND (Gained Focus). Pause menus can open here.");
         }
     }
 
-    //For Mobile devices (iOS/Android) 
     private void OnApplicationPause(bool isPaused)
     {
         if (isPaused)
         {
-            // Debug.Log("App suspended to BACKGROUND (Paused). Saving game state...");
             TriggerAutoSave();
-        }
-        else
-        {
-            // Debug.Log("App resumed to FOREGROUND (Unpaused).");
         }
     }
 
-    private void TriggerAutoSave()
+    public void TriggerAutoSave()
     {
+        if (Time.unscaledTime - lastSaveTime < saveCooldown) return;
+
         if (DataPersistenceManager.instance != null)
         {
             DataPersistenceManager.instance.SaveGame();
+            lastSaveTime = Time.unscaledTime;
         }
     }
 }

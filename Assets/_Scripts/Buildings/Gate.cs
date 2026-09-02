@@ -41,6 +41,7 @@ public class Gate : MonoBehaviour
 
         newVillagerSpawned = go;
         AudioManager.instance.Play(AudioManager.instance.villagerCome);
+        PopupText.instance.Popup("A traveller came to your village.");
     }
 
     public GameObject SpawnNewVillagerInfo()

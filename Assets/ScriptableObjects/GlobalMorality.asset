@@ -1,0 +1,69 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11b67086090581648b03d95be6a83b2b, type: 3}
+  m_Name: GlobalMorality
+  m_EditorClassIdentifier: Assembly-CSharp::DevSidePage
+  leftPageInfo: '<align=center><size=140%>- Global Morality -</size></align>
+
+    Located
+    in the Villager status, and the brief at the end of the day
+
+
+    It represents
+    the total love the <color=#305D42><size=110%><i>villagers</i></size></color>
+    have for your village.
+
+
+    <align=center><size=120%>- Gains and Losses -</size></align>
+
+    +
+    <color=#305D42><size=110%><i>Fed</i></size></color> and <color=#305D42><size=110%><i>Working</i></size></color>
+    vilagers increase the morality.
+
+    - <color=#305D42><size=110%><i>Homeless</i></size></color>
+    and <color=#305D42><size=110%><i>Starving</i></size></color> villagers decrease
+    the morality.'
+  leftPageLayout: 1
+  leftPageIcons:
+  - {fileID: -2695832508711533426, guid: 9bd32f1618607bc479f1932f5c981af4, type: 3}
+  leftPageWidth: 100
+  leftPageHeight: 100
+  leftPageSpacing: 10
+  leftPagePadding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 20
+    m_Bottom: 0
+  rightPageInfo: '<align=center><size=120%>- Effects -</size></align>
+
+    <color=#305D42><size=110%><i>High</i></size></color>
+    Morality attracts <color=#305D42><size=110%><i>New</i></size></color> villagers
+    to your village.
+
+
+    <color=#305D42><size=110%><i>Low</i></size></color> Morality
+    causes unhappy villagers to <color=#305D42><size=110%><i>desert</i></size></color>
+    your village.
+
+
+    Keep morality high to expand and <color=#305D42><size=110%><i>stabilize</i></size></color>
+    your village! '
+  rightPageLayout: 0
+  rightPageIcons: []
+  rightPageWidth: 100
+  rightPageHeight: 100
+  rightPageSpacing: 10
+  rightPagePadding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0

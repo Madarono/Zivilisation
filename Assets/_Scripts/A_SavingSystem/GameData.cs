@@ -27,6 +27,7 @@ public class GameData
     public List<int> workplaceId = new List<int>();
     public List<int> workplaceTypeId = new List<int>();
     public List<int> workplaceSellValue = new List<int>();
+    public List<int> matSelectionId = new List<int>();
     public List<Vector3> workplacePos = new List<Vector3>();
 
     public float[] dailyDemand = new float[5];
@@ -109,6 +110,7 @@ public class GameData
         workplaceTypeId = new List<int>();
         workplaceSellValue = new List<int>();
         workplacePos = new List<Vector3>();
+        matSelectionId = new List<int>();
 
         dailyDemand = new float[5];
         demandPower = 1f;

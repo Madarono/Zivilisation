@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11b67086090581648b03d95be6a83b2b, type: 3}
+  m_Name: Motel
+  m_EditorClassIdentifier: Assembly-CSharp::DevSidePage
+  leftPageInfo: '<align=center><size=140%>- Motel -</size></align>
+
+    Motel is
+    a villager building, you can have multiple at a time.
+
+
+    <align=center><size=120%>-
+    Usage -</size></align>
+
+    House up to <color=#305D42><size=110%><i>3</i></size></color>
+    villagers to sleep during the night.
+
+
+'
+  leftPageLayout: 1
+  leftPageIcons:
+  - {fileID: 21300000, guid: f8f85ea8749c07d4d93ac250965ab3ce, type: 3}
+  - {fileID: 21300000, guid: abb79316e90b519469bcb5324d99e1aa, type: 3}
+  leftPageWidth: 55
+  leftPageHeight: 110
+  leftPageSpacing: 30
+  leftPagePadding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 25
+    m_Bottom: 0
+  rightPageInfo: '<align=center><size=120%>- Benefits -</size></align>
+
+
+    Housed
+    villagers don''t lose <color=#305D42><size=110%><i>hunger</i></size></color>
+    while sleeping and increase <color=#305D42><size=110%><i>Global Morality</i></size></color>
+
+
+    <align=center><size=120%>-
+    Warning -</size></align>
+
+    Homeless villagers will decrease <color=#305D42><size=110%><i>Global
+    Morality</i></size></color> every night they don''t sleep.'
+  rightPageLayout: 0
+  rightPageIcons: []
+  rightPageWidth: 100
+  rightPageHeight: 100
+  rightPageSpacing: 10
+  rightPagePadding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0

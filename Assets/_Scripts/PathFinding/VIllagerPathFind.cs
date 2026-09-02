@@ -20,8 +20,9 @@ public class VillagerPathFind : MonoBehaviour
         villager = GetComponent<VillagerAI>();
         moveSpeed = villager.villagerSpeed * villager.villagerHealth.functionSpeed;
         gridManager = GridManager.instance;
-        Vector2Int currentPlayerPosition = new Vector2Int((int)transform.position.x, (int)transform.position.y);
-        currentGridPosition = currentPlayerPosition;
+
+        currentGridPosition = new Vector2Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y));
+        
         transform.position = new Vector3(currentGridPosition.x, currentGridPosition.y, 0f);
     }
 
@@ -50,8 +51,13 @@ public class VillagerPathFind : MonoBehaviour
     private IEnumerator FollowPathRoutine()
     {
         isMoving = true;
-        int currentPathIndex = 0;
         moveSpeed = villager.villagerSpeed * villager.villagerHealth.functionSpeed;
+
+        int currentPathIndex = 0;
+        if (currentPath.Count > 1 && currentPath[0] == currentGridPosition)
+        {
+            currentPathIndex = 1;
+        }
 
         while (currentPathIndex < currentPath.Count)
         {
@@ -68,6 +74,7 @@ public class VillagerPathFind : MonoBehaviour
                 yield return null;
             }
             
+            transform.position = targetWorldPos;
             currentGridPosition = nextTile;
             currentPathIndex++;
         }

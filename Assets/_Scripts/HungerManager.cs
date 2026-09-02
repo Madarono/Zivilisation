@@ -115,13 +115,13 @@ public class HungerManager : MonoBehaviour
 
         float difference = maxFeed - hunger;
 
-        Debug.Log($"Villager {villager.name} hunger: {villager.hunger}, target: {maxFeed}");
+        // Debug.Log($"Villager {villager.name} hunger: {villager.hunger}, target: {maxFeed}");
 
         if(townStorage.wheat >= difference)
         {
             villager.hunger = maxFeed;
             townStorage.wheat -= difference;
-            Debug.Log("Fed full" + villager.gameObject.name);
+            villager.showedStarvation = false;
             totalUsedWheat += difference;
         }
         else if(townStorage.wheat > 0) //Partially feeds
@@ -131,11 +131,13 @@ public class HungerManager : MonoBehaviour
             townStorage.wheat = 0;
             Debug.Log("Fed partial" + villager.gameObject.name);
             if(popup) PopupText.instance.Popup("A villager satisfied partially his hunger.");
+            villager.showedStarvation = false;
         }
         else
         {
             Debug.Log("Couldn't Feed" + villager.gameObject.name);
-            if(popup) PopupText.instance.Popup("A villager can't satisfy his hunger.");
+            if(popup) PopupText.instance.Popup("A villager couldn't satisfy his hunger.");
+            villager.showedStarvation = true;
         }
     }
 }

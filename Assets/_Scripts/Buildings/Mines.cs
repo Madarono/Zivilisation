@@ -6,7 +6,8 @@ using UnityEngine;
 public class MinesMaterial
 {
     public Sprite materialIcon;
-    public int timeToGather;
+    public string materialName;
+    public float amountPerIngameHour;
     public Sprite[] materialStages;
     public int storageID;
 }
@@ -17,7 +18,7 @@ public class Mines : Building, VillageBuildable
 
     [Header("Mines Specific")]
     public VillagerAI currentVillager;
-    public bool isWorkedOn; //When villager is working
+    public bool isWorkedOn;
     public Sprite[] workedOnStates;
     public int jobPlaceID = 2;
 
@@ -25,6 +26,7 @@ public class Mines : Building, VillageBuildable
     public SpriteRenderer matSelectionIcon;
     public SpriteRenderer matGatherIcon;
     public MinesMaterial[] materials;
+    public Vector3 popupOffset = new Vector3(0, 1.5f, 0);
     public int matSelectionId = 0;
 
     private Coroutine activeMines;
@@ -70,10 +72,6 @@ public class Mines : Building, VillageBuildable
             {
                 ChangeMaterial();
             }
-            // else if(isShowing && !isChoosing && (TownManager.instance.activeBuilding != this || TownManager.instance.activeBuilding == null))
-            // {
-            //     HideVisuals();
-            // }
         }
 
         if(CameraPinch.Instance.IsPanning && isShowing && !isChoosing && (TownManager.instance.activeBuilding != this || TownManager.instance.activeBuilding == null))
@@ -98,6 +96,7 @@ public class Mines : Building, VillageBuildable
         isShowing = false;
         TownManager.instance.HideSelectedHumans(this);
         if(withSound) AudioManager.instance.Play(AudioManager.instance.buttonClicks[1]);
+        PopupText.instance.StopMiniPopup();
         UpdateVisuals();
     }
 
@@ -106,6 +105,12 @@ public class Mines : Building, VillageBuildable
         isChoosing = true;
         TownManager.instance.activeBuilding = this;
         TownManager.instance.SelectingHumanMode(this);
+    }
+
+    public override void RemoveHuman()
+    {
+        TownManager.instance.RemoveHumanManually(villagers[0], this);
+        StopMining();
     }
 
     public override void UpdateVisuals()
@@ -149,11 +154,15 @@ public class Mines : Building, VillageBuildable
             matSelectionId = 0;
         }
 
+        AudioManager.instance.Play(AudioManager.instance.buttonClicks[0]);
+        PopupText.instance.MiniPopup(materials[matSelectionId].materialName, transform, popupOffset);
         UpdateVisuals();
     }
 
     public void StartMining()
     {
+        if(isWorkedOn) return;
+
         isWorkedOn = true;
         UpdateVisuals();
 
@@ -198,46 +207,60 @@ public class Mines : Building, VillageBuildable
 
     IEnumerator GatherMaterial()
     {
-        matGatherIcon.gameObject.SetActive(true);
-        float gatherTime = materials[matSelectionId].timeToGather / currentVillager.villagerHealth.functionSpeed;
-        List<float> spriteUpdateTime = new List<float>();
-        float differenceTime = gatherTime / (float)materials[matSelectionId].materialStages.Length; //To add each spriteUpdateTime
-        float accumulatedTime = 0; //To set each spriteUpdateTime
-        int currentSpriteUpdateTime = 0; //Id for each spriteUpdateTime
+        DayCycle cycle = DayCycle.instance;
+
+        float speed = (currentVillager != null && currentVillager.villagerHealth.functionSpeed > 0) ? currentVillager.villagerHealth.functionSpeed : 1f;
+        
+
+        int ticksNeeded = Mathf.Max(1, Mathf.RoundToInt((60f / materials[matSelectionId].amountPerIngameHour) / speed));
+
+        List<int> ticksPerSprite = new List<int>();
+        int dividedTicks = Mathf.FloorToInt((float)ticksNeeded / materials[matSelectionId].materialStages.Length);
 
         for(int i = 0; i < materials[matSelectionId].materialStages.Length; i++)
         {
-            accumulatedTime += differenceTime;
-            spriteUpdateTime.Add(accumulatedTime);
+            ticksPerSprite.Add(Mathf.RoundToInt((i + 1) * dividedTicks));
+            Debug.Log(ticksPerSprite[i]);
         }
 
-        float t = 0;
-        matGatherIcon.sprite = materials[matSelectionId].materialStages[0];
+        int startingMinute = (cycle.hours * 60) + cycle.minutes;
+        int deltaMinute = (cycle.hours * 60) + cycle.minutes;
+        
+        int startingHour = cycle.hours;
+        int deltaHour = cycle.hours;
 
-        while(true)
+        matGatherIcon.gameObject.SetActive(true);
+        
+        int stageCount = materials[matSelectionId].materialStages.Length;
+        if (stageCount == 0) yield break;
+
+        while (true)
         {
-            if(currentVillager.isCoughing)
+            deltaHour = cycle.hours;
+            deltaMinute = (deltaHour * 60) + cycle.minutes;
+
+            int difference = deltaMinute - startingMinute;
+
+            if (currentVillager != null && currentVillager.isCoughing)
             {
+                startingMinute = deltaMinute - difference;
                 yield return null;
                 continue;
             }
 
-            t += Time.deltaTime;
-            if(t >= (spriteUpdateTime[currentSpriteUpdateTime] + differenceTime) && currentSpriteUpdateTime < spriteUpdateTime.Count)
+            while (difference >= ticksNeeded)
             {
-                currentSpriteUpdateTime++;
+                TownStorage.instance.AddToInventoryID(materials[matSelectionId].storageID, 1f);
+                Debug.Log("Gave 1");
 
-                if(currentSpriteUpdateTime >= spriteUpdateTime.Count)
-                {
-                    currentSpriteUpdateTime = 0;
-                    t = 0;
-                    TownStorage.instance.AddToInventoryID(materials[matSelectionId].storageID, 1f);
-                    matGatherIcon.sprite = materials[matSelectionId].materialStages[spriteUpdateTime.Count - 1];
-                    yield return null;
-                }
-
-                matGatherIcon.sprite = materials[matSelectionId].materialStages[currentSpriteUpdateTime];
+                startingMinute += ticksNeeded; 
+                difference -= ticksNeeded;
             }
+
+
+            int currentStageIndex = GetStageIndex(ticksPerSprite, difference);
+            matGatherIcon.sprite = materials[matSelectionId].materialStages[currentStageIndex];
+
             yield return null;
         }
     }
@@ -259,5 +282,15 @@ public class Mines : Building, VillageBuildable
         villager.jobPlaceID = 0;
         villager.villagerSprite.UpdateLooks();
         if(withSound) AudioManager.instance.Play(AudioManager.instance.villagerRevoke);
+    }
+
+    int GetStageIndex(List<int> ticksPerSprite, int difference)
+    {
+        for (int i = 0; i < ticksPerSprite.Count; i++)
+        {
+            if (difference < ticksPerSprite[i]) return i;
+        }
+
+        return ticksPerSprite.Count - 1;
     }
 }

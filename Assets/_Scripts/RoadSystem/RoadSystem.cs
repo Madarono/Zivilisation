@@ -122,6 +122,12 @@ public class RoadSystem : MonoBehaviour
     public void PutRoad(Vector2Int pos, bool sound = true)
     {
         Vector3 goPos = new Vector3(pos.x, pos.y, 0);
+        if (pos.x < 0 || pos.y < 0 || pos.x >= GridManager.instance.width || pos.y >= GridManager.instance.height)
+        {
+            PopupText.instance.Popup("Out of bounds");
+            return;
+        }
+
         GameObject go = Instantiate(roadPrefab, goPos, Quaternion.identity);
         go.transform.SetParent(roadParent);
         
@@ -136,7 +142,7 @@ public class RoadSystem : MonoBehaviour
 
         UpdateOneRoad(pos);
         if(sound && !isMultiBrush) AudioManager.instance.Play(AudioManager.instance.roadPut);
-        if(sound && isMultiBrush && !onCooldown)
+        else if(sound && isMultiBrush && !onCooldown)
         {
             AudioManager.instance.Play(AudioManager.instance.roadPut);
             activeCooldown = StartCoroutine(SoundCooldown());
@@ -170,6 +176,7 @@ public class RoadSystem : MonoBehaviour
             }
         }
 
+        PopupText.instance.Popup("Roads must connect to existing roads.");
         return false;
     }
 
@@ -195,7 +202,12 @@ public class RoadSystem : MonoBehaviour
             roadPos.Remove(pos);
             Destroy(road);
             GridManager.instance.PlaceBuilding(pos.x, pos.y); //To make the tile unwalkable
-            AudioManager.instance.Play(AudioManager.instance.roadShovel);
+            if(!isMultiBrush) AudioManager.instance.Play(AudioManager.instance.roadShovel);
+            else if(isMultiBrush && !onCooldown)
+            {
+                AudioManager.instance.Play(AudioManager.instance.roadShovel);
+                activeCooldown = StartCoroutine(SoundCooldown());
+            }
         }
     }
 

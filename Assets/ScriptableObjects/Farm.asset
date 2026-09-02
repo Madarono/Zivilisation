@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11b67086090581648b03d95be6a83b2b, type: 3}
+  m_Name: Farm
+  m_EditorClassIdentifier: Assembly-CSharp::DevSidePage
+  leftPageInfo: '<align=center><size=140%>- Farm -</size></align>
+
+    Farm is a
+    villager building, you can have multiple at a time.
+
+
+    <align=center><size=120%>-
+    Usage -</size></align>
+
+    Assign villagers to farm and harvest <color=#305D42><size=110%><i>wheat</i></size></color>
+    for your village.'
+  leftPageLayout: 1
+  leftPageIcons:
+  - {fileID: 21300000, guid: 3632423a150ec4a43b14609469766b13, type: 3}
+  - {fileID: 21300000, guid: d35183e55fefbc740bb12afaae6c9360, type: 3}
+  - {fileID: 21300000, guid: 2f6f626fbbd140f468328fb850384977, type: 3}
+  leftPageWidth: 100
+  leftPageHeight: 100
+  leftPageSpacing: 20
+  leftPagePadding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 20
+    m_Bottom: 0
+  rightPageInfo: '<align=center><size=120%>- Stats -</size></align>
+
+    A farmer
+    farms <color=#305D42><size=110%><i>1</i></size></color> Wheat grain every <color=#305D42><size=110%><i>11</i></size></color>
+    seconds
+
+
+    <color=#305D42><size=110%><i>9</i></size></color> Wheat is produced
+    every full work shift. Enough to feed:
+
+    - <color=#305D42><size=110%><i>9</i></size></color>
+    housed Villagers/day
+
+    - <color=#305D42><size=110%><i>6</i></size></color>
+    Homeless villagers/day '
+  rightPageLayout: 0
+  rightPageIcons: []
+  rightPageWidth: 100
+  rightPageHeight: 100
+  rightPageSpacing: 10
+  rightPagePadding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0

@@ -530,6 +530,7 @@ MonoBehaviour:
   hunger: 1
   hungerDepletionAmount: 0.05
   hungerDepletionCooldown: 10
+  showedStarvation: 0
   isCoughing: 0
   isShowing: 0
   villagerStatsWindow: {fileID: 9081392522446617057}

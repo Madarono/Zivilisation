@@ -142,8 +142,8 @@ public class TownStorage : MonoBehaviour
             Stats.instance.lowestMorality = globalMorality;
         }
 
-        Debug.Log("Population: " + totalPopulation + "\nFed: " + totalFed + "\nWorking: " + totalWorking + "\nHomeless: " + totalHomeless + "\nStarving: " + totalStarving + 
-        "\n\nNetDailyChange: " + netDailyChange + "\nNew Global Morality: " + globalMorality);
+        // Debug.Log("Population: " + totalPopulation + "\nFed: " + totalFed + "\nWorking: " + totalWorking + "\nHomeless: " + totalHomeless + "\nStarving: " + totalStarving + 
+        // "\n\nNetDailyChange: " + netDailyChange + "\nNew Global Morality: " + globalMorality);
         hasCheckedTomorrow = true;
 
         brief.gameObject.SetActive(true);
@@ -162,11 +162,11 @@ public class TownStorage : MonoBehaviour
 
             yield return new WaitForSeconds(cooldown);
 
-            Debug.Log("Checking Chance");
+            // Debug.Log("Checking Chance");
 
             float randomChance = Random.Range(0, 1f);
 
-            Debug.Log(randomChance + "/" + spawnChance);
+            // Debug.Log(randomChance + "/" + spawnChance);
 
             if(randomChance <= spawnChance)
             {
