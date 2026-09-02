@@ -107,32 +107,22 @@ public class VirusManager : MonoBehaviour
         VirusResistance virusResistance = GetRandomResistence();
 
         float trait1Multiplyer = 1.0f - Mathf.Pow(UnityEngine.Random.value, trait1Power * power);
-        VirusTrait trait1 = VirusTrait.None;
-
-        float trait2Multiplyer = 1.0f - Mathf.Pow(UnityEngine.Random.value, trait2Power * power);
-        VirusTrait trait2 = VirusTrait.None;
-
-        float trait3Multiplyer = 1.0f - Mathf.Pow(UnityEngine.Random.value, trait3Power * power);
-        VirusTrait trait3 = VirusTrait.None;
-
-        if(UnityEngine.Random.value <= trait1Multiplyer)
+        if (UnityEngine.Random.value <= trait1Multiplyer)
         {
-            trait1 = GetRandomTrait(newVirus);
-            newVirus.trait1 = trait1;
-
-            if(UnityEngine.Random.value <= trait2Multiplyer)
-            {
-                trait2 = GetRandomTrait(newVirus);
-                newVirus.trait2 = trait2;
-
-                if(UnityEngine.Random.value <= trait3Multiplyer)
-                {
-                    trait3 = GetRandomTrait(newVirus);
-                    newVirus.trait3 = trait3;
-                }
-            }
+            newVirus.trait1 = GetRandomTrait(newVirus);
         }
 
+        float trait2Multiplyer = 1.0f - Mathf.Pow(UnityEngine.Random.value, trait2Power * power);
+        if (UnityEngine.Random.value <= trait2Multiplyer)
+        {
+            newVirus.trait2 = GetRandomTrait(newVirus);
+        }
+
+        float trait3Multiplyer = 1.0f - Mathf.Pow(UnityEngine.Random.value, trait3Power * power);
+        if (UnityEngine.Random.value <= trait3Multiplyer)
+        {
+            newVirus.trait3 = GetRandomTrait(newVirus);
+        }
 
         newVirus.infection = Mathf.Clamp(Mathf.RoundToInt(virusInfection), 0, 100);
         newVirus.severity = Mathf.Clamp(Mathf.RoundToInt(virusSeverity), 0, 100);

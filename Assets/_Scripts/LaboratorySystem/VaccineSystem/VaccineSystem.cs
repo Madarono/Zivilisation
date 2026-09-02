@@ -371,7 +371,7 @@ public class VaccineSystem : MonoBehaviour
         else PopupText.instance.Popup($"{LaboratorySystem.instance.virusNames[virusId]} is now fully vaccinated, No active infections were found.");
     }
 
-    bool SameVirus(Virus virus, Virus targetVirus)
+    public bool SameVirus(Virus virus, Virus targetVirus)
     {
         return virus.infection == targetVirus.infection &&
             virus.severity == targetVirus.severity &&

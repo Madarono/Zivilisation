@@ -197,6 +197,24 @@ public class VillagerHealth : MonoBehaviour //ToDo: Infection that makes Infecti
         CheckIncubation();
     }
 
+    public void CheckVirus() // Safe Failsafe Check
+    {
+        if (health == Health.Healthy || inflictedVirus == null) return;
+
+        if (VirusManager.instance == null || VirusManager.instance.viruses == null) return;
+
+        foreach (var virus in VirusManager.instance.viruses)
+        {
+            if (virus != null && VaccineSystem.instance.SameVirus(inflictedVirus, virus))
+            {
+                return; // Virus already registered in VirusManager
+            }
+        }
+
+        VirusManager.instance.viruses.Add(inflictedVirus);
+        Debug.LogWarning($"[Failsafe] Re-registered missing virus '{inflictedVirus}' into VirusManager.");
+    }
+
     IEnumerator Infection()
     {
         float infectionMultiplyer = HasCertainTrait(VirusTrait.Airborne) ? airborneInfectionMultiplyer : 1f;
@@ -222,19 +240,23 @@ public class VillagerHealth : MonoBehaviour //ToDo: Infection that makes Infecti
                 }
 
 
-                if(villager.house.gameObject.TryGetComponent(out Building building))
+                if (villager.house != null && villager.house.gameObject.TryGetComponent(out Building building))
                 {
                     villagers.Clear();
-                    foreach(var villagerBuilding in building.villagers)
+                    foreach (var villagerBuilding in building.villagers)
                     {
-                        if(villagerBuilding == this.villager || villagerBuilding.villagerHealth.health == Health.Healthy) continue;
-
-                        villagers.Add(villagerBuilding);
+                        if (villagerBuilding != null && villagerBuilding != this.villager && villagerBuilding.villagerHealth.health == Health.Healthy)
+                        {
+                            villagers.Add(villagerBuilding);
+                        }
                     }
 
-                    VillagerAI randomVillager = villagers[Random.Range(0, villagers.Count)];
-                    randomVillager.villagerHealth.Infect(inflictedVirus);
-                    Debug.Log("Infected in household");
+                    if (villagers.Count > 0)
+                    {
+                        VillagerAI randomVillager = villagers[Random.Range(0, villagers.Count)];
+                        randomVillager.villagerHealth.Infect(inflictedVirus);
+                        Debug.Log("Infected roommate in household!");
+                    }
                 }
                 continue;
             }
@@ -289,12 +311,12 @@ public class VillagerHealth : MonoBehaviour //ToDo: Infection that makes Infecti
 
     IEnumerator SuddenCollapse()
     {
-        float lethality = Mathf.Min(lethalityMultiplyer * inflictedVirus.lethality, 100f);
+        float lethality = Mathf.Min(lethalityMultiplyer * inflictedVirus.lethality, 100f) / 100f;
         float deathChance = Mathf.Lerp(minChanceForDeath, maxChanceForDeath, lethality);
 
-        while(true)
+        while (true)
         {
-            if(villager.state == VillagerState.Sleeping || villager.quarantine != null) //Don't kill him while he's asleep. Sheesh
+            if (villager.state == VillagerState.Sleeping || villager.quarantine != null)
             {
                 yield return null;
                 continue;
@@ -304,10 +326,10 @@ public class VillagerHealth : MonoBehaviour //ToDo: Infection that makes Infecti
 
             float chance = Random.Range(0, 100f);
 
-            if(chance <= deathChance)
+            if (chance <= deathChance)
             {
-                Debug.Log("Kill the villager");
                 villager.Death();
+                yield break;
             }
         }
     }

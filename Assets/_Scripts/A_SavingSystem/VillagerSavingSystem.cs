@@ -567,7 +567,23 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         AudioManager.instance.UpdateVolume();
 
         //VirusManager
-        VirusManager.instance.viruses = new List<Virus>(viruses);
+        VirusManager.instance.viruses = new List<Virus>();
+
+        foreach (var loadedVirus in this.viruses)
+        {
+            Virus copy = new Virus
+            {
+                infection = loadedVirus.infection,
+                severity = loadedVirus.severity,
+                lethality = loadedVirus.lethality,
+                resistanceType = loadedVirus.resistanceType,
+                trait1 = loadedVirus.trait1,
+                trait2 = loadedVirus.trait2,
+                trait3 = loadedVirus.trait3
+            };
+
+            VirusManager.instance.viruses.Add(copy);
+        }
 
         //MarketSystem.cs
         MarketSystem.instance.dailyDemand = (float[])dailyDemand.Clone();
@@ -696,6 +712,11 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         foreach(var vaccinated in VaccineSystem.instance.vaccinatedVirusId)
         {
             VaccineSystem.instance.CureAllVaccinated(vaccinated, false);
+        }
+
+        foreach(var villager in TownManager.instance.villagers)
+        {
+            villager.villagerHealth.CheckVirus();
         }
     }
 }
