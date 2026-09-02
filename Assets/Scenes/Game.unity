@@ -59614,6 +59614,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: c252c7180bfe9ae4a91890af9cfffb0e, type: 3}
   isMultiBrush: 0
   delayBetweenSounds: 0.1
+  delayBetweenPopups: 3
 --- !u!114 &2112431325
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -54,7 +54,7 @@ public class PopupText : MonoBehaviour
         }
     }
 
-    public void Popup(string input)
+    public void Popup(string input, bool sound = true)
     {
         if (currentPopup != null)
         {
@@ -63,8 +63,8 @@ public class PopupText : MonoBehaviour
 
         popupVisual.text = input;
 
-        if (currentSound != null) Destroy(currentSound);
-        currentSound = AudioManager.instance.PlayGameObject(AudioManager.instance.popupText, amplification);
+        if (currentSound != null && sound) Destroy(currentSound);
+        if (sound) currentSound = AudioManager.instance.PlayGameObject(AudioManager.instance.popupText, amplification);
 
         currentPopup = StartCoroutine(DoPopupText(popupVisual));
     }

@@ -24,8 +24,12 @@ public class RoadSystem : MonoBehaviour
     public Sprite[] multiBrushStates;
     public bool isMultiBrush = false;
     public float delayBetweenSounds = 0.1f;
+    public float delayBetweenPopups = 2f;
     bool onCooldown = false;
+    bool onPopupCooldown = false;
+
     Coroutine activeCooldown;
+    Coroutine activePopupCooldown;
 
     void Awake()
     {
@@ -145,7 +149,7 @@ public class RoadSystem : MonoBehaviour
         else if(sound && isMultiBrush && !onCooldown)
         {
             AudioManager.instance.Play(AudioManager.instance.roadPut);
-            activeCooldown = StartCoroutine(SoundCooldown());
+            activeCooldown = StartCoroutine(SoundCooldown(delayBetweenSounds));
         }
     }
 
@@ -176,7 +180,12 @@ public class RoadSystem : MonoBehaviour
             }
         }
 
-        PopupText.instance.Popup("Roads must connect to existing roads.");
+        if(!isMultiBrush) PopupText.instance.Popup("Roads must connect to existing roads.");
+        else if(isMultiBrush && !onPopupCooldown && !roadPos.ContainsKey(pos))
+        {
+            PopupText.instance.Popup("Roads must connect to existing roads.", false);
+            activePopupCooldown = StartCoroutine(PopupCooldown(delayBetweenPopups));
+        }
         return false;
     }
 
@@ -206,7 +215,7 @@ public class RoadSystem : MonoBehaviour
             else if(isMultiBrush && !onCooldown)
             {
                 AudioManager.instance.Play(AudioManager.instance.roadShovel);
-                activeCooldown = StartCoroutine(SoundCooldown());
+                activeCooldown = StartCoroutine(SoundCooldown(delayBetweenSounds));
             }
         }
     }
@@ -223,12 +232,20 @@ public class RoadSystem : MonoBehaviour
         roadPos.Clear();
     }
 
-    IEnumerator SoundCooldown()
+    IEnumerator SoundCooldown(float delay)
     {
         onCooldown = true;
-        yield return new WaitForSecondsRealtime(delayBetweenSounds);
+        yield return new WaitForSecondsRealtime(delay);
         onCooldown = false;
         activeCooldown = null;
+    }
+
+    IEnumerator PopupCooldown(float delay)
+    {
+        onPopupCooldown = true;
+        yield return new WaitForSecondsRealtime(delay);
+        onPopupCooldown = false;
+        activePopupCooldown = null;
     }
 
 }
