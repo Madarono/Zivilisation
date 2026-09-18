@@ -8,6 +8,7 @@ public class Autosave : MonoBehaviour
     
     private float lastSaveTime;
     private const float saveCooldown = 1.0f;
+    private bool isSaving = false;
 
     private void Awake()
     {
@@ -17,13 +18,14 @@ public class Autosave : MonoBehaviour
             return;
         }
         instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
     private void OnApplicationFocus(bool hasFocus)
     {
         if (!hasFocus)
         {
-            TriggerAutoSave();
+            ForceLifecycleSave();
         }
     }
 
@@ -31,18 +33,36 @@ public class Autosave : MonoBehaviour
     {
         if (isPaused)
         {
-            TriggerAutoSave();
+            ForceLifecycleSave();
         }
+    }
+
+    private void OnApplicationQuit()
+    {
+        ForceLifecycleSave();
     }
 
     public void TriggerAutoSave()
     {
         if (Time.unscaledTime - lastSaveTime < saveCooldown) return;
+        ExecuteSave();
+    }
 
+    private void ForceLifecycleSave()
+    {
+        if (isSaving) return; 
+
+        ExecuteSave();
+    }
+
+    private void ExecuteSave()
+    {
         if (DataPersistenceManager.instance != null)
         {
+            isSaving = true;
             DataPersistenceManager.instance.SaveGame();
             lastSaveTime = Time.unscaledTime;
+            isSaving = false;
         }
     }
 }

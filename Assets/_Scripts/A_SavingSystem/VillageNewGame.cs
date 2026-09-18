@@ -63,7 +63,7 @@ public class VillageNewGame : MonoBehaviour
         {
             road.PutRoad(roadPlacement);
         }
-
+        
         foreach(var villagerPos in villagerPlacement)
         {
             GameObject newVillager = gate.SpawnNewVillagerInfo();
@@ -78,17 +78,32 @@ public class VillageNewGame : MonoBehaviour
             build.SpawnOption(building.prefab, buildingPos);
         }
 
-        TownStorage.instance.Money = 100;
         TownStorage.instance.wheat = 3f;
         TownStorage.instance.iron = 0;
         TownStorage.instance.copper = 0;
         TownStorage.instance.quartz = 0;
         TownStorage.instance.titanium = 0;
 
+        Settings.instance.sfxValue = 100f;
+        Settings.instance.musicValue = 100f;
+        Settings.instance.muteSfx = false;
+        Settings.instance.muteMusic = false;
+        Settings.instance.graphicsIndex = 2;
+        Settings.instance.canScreenShake = true;
+        Settings.instance.fpsIndex = 1;
+        Settings.instance.musicSlider.value = 100f * Settings.instance.audioDivider;
+        Settings.instance.sfxSlider.value = 100f * Settings.instance.audioDivider;
+        Settings.instance.UpdateValues();
+        Settings.instance.SetFPS();
+        Settings.instance.ApplyChanges();
+        AudioManager.instance.UpdateVolume();
+
         DayCycle.instance.hours = 6;
         DayCycle.instance.minutes = 0;
         DayCycle.instance.seconds = 0;
         DayCycle.instance.UpdateClock(true);
+
+        GameMode.instance.ApplyMode(true);
     }
 
     [ContextMenu("Debug NewGame")]

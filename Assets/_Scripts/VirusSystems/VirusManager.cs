@@ -70,6 +70,7 @@ public class VirusManager : MonoBehaviour
     [Header("Infect Chance")]
     public float gateVillagerChance = 5f;
     public float randomVillagerChance = 10f;
+    public float randomNewVirusChance = 10f;
     public int[] villagerInfectTimes;
 
     private Coroutine randomInfect;
@@ -261,9 +262,13 @@ public class VirusManager : MonoBehaviour
         {
             if (chance <= randomVillagerChance)
             {
-                if(viruses.Count == 0) MakeNewVirus();
+                float virusChance = Random.Range(0, 100f);
+                bool makeNewVirus = viruses.Count == 0 || virusChance <= randomNewVirusChance;
 
-                InflictRandom();
+                if(makeNewVirus) MakeNewVirus();
+
+                if(makeNewVirus) InflictNewest();
+                else InflictRandom();
             }
         }
     }

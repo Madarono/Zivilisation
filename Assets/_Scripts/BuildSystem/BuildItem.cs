@@ -11,6 +11,7 @@ public class BuildItem : MonoBehaviour
 
     [Header("Data")]
     public int price;
+    public int priceAfterDiscount;
     public string name;
     public Sprite icon;
 
@@ -34,8 +35,9 @@ public class BuildItem : MonoBehaviour
 
     public void Refresh()
     {
+        priceAfterDiscount = Mathf.RoundToInt(price * BuildOptions.instance.priceValueMultiplyer);
         iconVisual.sprite = icon;
-        priceVisual.text = "$" + price.ToString();
+        priceVisual.text = "$" + priceAfterDiscount.ToString();
         nameVisual.text = name;
 
         if(!onlyOne) return;

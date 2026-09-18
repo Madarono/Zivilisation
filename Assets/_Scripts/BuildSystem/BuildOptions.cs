@@ -19,6 +19,7 @@ public class BuildOptions : MonoBehaviour
 
     [Header("Sell Value")]
     public float sellValueMultiplyer = 0.7f;
+    public float priceValueMultiplyer = 1f;
 
     [Header("Current chosen")]
     public Camera cam;
@@ -247,6 +248,7 @@ public class BuildOptions : MonoBehaviour
         priceObj.SetActive(false);
         TownManager.instance.CloseLaboratoryWindow();
         TownManager.instance.availableMarket?.HideVisuals();
+        ObjectiveSystem.instance.CloseWindow();
         shovelBuilds.gameObject.SetActive(true);
         moveBuilds.gameObject.SetActive(true);
 
@@ -254,12 +256,16 @@ public class BuildOptions : MonoBehaviour
         {
             item.Refresh();
         }
+
+        MoneyCounter.instance.UpdateStaticMoney();
+        TutorialSystem.instance.NotifyTutorial("BuildOptions", "OpenWindow");
     }
 
     public void CloseWindow()
     {
         window.SetActive(false);
         isOpen = false;
+        if(TutorialSystem.instance.currentTutorial != null && TutorialSystem.instance.currentStep <= 2)TutorialSystem.instance.NotifyTutorial("BuildOptions", "CloseWindow");
         // BuildSystem.instance.options[id].optionVisual.sprite = BuildSystem.instance.options[id].optionStates[0];
     }
 
@@ -387,17 +393,22 @@ public class BuildOptions : MonoBehaviour
         }
 
         this.item = item;
-        if(TownStorage.instance.Money < item.price)
+        if(TownStorage.instance.Money < item.priceAfterDiscount)
         {
             PopupText.instance.Popup("Insufficient Money.");
+            TutorialSystem.instance.NotifyTutorial("BuildOptions", $"Little{this.item.name}Money");
             this.item = null;
             return;
         }
 
+        TutorialSystem.instance.NotifyTutorial("BuildOptions", $"Chose{this.item.name}");
+        
+        TutorialSystem.instance.CheckBuilding(item.name);
+
         isPositionLocked = false;
         finalPos = Vector2Int.zero;
         debugItem.gameObject.SetActive(true);
-        priceObj.SetActive(true);
+        priceObj.SetActive(false);
         priceVisual.text = item.priceVisual.text;
         debugItem.sprite = item.itemSprite;
         CloseWindow();
@@ -438,6 +449,7 @@ public class BuildOptions : MonoBehaviour
         cancelButton.SetActive(false);
         acceptButton.SetActive(false);
         BuildSystem.instance.CloseOther(id);
+        TutorialSystem.instance.NotifyTutorial("BuildOptions", "CancelledPlace");
     }
 
     public void AcceptButton()
@@ -475,7 +487,7 @@ public class BuildOptions : MonoBehaviour
     {
         if(TownStorage.instance.Money < item.price || !isPositionLocked)
         {
-            if(TownStorage.instance.Money < item.price) PopupText.instance.Popup("Insufficient Money.");
+            if(TownStorage.instance.Money < item.price) PopupText.instance.Popup("Insufficient Money");
             return;
         }
 
@@ -486,6 +498,7 @@ public class BuildOptions : MonoBehaviour
 
         TownStorage.instance.Money -= item.price;
         SpawnOption(item.itemPrefab, finalWorldPos, item.price * sellValueMultiplyer);
+        TutorialSystem.instance.NotifyTutorial("BuildOptions", $"Placed{item.name}");
 
         if(item.onlyOne)
         {

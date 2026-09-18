@@ -83,39 +83,62 @@ public class GameData
     public List<int> curedVirusId = new List<int>();
     public List<int> vaccinatedVirusId = new List<int>();
 
+    public List<bool> doneTutorials = new List<bool>();
+
+    public bool newGame;
+
+    public Mode mode;
+    public Difficulty difficulty;
+
+    public bool hasWon;
+
     public GameData()
     {
-        //VillagerSavingSystem.cs
-        villagerId = new List<int>();
-        houseId = new List<int>();
-        jobId = new List<int>();
-        quarantineId = new List<int>();
-        villagerPos = new List<Vector3>();
-        villagerHunger = new List<float>();
-        daysLeft = new List<int>();
+        sfxValue = 100f;
+        musicValue = 100f;
+        muteSfx = false;
+        muteMusic = false;
+        graphicsIndex = 2;
+        canScreenShake = true;
+        fpsIndex = 1;
+        mode = Mode.Normal;
+        difficulty = Difficulty.Normal;
 
-        deadVillagerPos = new List<Vector3>();
-        deadVillagerVirus = new List<Virus>();
+        ResetToNewGame();
+    }
+
+    public void ResetToNewGame() //For any new playthrough
+    {
+        villagerId.Clear();
+        houseId.Clear();
+        jobId.Clear();
+        quarantineId.Clear();
+        villagerPos.Clear();
+        villagerHunger.Clear();
+        daysLeft.Clear();
+
+        deadVillagerPos.Clear();
+        deadVillagerVirus.Clear();
         totalDead = 0;
-        
-        villagerHealth = new List<Health>();
-        villagerVirus = new List<Virus>();
 
-        motelId = new List<int>();
-        motelTypeId = new List<int>();
-        motelSellValue = new List<int>();
-        motelPos = new List<Vector3>();
+        villagerHealth.Clear();
+        villagerVirus.Clear();
 
-        workplaceId = new List<int>();
-        workplaceTypeId = new List<int>();
-        workplaceSellValue = new List<int>();
-        workplacePos = new List<Vector3>();
-        matSelectionId = new List<int>();
+        motelId.Clear();
+        motelTypeId.Clear();
+        motelSellValue.Clear();
+        motelPos.Clear();
+
+        workplaceId.Clear();
+        workplaceTypeId.Clear();
+        workplaceSellValue.Clear();
+        workplacePos.Clear();
+        matSelectionId.Clear();
 
         dailyDemand = new float[5];
         demandPower = 1f;
 
-        roadPos = new List<Vector2>();
+        roadPos.Clear();
 
         moneySave = 100;
         wheatSave = 3f;
@@ -126,19 +149,11 @@ public class GameData
         globalMoralitySave = 0.5f;
         hasCheckedTomorrow = false;
 
-        hourSave = 6; //Time when Villagers wake up
+        hourSave = 6;
         minuteSave = 0;
         secondSave = 0;
 
-        sfxValue = 100f;
-        musicValue = 100f;
-        muteSfx = false;
-        muteMusic = false;
-        graphicsIndex = 2;
-        canScreenShake = true;
-        fpsIndex = 1;
-
-        viruses = new List<Virus>();
+        viruses.Clear();
 
         timeInsideCurrent = 0f;
         timeoutCurrent = 0f;
@@ -156,13 +171,18 @@ public class GameData
         totalSick = 0;
         totalMoneyGained = 0;
 
-        pageInfo = new List<string>();
-        headerInfo = new List<string>();
+        pageInfo.Clear();
+        headerInfo.Clear();
 
-        virusNames = new List<string>();
-        manualPage = new List<int>();
+        virusNames.Clear();
+        manualPage.Clear();
 
-        curedVirusId = new List<int>();
-        vaccinatedVirusId = new List<int>();
+        curedVirusId.Clear();
+        vaccinatedVirusId.Clear();
+
+        doneTutorials.Clear();
+
+        newGame = true;
+        hasWon = true;
     }
 }

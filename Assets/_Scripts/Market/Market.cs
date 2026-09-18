@@ -112,6 +112,7 @@ public class Market : Building, VillageBuildable
         AudioManager.instance.Play(AudioManager.instance.select);
         isShowing = true;
         marketWindow.SetActive(true);
+        TutorialSystem.instance.NotifyTutorial("Market", "ShowVisuals");
     }
 
     public override void HideVisuals(bool withSound = false)
@@ -119,6 +120,7 @@ public class Market : Building, VillageBuildable
         isShowing = false;
         marketWindow.SetActive(false);
         if(withSound) AudioManager.instance.Play(AudioManager.instance.buttonClicks[1]);
+        TutorialSystem.instance.NotifyTutorial("Market", "HideVisuals");
     }
 
     public override void UpdateVisuals()
@@ -188,6 +190,8 @@ public class Market : Building, VillageBuildable
         {
             slider.value = 0;
         }
+
+        TutorialSystem.instance.NotifyTutorial("Market", "Sold");
 
         UpdateVisuals();
     }

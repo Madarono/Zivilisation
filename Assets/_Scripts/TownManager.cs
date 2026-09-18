@@ -234,6 +234,11 @@ public class TownManager : MonoBehaviour
                 LoseCondition.instance.DecreaseLossMorality();
             }
 
+            if(GameMode.instance.mode == Mode.Endless)
+            {
+                GameMode.instance.ApplyMode(false);
+            }
+
             if(LoseCondition.instance.LossByMorality())
             {
                 LoseCondition.instance.CheckLossCondition();
@@ -267,6 +272,7 @@ public class TownManager : MonoBehaviour
         foreach(var villager in villagers)
         {
             villager.WakeUpFromHouse();
+            villager.villagerSprite.UpdateLooks();
         }
     }
 
@@ -567,6 +573,8 @@ public class TownManager : MonoBehaviour
         {
             VaccineSystem.instance.OpenWindow(true);
         }
+
+        ObjectiveSystem.instance.CloseWindow();
     }
 
     public void CloseLaboratoryWindow()
@@ -578,5 +586,6 @@ public class TownManager : MonoBehaviour
         availableLaboratory.isShowing = false;
         LookAhead.instance.SetValues(false);
         LookAhead.instance.CloseWindow();
+        TutorialSystem.instance.NotifyTutorial("LaboratorySystem", "HideAllVisuals");
     }
 }

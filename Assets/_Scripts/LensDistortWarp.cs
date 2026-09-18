@@ -82,7 +82,7 @@ public class LensDistortWarp : MonoBehaviour
 
         while (t < timeDistort)
         {
-            t += Time.deltaTime;
+            t += Time.unscaledDeltaTime;
 
             if (t < halfTime)
             {

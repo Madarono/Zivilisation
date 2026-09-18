@@ -29,6 +29,7 @@ public class TownStorage : MonoBehaviour
 
     [Header("Global Morality")]
     public float globalMorality;
+    public float penaltyMultiplyer = 1f;
     public bool hasCheckedTomorrow;
     public GlobalMoralityBrief brief;
 
@@ -133,6 +134,7 @@ public class TownStorage : MonoBehaviour
         float starvationPenalty = starvingMultiplyer * starvationRatio;
 
         netDailyChange = (fedMultiplyer * totalFed) + (workingMultiplyer * totalWorking) - (homelessMultiplyer * totalHomeless) - starvationPenalty;
+        netDailyChange *= penaltyMultiplyer;
         float oldGlobalMorality = globalMorality;
 
         globalMorality = Mathf.Clamp01(globalMorality + netDailyChange);

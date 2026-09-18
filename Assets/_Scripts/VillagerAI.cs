@@ -106,6 +106,7 @@ public class VillagerAI : MonoBehaviour
         canWander = false;
         hungerDown = StartCoroutine(HungerGoDown());
         HideVisuals(false);
+        villagerSprite.UpdateLooks();
         // StartCoroutine(Wandering());
     }
 
@@ -299,12 +300,12 @@ public class VillagerAI : MonoBehaviour
             TownManager.instance.ReleaseWanderSlot();
         }
 
-        if(goingToHouse)
+        if(goingToHouse || state == VillagerState.Sleeping)
         {
             rend.sprite = null;
             state = VillagerState.Sleeping;
+            villagerSprite.UpdateLooks();
             HideVisuals(false);
-            return;
         }
         else if(state == VillagerState.Working)
         {
@@ -435,13 +436,13 @@ public class VillagerAI : MonoBehaviour
 
     public void WakeUpFromHouse()
     {
+        villagerSprite.UpdateLooks();
         if(house == null)
         {
             return;
         }
 
         goingToHouse = false;
-        villagerSprite.UpdateLooks();
         state = VillagerState.Idle;
         hasWarnedInsomnia = false;
     }

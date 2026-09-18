@@ -47,9 +47,19 @@ public class DataPersistenceManager : MonoBehaviour
 
     public void NewGame()
     {
-        this.gameData = new GameData();
+        if (this.gameData == null)
+        {
+            this.gameData = new GameData();
+        }
+        else
+        {
+            this.gameData.ResetToNewGame();
+        }
+
         VillageNewGame.instance.DeletePrevious();
         VillageNewGame.instance.InitializeNewGame();
+        
+        SaveGame();
     }
 
     public void LoadGame()
@@ -60,6 +70,7 @@ public class DataPersistenceManager : MonoBehaviour
         {
             Debug.Log("Initializing data to defaults");
             NewGame();
+            return;
         }
 
         foreach (IDataPersistence dataPersistenceObj in dataPersistenceObjects)

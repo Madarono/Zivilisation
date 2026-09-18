@@ -163,12 +163,14 @@ public class Settings : MonoBehaviour
     {
         muteSfx = !muteSfx;
         UpdateVisual();
+        AudioManager.instance.UpdateVolume();
     }
 
     public void MuteMusic()
     {
         muteMusic = !muteMusic;
         UpdateVisual();
+        AudioManager.instance.UpdateVolume();
     }
 
     public void UpdateVisual()

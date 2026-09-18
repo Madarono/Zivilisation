@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1fb3e7da7791bf42972e8814c221ec0, type: 3}
+  m_Name: BuildLaboratory
+  m_EditorClassIdentifier: Assembly-CSharp::TutorialSO
+  type: 0
+  startingPopup: Tap on the Build Options
+  showSelection: 1
+  position: {x: -765, y: 475}
+  size: {x: 100, y: 100}
+  steps:
+  - scriptName: BuildSystem
+    functionName: StartBuilding
+    popupTextVisual: Open Store
+    showSelection: 1
+    position: {x: -765, y: 275}
+    size: {x: 80, y: 80}
+  - scriptName: BuildOptions
+    functionName: OpenWindow
+    popupTextVisual: Choose Laboratory
+    showSelection: 1
+    position: {x: -141.0976, y: -120.1403}
+    size: {x: 220, y: 250}
+  - scriptName: BuildOptions
+    functionName: ChoseLaboratory
+    popupTextVisual: Select a suitable spot and accept
+    showSelection: 1
+    position: {x: 894.9401, y: -15.00018}
+    size: {x: 100, y: 100}
+  congratsStep:
+    scriptName: BuildOptions
+    functionName: PlacedLaboratory
+    popupTextVisual: Congrats!
+    showSelection: 0
+    position: {x: -765, y: 475}
+    size: {x: 100, y: 100}
+  failTutorial:
+  - scriptName: BuildOptions
+    functionName: LittleLaboratoryMoney
+    popupTextVisual: Save up $250 and come here again!
+    showSelection: 0
+    position: {x: 0, y: 0}
+    size: {x: 0, y: 0}
+  - scriptName: BuildSystem
+    functionName: StopBuilding
+    popupTextVisual: you closed the building menu
+    showSelection: 0
+    position: {x: 0, y: 0}
+    size: {x: 0, y: 0}
+  - scriptName: BuildSystem
+    functionName: StartRoad
+    popupTextVisual: you chose the road system
+    showSelection: 0
+    position: {x: 0, y: 0}
+    size: {x: 0, y: 0}
+  buildingName: Laboratory
+  buildingPopupFail: you didn't choose laboratory

@@ -42,6 +42,7 @@ public class Window : MonoBehaviour
 
         if(closeLaboratory) TownManager.instance.CloseLaboratoryWindow();
         if(!closeLaboratory) TownManager.instance.availableLaboratory?.laboratoryWindow.SetActive(false);
+        ObjectiveSystem.instance.CloseWindow();
         TownManager.instance.availableMarket?.HideVisuals();
 
         ActiveWindow.instance.currentActiveWindow = this;

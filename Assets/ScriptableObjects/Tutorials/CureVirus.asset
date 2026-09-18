@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1fb3e7da7791bf42972e8814c221ec0, type: 3}
+  m_Name: CureVirus
+  m_EditorClassIdentifier: Assembly-CSharp::TutorialSO
+  type: 5
+  startingPopup: Open the Laboratory
+  showSelection: 0
+  position: {x: 0, y: 0}
+  size: {x: 0, y: 0}
+  steps:
+  - scriptName: Laboratory
+    functionName: ShowVisuals
+    popupTextVisual: Adjust the sliders to match the virus DNA, then attempt the
+      cure!
+    showSelection: 1
+    position: {x: 0, y: -294.9999}
+    size: {x: 700, y: 100}
+  congratsStep:
+    scriptName: LaboratorySystem
+    functionName: Attempt
+    popupTextVisual: Congrats!
+    showSelection: 0
+    position: {x: 0, y: 0}
+    size: {x: 0, y: 0}
+  failTutorial:
+  - scriptName: LaboratorySystem
+    functionName: HideAllVisuals
+    popupTextVisual: You closed the laboratory
+    showSelection: 0
+    position: {x: 0, y: 0}
+    size: {x: 0, y: 0}
+  buildingName: 
+  buildingPopupFail: 

@@ -124,6 +124,7 @@ public class Building : MonoBehaviour, VillageBuildable
         isShowing = true;
         AudioManager.instance.Play(AudioManager.instance.select);
         TownManager.instance.ShowSelectedHumans(this);
+        TutorialSystem.instance.NotifyTutorial("Building", "ShowVisuals");
     }
 
     public virtual void HideVisuals(bool withSound = true)
@@ -160,6 +161,7 @@ public class Building : MonoBehaviour, VillageBuildable
         isChoosing = true;
         TownManager.instance.activeBuilding = this;
         TownManager.instance.SelectingHumanMode(this);
+        TutorialSystem.instance.NotifyTutorial("Building", "AddHuman");
     }
 
     public virtual void RemoveHuman()
@@ -174,6 +176,7 @@ public class Building : MonoBehaviour, VillageBuildable
     {
         villager.house = this.transform;
         if(withSound) AudioManager.instance.Play(AudioManager.instance.villagerAssign);
+        TutorialSystem.instance.NotifyTutorial("Building", "AssignVillagerRole");
     }
     public virtual void RemoveVillagerRole(VillagerAI villager, bool withSound = true)
     {

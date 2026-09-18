@@ -13,6 +13,7 @@ public class MoneyCounter : MonoBehaviour
     public RectTransform differenceWindow;
     public TextMeshProUGUI moneyVisual;
     public TextMeshProUGUI differenceVisual;
+    public TextMeshProUGUI[] staticMoneyVisual;
     public Color[] differenceStates;
 
     [Header("Price Animation")]
@@ -219,6 +220,14 @@ public class MoneyCounter : MonoBehaviour
 
             lastPlayedValue = currentValue;
             lastPlayTime = Time.unscaledTime;
+        }
+    }
+
+    public void UpdateStaticMoney()
+    {
+        foreach(var visual in staticMoneyVisual)
+        {
+            visual.text = $"${storage.Money:N0}";
         }
     }
 }

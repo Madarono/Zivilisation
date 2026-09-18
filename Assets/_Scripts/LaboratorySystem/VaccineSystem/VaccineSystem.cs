@@ -347,9 +347,11 @@ public class VaccineSystem : MonoBehaviour
         {
             ChangeInventory(resource.Key, resource.Value);
         }
+
         HideVaccinate();
         vaccinatedVirusId.Add(currentVaccinateVirusId);
         CureAllVaccinated(currentVaccinateVirusId);
+        WinCon.instance.CheckWinCon();
         UpdateVisuals();
     }
 

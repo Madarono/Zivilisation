@@ -86,12 +86,15 @@ public class BuildSystem : MonoBehaviour
         }
         activeMoving = StartCoroutine(ReturnAllOptions());
         CloseOther(1);
+        TutorialSystem.instance.NotifyTutorial("BuildSystem", "StopBuilding");
     }
 
     public void StartBuilding()
     {
         TownManager.instance.availableLaboratory?.HideVisuals();
         TownManager.instance.availableMarket?.HideVisuals();
+        ObjectiveSystem.instance.CloseWindow();
+
         foreach(var window in windowsToClose)
         {
             window.CloseWindow();
@@ -103,6 +106,7 @@ public class BuildSystem : MonoBehaviour
             StopCoroutine(activeMoving);
         }
         activeMoving = StartCoroutine(MoveAllOptions());
+        TutorialSystem.instance.NotifyTutorial("BuildSystem", "StartBuilding");
     }
 
     public void ChooseRoads(int id)
@@ -125,6 +129,8 @@ public class BuildSystem : MonoBehaviour
             roadSystem.StopShovelMode();
             roadSystem.StopMultiBrushMode();
         }
+
+        TutorialSystem.instance.NotifyTutorial("BuildSystem", "StartRoad");
     }
 
     public void CloseRoads(int id)
@@ -139,6 +145,14 @@ public class BuildSystem : MonoBehaviour
     {
         if(!townManager.isBuilding)
         {
+            return;
+        }
+
+        if(buildOptions.isActive && !buildOptions.isOpen)
+        {
+            options[id].optionVisual.sprite = options[id].optionStates[1];
+            buildOptions.OpenWindow();
+            CloseRoads(0);
             return;
         }
 

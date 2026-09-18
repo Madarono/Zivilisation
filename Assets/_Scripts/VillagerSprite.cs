@@ -17,10 +17,19 @@ public class VillagerSprite : MonoBehaviour
     void Start()
     {
         villager ??= GetComponent<VillagerAI>();
+        UpdateLooks();
     }
     
     public void UpdateLooks()
     {
+        if(villager.state == VillagerState.Sleeping)
+        {
+            villager.rend.enabled = false;
+            return;
+        }
+
+        villager.rend.enabled = true;
+
         if (isHighlighted)
         {
             villager.rend.sprite = villagerLook[villager.jobPlaceID].look[1];
@@ -33,7 +42,7 @@ public class VillagerSprite : MonoBehaviour
 
     public void Selected()
     {
-        if(villager.quarantine != null) return;
+        if(villager.quarantine != null || villager.state == VillagerState.Sleeping) return;
 
         isHighlighted = true;
         UpdateLooks();
@@ -41,7 +50,7 @@ public class VillagerSprite : MonoBehaviour
 
     public void DeSelected()
     {
-        if(villager.quarantine != null) return;
+        if(villager.quarantine != null || villager.state == VillagerState.Sleeping) return;
 
         isHighlighted = false;
         UpdateLooks();

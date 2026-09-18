@@ -11,6 +11,7 @@ public class PopupText : MonoBehaviour
     public TextMeshProUGUI miniPopupVisual;
     
     private Coroutine currentPopup;
+    private Coroutine currentStopPopup;
     private Coroutine currentMiniPopup;
     private Coroutine currentStopMiniPopup;
 
@@ -54,8 +55,10 @@ public class PopupText : MonoBehaviour
         }
     }
 
-    public void Popup(string input, bool sound = true)
+    public void Popup(string input, bool sound = true, bool tutorial = false)
     {
+        if(TutorialSystem.instance.isActive && !tutorial) return;
+
         if (currentPopup != null)
         {
             StopCoroutine(currentPopup);
@@ -66,7 +69,25 @@ public class PopupText : MonoBehaviour
         if (currentSound != null && sound) Destroy(currentSound);
         if (sound) currentSound = AudioManager.instance.PlayGameObject(AudioManager.instance.popupText, amplification);
 
-        currentPopup = StartCoroutine(DoPopupText(popupVisual));
+        if(!tutorial) currentPopup = StartCoroutine(DoPopupText(popupVisual));
+        else 
+        {
+            if(currentStopPopup != null) StopCoroutine(currentStopPopup);
+            
+            Color c = popupVisual.color;
+            c.a = 1f;
+            popupVisual.gameObject.SetActive(true);
+            popupVisual.color = c;
+        }
+    }
+
+    public void StopPopup()
+    {
+        if(currentPopup != null) StopCoroutine(currentPopup);
+
+        if(currentStopPopup != null) return;
+
+        currentStopPopup = StartCoroutine(StopPopupText(popupVisual));
     }
     
     public void MiniPopup(string input, Transform origin, Vector3? worldOffset = null)
@@ -231,5 +252,26 @@ public class PopupText : MonoBehaviour
         visual.gameObject.SetActive(false);
 
         currentPopup = null;
+    }
+    
+    IEnumerator StopPopupText(TextMeshProUGUI visual)
+    {
+        visual.gameObject.SetActive(true);
+        Color c = visual.color;
+        float t = 0f;
+
+        while (t < duration * 0.5f)
+        {
+            t += Time.unscaledDeltaTime;
+            c.a = Mathf.Lerp(1f, 0f, t / (duration * 0.5f));
+            visual.color = c;
+            yield return null;
+        }
+
+        c.a = 0f;
+        visual.color = c;
+        visual.gameObject.SetActive(false);
+
+        currentStopPopup = null;
     }
 }

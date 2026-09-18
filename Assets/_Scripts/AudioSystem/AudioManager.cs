@@ -11,6 +11,7 @@ public class AudioManager : MonoBehaviour
 
     [Header("Play GameObject")]
     public GameObject playPrefab;
+    public AudioSource musicSource;
 
     [Header("Vilagers")]
     public AudioClip villagerAssign;
@@ -47,6 +48,10 @@ public class AudioManager : MonoBehaviour
     [Header("Building - Market")]
     public AudioClip sellMarket;
 
+    [Header("Misc.")]
+    public AudioClip envellope;
+    public AudioClip loseSong;
+
     [Header("Camera")]
     public AudioClip zoomIn;
     public AudioClip zoomOut;
@@ -82,10 +87,19 @@ public class AudioManager : MonoBehaviour
 
         return go;
     }
+
+    public void UpdateMusic(AudioClip clip, bool loop)
+    {
+        musicSource.clip = clip;
+        musicSource.loop = loop;
+        musicSource.Play();
+    }
     
     public void UpdateVolume()
     {
         master = Settings.instance.sfxValue;
         music = Settings.instance.musicValue;
+        musicSource.volume = Settings.instance.musicValue;
+        if(Settings.instance.muteMusic) musicSource.volume = 0;
     }
 }

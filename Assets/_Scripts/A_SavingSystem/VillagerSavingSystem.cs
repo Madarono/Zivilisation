@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
 {
+    public static VillagerSavingSystem instance {get; private set;}
+
+    public bool newGame;
+
     [Header("Villager Saving")]
     public List<int> villagerId = new List<int>();
     public List<int> houseId = new List<int>();
@@ -110,8 +114,23 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
     public List<int> curedVirusId = new List<int>();
     public List<int> vaccinatedVirusId = new List<int>();
 
+    [Header("Tutorial System")]
+    public List<bool> doneTutorials = new List<bool>();
+
+    [Header("Game Mode")]
+    public Mode mode;
+    public Difficulty difficulty;
+
+    [Header("Win Con")]
+    public bool hasWon;
+
     //Temporary then delete immediately
     private List<Building> lateStateBuildings = new List<Building>();
+
+    void Awake()
+    {
+        instance = this;
+    }
 
     public void SaveData(GameData data)
     {
@@ -195,6 +214,13 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
 
         data.curedVirusId = this.curedVirusId;
         data.vaccinatedVirusId = this.vaccinatedVirusId;
+
+        data.doneTutorials = this.doneTutorials;
+        data.newGame = this.newGame;
+
+        data.mode = this.mode;
+        data.difficulty = this.difficulty;
+        data.hasWon = this.hasWon;
     }
 
     public void LoadData(GameData data)
@@ -278,6 +304,13 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         this.curedVirusId = data.curedVirusId;
         this.vaccinatedVirusId = data.vaccinatedVirusId;
 
+        this.doneTutorials = data.doneTutorials;
+        this.newGame = data.newGame;
+
+        this.mode = data.mode;
+        this.difficulty = data.difficulty;
+        this.hasWon = data.hasWon;
+
         LoadInfo();
     }
 
@@ -292,6 +325,7 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         virusNames.Clear();
         manualPage.Clear();
         curedVirusId.Clear(); vaccinatedVirusId.Clear();
+        doneTutorials.Clear();
 
         //Gathering Buildings' Info
         GridManager grid = GridManager.instance;
@@ -427,12 +461,32 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         //Gathering the VaccineSystem's info
         curedVirusId = new List<int>(VaccineSystem.instance.curedVirusId);
         vaccinatedVirusId = new List<int>(VaccineSystem.instance.vaccinatedVirusId);
+
+        //Gathering the TutorialSystem's info
+        foreach(var objective in TutorialSystem.instance.objectives)
+        {
+            doneTutorials.Add(objective.done);
+        }
+
+        //Gathering the GameMode's info
+        mode = GameMode.instance.mode;
+        difficulty = GameMode.instance.difficulty;
+
+        //Gathering the WinCon's info
+        hasWon = WinCon.instance.hasWon;
+
     }
 
     public void LoadInfo()
     {
         motelTransform.Clear();
         workplaceTransform.Clear();
+
+        //GameMode.cs
+        Stats.instance.totalDays = totalDays;
+        GameMode.instance.mode = mode;
+        GameMode.instance.difficulty = difficulty;
+        GameMode.instance.ApplyMode(newGame);
 
         //Roads
         for(int i = 0; i < roadPos.Count; i++)
@@ -533,10 +587,10 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
 
         TownManager.instance.totalDead = totalDead;
 
-        MoneyCounter.instance.deltaPrice = moneySave;
+        if(!newGame) MoneyCounter.instance.deltaPrice = moneySave;
         
         //TownStorage
-        TownStorage.instance.Money = moneySave;
+        if(!newGame) TownStorage.instance.Money = moneySave;
         TownStorage.instance.wheat = wheatSave;
         TownStorage.instance.iron = ironSave;
         TownStorage.instance.copper = copperSave;
@@ -615,7 +669,6 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         LoseCondition.instance.progressLosMor = progressLosMor;
 
         //Stats.cs
-        Stats.instance.totalDays = totalDays;
         Stats.instance.lowestMorality = lowestMorality;
         Stats.instance.desertions = desertions;
         Stats.instance.totalSick = totalSick;
@@ -633,6 +686,17 @@ public class VillagerSavingSystem : MonoBehaviour, IDataPersistence
         VaccineSystem.instance.curedVirusId = new HashSet<int>(this.curedVirusId);
         VaccineSystem.instance.vaccinatedVirusId = new HashSet<int>(this.vaccinatedVirusId);
 
+        //TutorialSystem.cs
+        for(int i = 0; i < doneTutorials.Count; i++)
+        {
+            TutorialSystem.instance.objectives[i].done = doneTutorials[i];
+        }
+
+        //WinCon.cs
+        WinCon.instance.hasWon = hasWon;
+        WinCon.instance.UpdateVisual();
+
+        newGame = false;
         StartCoroutine(WaitForStart());
     }
 

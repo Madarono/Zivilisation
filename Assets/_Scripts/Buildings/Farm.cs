@@ -40,6 +40,7 @@ public class Farm : Building, VillageBuildable
         TownManager.instance.ShowSelectedHumans(this);
         UpdateVisuals();
         AudioManager.instance.Play(AudioManager.instance.select);
+        TutorialSystem.instance.NotifyTutorial("Workplace", "ShowVisuals");
     }
 
     public override void HideVisuals(bool withSound = true)
@@ -49,6 +50,8 @@ public class Farm : Building, VillageBuildable
         TownManager.instance.HideSelectedHumans(this);
         if(withSound) AudioManager.instance.Play(AudioManager.instance.buttonClicks[1]);
         UpdateVisuals();
+
+        if(TownManager.instance.currentBuilding != null && TownManager.instance.currentBuilding == this) TownManager.instance.currentBuilding = null;
     }
 
     protected override void AddHuman()
@@ -56,6 +59,7 @@ public class Farm : Building, VillageBuildable
         isChoosing = true;
         TownManager.instance.activeBuilding = this;
         TownManager.instance.SelectingHumanMode(this);
+        TutorialSystem.instance.NotifyTutorial("Workplace", "AddHuman");
     }
 
     public override void RemoveHuman()
@@ -185,6 +189,7 @@ public class Farm : Building, VillageBuildable
         villager.jobPlaceID = jobPlaceID;
         villager.villagerSprite.UpdateLooks();
         if(withSound) AudioManager.instance.Play(AudioManager.instance.villagerAssign);
+        TutorialSystem.instance.NotifyTutorial("Workplace", "AssignVillagerRole");
     }
 
     public override void RemoveVillagerRole(VillagerAI villager, bool withSound = true)
@@ -193,7 +198,7 @@ public class Farm : Building, VillageBuildable
         villager.jobPlace = null;
         villager.jobPlaceID = 0;
         villager.villagerSprite.UpdateLooks();
-        StopFarming();
         if(withSound) AudioManager.instance.Play(AudioManager.instance.villagerRevoke);
+        if(isWorkedOn) StopFarming();
     }
 }

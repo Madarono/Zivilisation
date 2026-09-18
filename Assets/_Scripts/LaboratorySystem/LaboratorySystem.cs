@@ -307,6 +307,7 @@ public class LaboratorySystem : MonoBehaviour
         TownStorage.instance.Money -= price;
         CheckWin();
         StartCoroutine(Diagnose());
+        TutorialSystem.instance.NotifyTutorial("LaboratorySystem", "Attempt");
     }
 
     IEnumerator Diagnose()

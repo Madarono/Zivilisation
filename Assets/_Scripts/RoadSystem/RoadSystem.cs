@@ -88,6 +88,7 @@ public class RoadSystem : MonoBehaviour
     {
         shovelMode = !shovelMode;
         shovelVisual.sprite = shovelMode ? shovelStates[1] : shovelStates[0];
+        TutorialSystem.instance.NotifyTutorial("RoadSystem", "Shovel");
     }
 
     public void StopShovelMode()
@@ -100,6 +101,7 @@ public class RoadSystem : MonoBehaviour
     {
         isMultiBrush = !isMultiBrush;
         brushButton.sprite = isMultiBrush ? multiBrushStates[1] : multiBrushStates[0];
+        TutorialSystem.instance.NotifyTutorial("RoadSystem", "Multi");
     }
 
     public void StopMultiBrushMode()
@@ -113,14 +115,15 @@ public class RoadSystem : MonoBehaviour
         Vector3 clickPos = Camera.main.ScreenToWorldPoint(inputScreenPos);
         Vector2Int roadPos = new Vector2Int(Mathf.RoundToInt(clickPos.x), Mathf.RoundToInt(clickPos.y));
         
-        if(CheckNeighbors(roadPos) && !shovelMode)
-        {
-            PutRoad(roadPos);
-        }
-        else if(shovelMode)
+        if(shovelMode)
         {
             DeleteRoad(roadPos);
         }
+        else if(CheckNeighbors(roadPos) && !shovelMode)
+        {
+            PutRoad(roadPos);
+        }
+        
     }
 
     public void PutRoad(Vector2Int pos, bool sound = true)
@@ -151,6 +154,9 @@ public class RoadSystem : MonoBehaviour
             AudioManager.instance.Play(AudioManager.instance.roadPut);
             activeCooldown = StartCoroutine(SoundCooldown(delayBetweenSounds));
         }
+
+        if(!isMultiBrush) TutorialSystem.instance.NotifyTutorial("RoadSystem", "PutRoad");
+        else TutorialSystem.instance.NotifyTutorial("RoadSystem", "PutMultiRoad");
     }
 
     bool CheckNeighbors(Vector2Int pos)
@@ -217,6 +223,7 @@ public class RoadSystem : MonoBehaviour
                 AudioManager.instance.Play(AudioManager.instance.roadShovel);
                 activeCooldown = StartCoroutine(SoundCooldown(delayBetweenSounds));
             }
+            TutorialSystem.instance.NotifyTutorial("RoadSystem", "DeleteRoad");
         }
     }
 

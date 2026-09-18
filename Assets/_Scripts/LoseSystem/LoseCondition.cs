@@ -119,6 +119,7 @@ public class LoseCondition : MonoBehaviour
 
         deathInfo.text = info;
         LensDistortWarp.instance.LoseSequence();
+        AudioManager.instance.UpdateMusic(AudioManager.instance.loseSong, false);
     }
 
     //Loss by morality #1

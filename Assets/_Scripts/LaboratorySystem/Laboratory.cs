@@ -78,6 +78,7 @@ public class Laboratory : Building, VillageBuildable
     {
         TownManager.instance.OpenLaboratoryWindow();
         AudioManager.instance.Play(AudioManager.instance.select);
+        TutorialSystem.instance.NotifyTutorial("Laboratory", "ShowVisuals");
     }
 
     public override void HideVisuals(bool withSound = true)
